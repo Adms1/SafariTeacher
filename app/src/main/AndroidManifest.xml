@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.adms.safariteacher">
+
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/safari"
@@ -22,7 +26,7 @@
             android:name=".Activities.DashBoardActivity"
             android:label="@string/title_activity_dash_board"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

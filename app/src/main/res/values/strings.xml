@@ -11,7 +11,7 @@
     <string name="dob">Date of Birth</string>
     <string name="family_register1">Registration</string>
     <string name="title_activity_dash_board">DashBoardActivity</string>
-    <string name="session_time">Session Time</string>
+    <string name="session_time">Add Session Time</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="area">Area</string>
@@ -42,6 +42,12 @@
     <string name="openDrawer">open_drawer</string>
     <string name="closeDrawer">close_drawer</string>
     <string name="session_price">Session Price</string>
+    <string name="s_subject">Subject</string>
+    <string name="batch_time">Class Time</string>
+    <string name="total_student">Student</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+<string name="sports">Sports</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -53,4 +59,7 @@
         <item>Notifications</item>
         <item>Settings</item>
     </string-array>
+
+    <!--Important-->
+    <string name="googleplus_sha">DF:DD:F8:1D:1F:BA:43:06:D3:92:25:F5:39:28:E1:3C:3F:FA:8C:06</string>
 </resources>

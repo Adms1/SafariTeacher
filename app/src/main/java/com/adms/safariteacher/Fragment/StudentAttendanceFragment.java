@@ -1,6 +1,9 @@
 package com.adms.safariteacher.Fragment;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.net.Uri;
@@ -108,9 +111,36 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                 datePickerDialog.show(getActivity().getFragmentManager(), "Datepickerdialog");
             }
         });
+        studentAttendanceBinding.sessionCal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ComponentName cn;
+                if (isPackageInstalled("com.android.calendar", getActivity())) {
+                    Intent i = new Intent();
+                    cn = new ComponentName("com.android.calendar", "com.android.calendar.LaunchActivity");
+                    i.setComponent(cn);
+                    startActivity(i);
+                } else {
+                    Intent i = new Intent();
+                    cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
+                    i.setComponent(cn);
+                    startActivity(i);
+                }
 
+            }
+        });
 
     }
+    public static boolean isPackageInstalled(String packagename, Context context) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(packagename, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
     public void getMonthFun(int month) {
         SimpleDateFormat monthParse = new SimpleDateFormat("MM");
         SimpleDateFormat monthDisplay = new SimpleDateFormat("MMM");
