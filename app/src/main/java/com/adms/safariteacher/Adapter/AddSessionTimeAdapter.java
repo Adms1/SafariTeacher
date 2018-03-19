@@ -5,6 +5,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,19 +42,12 @@ public class AddSessionTimeAdapter extends RecyclerView.Adapter<AddSessionTimeAd
 
         TextView time_txt;
         RecyclerView checkbox_rcView;
-        CheckBox mon_chk, tue_chk, wed_chk, thu_chk, fri_chk, sat_chk;
 
         public MyViewHolder(View view) {
             super(view);
 
             time_txt = (TextView) view.findViewById(R.id.time_txt);
             checkbox_rcView = (RecyclerView) view.findViewById(R.id.checkbox_rcView);
-//            mon_chk = (CheckBox) view.findViewById(R.id.mon_chk);
-//            tue_chk = (CheckBox) view.findViewById(R.id.mon_chk);
-//            wed_chk = (CheckBox) view.findViewById(R.id.mon_chk);
-//            thu_chk = (CheckBox) view.findViewById(R.id.mon_chk);
-//            fri_chk = (CheckBox) view.findViewById(R.id.mon_chk);
-//            sat_chk = (CheckBox) view.findViewById(R.id.mon_chk);
         }
     }
 
@@ -67,7 +61,15 @@ public class AddSessionTimeAdapter extends RecyclerView.Adapter<AddSessionTimeAd
 
     @Override
     public void onBindViewHolder(final AddSessionTimeAdapter.MyViewHolder holder, final int position) {
-        holder.time_txt.setText(timegapArray.get(position));
+//        if (timegapArray.size()-2>position) {
+            holder.time_txt.setText(timegapArray.get(position));// + "-" + timegapArray.get(position + 1));
+            Log.d("poisitionId",""+position);
+//        }
+
+//        else if(position==-1) {
+//            holder.time_txt.setText(timegapArray.get(position));
+//        }
+//        Log.d("time",timegapArray.get(position)+"-"+timegapArray.get(position+1));
         checkboxAdapter = new CheckboxAdapter(mContext,checkboxArray);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext,7);
         holder.checkbox_rcView.setLayoutManager(mLayoutManager);

@@ -1,6 +1,8 @@
 package com.adms.safariteacher;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,4 +43,12 @@ public class Util {
         Log.d("Currenttime",strDate);
         return strDate;
     }
+    public static void ping(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void pong(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
 }

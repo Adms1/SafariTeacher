@@ -306,26 +306,27 @@
 
             <ImageView
                 android:id="@+id/session_email"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_35sdp"
                 android:src="@drawable/s_e" />
 
             <ImageView
                 android:id="@+id/session_search"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_85sdp"
-                android:src="@drawable/s_ser" />
+                android:src="@drawable/s_ser"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/session_cal"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/_95sdp"
+                android:layout_marginLeft="@dimen/_195sdp"
                 android:src="@drawable/s_cal" />
         </LinearLayout>
     </LinearLayout>

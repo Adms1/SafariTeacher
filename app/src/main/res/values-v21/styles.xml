@@ -21,6 +21,8 @@
         <item name="android:layout_marginTop">@dimen/_5sdp</item>
         <item name="android:paddingLeft">@dimen/_5sdp</item>
         <item name="android:paddingRight">@dimen/_5sdp</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:singleLine">true</item>
     </style>
     <style name="addSessionEditText" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:textColor">@color/gray</item>
@@ -33,6 +35,9 @@
         <item name="android:layout_marginTop">@dimen/_5sdp</item>
         <item name="android:paddingLeft">@dimen/_5sdp</item>
         <item name="android:paddingRight">@dimen/_5sdp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:singleLine">true</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

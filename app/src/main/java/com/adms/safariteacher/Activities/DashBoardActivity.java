@@ -1,10 +1,7 @@
 package com.adms.safariteacher.Activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -14,12 +11,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.adms.safariteacher.Fragment.AddSessionFragment;
+import com.adms.safariteacher.Fragment.SessionFragment;
 import com.adms.safariteacher.Fragment.StudentAttendanceFragment;
 import com.adms.safariteacher.R;
 
@@ -31,12 +28,13 @@ public class DashBoardActivity extends AppCompatActivity {
     private TextView txtName, txtWebsite;
     private Toolbar toolbar;
 
+    private static final String TAG_Session = "Session";
     private static final String TAG_Add_Session = "Add Session";
     private static final String TAG_Student_Attendance = "Student Attendance";
-    private static final String TAG_MOVIES = "movies";
-    private static final String TAG_NOTIFICATIONS = "notifications";
-    private static final String TAG_SETTINGS = "settings";
-    public static String CURRENT_TAG = TAG_Add_Session;
+
+    public static String CURRENT_TAG = TAG_Session;
+//    public static String CURRENT_TAG = TAG_Calendar;
+//    public static String CURRENT_TAG = TAG_Student_Attendance;
 
     public static int navItemIndex = 0;
     private String[] activityTitles;
@@ -66,7 +64,7 @@ public class DashBoardActivity extends AppCompatActivity {
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame, new AddSessionFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SessionFragment()).commit();
             getSupportActionBar().setTitle(activityTitles[navItemIndex]);
         }
 
@@ -83,7 +81,7 @@ public class DashBoardActivity extends AppCompatActivity {
     private void loadNavHeader() {
         // name, website
         txtName.setText("ADMS");
-        txtWebsite.setText("www.adms.net");
+        txtWebsite.setText("test@adms.net");
         imgProfile.setImageResource(R.drawable.person_placeholder);
 
     }
@@ -97,11 +95,11 @@ public class DashBoardActivity extends AppCompatActivity {
 
         // if user select the current navigation menu again, don't do anything
         // just close the navigation drawer
-        if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
-            drawer.closeDrawers();
-
-            return;
-        }
+//        if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
+//            drawer.closeDrawers();
+//
+//            return;
+//        }
 
         // Sometimes, when fragment has huge data, screen seems hanging
         // when switching between navigation menus
@@ -145,13 +143,19 @@ public class DashBoardActivity extends AppCompatActivity {
         switch (navItemIndex) {
             case 0:
                 // home
-                AddSessionFragment addSessionFragment = new AddSessionFragment();
-                return addSessionFragment;
+                SessionFragment sessionFragment = new SessionFragment();
+                return sessionFragment;
             case 1:
-                StudentAttendanceFragment studentAttendanceFragment = new StudentAttendanceFragment();
-                return studentAttendanceFragment;
+                AddSessionFragment addSessionFragment = new AddSessionFragment();
+                Bundle args = new Bundle();
+                args.putString("flag", "Add");
+                addSessionFragment.setArguments(args);
+                return addSessionFragment;
+//            case 2:
+//                StudentAttendanceFragment studentAttendanceFragment = new StudentAttendanceFragment();
+//                return studentAttendanceFragment;
             default:
-                return new AddSessionFragment();
+                return new SessionFragment();
         }
     }
 
@@ -166,16 +170,21 @@ public class DashBoardActivity extends AppCompatActivity {
                 //Check to see which item was being clicked and perform appropriate action
                 switch (menuItem.getItemId()) {
                     //Replacing the main content with ContentFragment Which is our Inbox View;
-                    case R.id.add_session:
+                    case R.id.session:
                         navItemIndex = 0;
+                        CURRENT_TAG = TAG_Session;
+                        break;
+                    case R.id.add_session:
+                        navItemIndex = 1;
                         CURRENT_TAG = TAG_Add_Session;
                         break;
-                    case R.id.student_attendance:
-                        navItemIndex = 1;
-                        CURRENT_TAG = TAG_Student_Attendance;
-                        break;
+//                    case R.id.student_attendance:
+//                        navItemIndex = 2;
+//                        CURRENT_TAG = TAG_Student_Attendance;
+//                        break;
                     default:
                         navItemIndex = 0;
+//                        CURRENT_TAG = TAG_Session;
                 }
 
                 //Checking if the item is in checked state or not, if not make it in checked state
@@ -229,13 +238,24 @@ public class DashBoardActivity extends AppCompatActivity {
             // rather than home
             if (navItemIndex != 0) {
                 navItemIndex = 0;
-                CURRENT_TAG = TAG_Add_Session;
+                CURRENT_TAG = TAG_Session;
                 loadHomeFragment();
                 return;
             }
         }
 
         super.onBackPressed();
+    }
+
+    public void setActionBar(int session,String flag) {
+        if (session==1 && flag.equalsIgnoreCase("edit")) {
+            getSupportActionBar().setTitle("Edit Session");
+        } else if(session==1 && flag.equalsIgnoreCase("add")){
+            getSupportActionBar().setTitle("Add Session");
+        }
+        else {
+            getSupportActionBar().setTitle(activityTitles[session]);
+        }
     }
 
 

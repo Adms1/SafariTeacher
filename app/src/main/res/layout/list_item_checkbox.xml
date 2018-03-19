@@ -6,9 +6,10 @@
 
     <CheckBox
         android:id="@+id/checkbox"
-        android:layout_width="@dimen/_25sdp"
-        android:layout_height="@dimen/_25sdp"
-        android:layout_gravity="center|center_horizontal"
-        android:layout_marginLeft="@dimen/_1sdp"
-        android:button="@drawable/check_uncheck" />
+        android:layout_width="@dimen/_27sdp"
+        android:layout_height="@dimen/_27sdp"
+        android:padding="@dimen/_5sdp"
+        android:layout_gravity="center|center_vertical"
+        android:layout_marginLeft="@dimen/_4sdp"
+        android:button="@drawable/custom_checkbox" />
 </LinearLayout>

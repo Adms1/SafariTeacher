@@ -17,6 +17,7 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -39,6 +40,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
+import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Adapter.AddSessionTimeAdapter;
 import com.adms.safariteacher.Adapter.AlertListAdapter;
 import com.adms.safariteacher.R;
@@ -91,6 +93,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     AddSessionTimeAdapter addSessionTimeAdapter;
     ArrayList<Integer> checkboxArray;
     public Dialog popularDialog;
+    String flag;
 
     public AddSessionFragment() {
     }
@@ -102,7 +105,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 
         rootView = addSessionBinding.getRoot();
         mContext = getActivity().getApplicationContext();
-
+        flag = getArguments().getString("flag");
+        if (flag.equalsIgnoreCase("edit")) {
+            ((DashBoardActivity) getActivity()).setActionBar(1,"edit");
+        }else {
+            ((DashBoardActivity) getActivity()).setActionBar(1,"add");
+        }
         initViews();
         setListners();
 
@@ -189,6 +197,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 //                timePickerDialog.show(getActivity().getFragmentManager(), "Timepickerdialog");
 //            }
 //        });
+
         addSessionBinding.fessStatusRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -214,18 +223,24 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         addSessionBinding.sessionCal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ComponentName cn;
-                if (isPackageInstalled("com.android.calendar", getActivity())) {
-                    Intent i = new Intent();
-                    cn = new ComponentName("com.android.calendar", "com.android.calendar.LaunchActivity");
-                    i.setComponent(cn);
-                    startActivity(i);
-                } else {
-                    Intent i = new Intent();
-                    cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
-                    i.setComponent(cn);
-                    startActivity(i);
-                }
+                Fragment fragment = new SessionFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+//                ComponentName cn;
+//                if (isPackageInstalled("com.android.calendar", getActivity())) {
+//                    Intent i = new Intent();
+//                    cn = new ComponentName("com.android.calendar", "com.android.calendar.LaunchActivity");
+//                    i.setComponent(cn);
+//                    startActivity(i);
+//                } else {
+//                    Intent i = new Intent();
+//                    cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
+//                    i.setComponent(cn);
+//                    startActivity(i);
+//                }
             }
         });
         addSessionBinding.sessionTimeTxt.setOnClickListener(new View.OnClickListener() {
@@ -377,7 +392,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         //Do something after 100ms
                         mBottomSheetDialog.dismiss();
                     }
-                }, 400);
+                }, 600);
 
             }
         });
@@ -405,7 +420,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setAttributes(wlp);
 
-        popularDialog.getWindow().setBackgroundDrawableResource(R.color.white);
+        popularDialog.getWindow().setBackgroundDrawableResource(R.drawable.grid_shape);
 
         popularDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         popularDialog.setCancelable(false);
@@ -473,29 +488,23 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
             }
         });
-        String time;
+        String time = "";
         hoursArray = new ArrayList<>();
-        for (int i = 8; i <= 12; i++) {
-            if (i < 12) {
-                if (i <=9) {
-                    time = "0" + i + ":" + "00" + "AM";
-                } else {
-                    time = i + ":" + "00" + "AM";
-                }
 
-            } else {
-                time = i + ":" + "00" + "PM";
-            }
-            hoursArray.add(String.valueOf(time));
-            Log.d("hoursArray", "" + hoursArray);
-        }
-        for (int j = 1; j <= 8; j++) {
-            time = "0" + j + ":" + "00" + "PM";
-            hoursArray.add(time);
-            Log.d("hoursArray", "" + hoursArray);
-        }
+        hoursArray.add("08:00 - 09:00AM");
+        hoursArray.add("09:00 - 10:00AM");
+        hoursArray.add("10:00 - 11:00AM");
+        hoursArray.add("11:00 - 12:00PM");
+        hoursArray.add("01:00 - 02:00PM");
+        hoursArray.add("02:00 - 03:00PM");
+        hoursArray.add("03:00 - 04:00PM");
+        hoursArray.add("04:00 - 05:00PM");
+        hoursArray.add("05:00 - 06:00PM");
+        hoursArray.add("07:00 - 08:00PM");
+
+
         checkboxArray = new ArrayList<>();
-        for (int k = 0; k < 6; k++) {
+        for (int k = 0; k < 7; k++) {
             checkboxArray.add(k);
         }
         addSessionTimeAdapter = new AddSessionTimeAdapter(mContext, hoursArray, checkboxArray);

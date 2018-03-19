@@ -46,6 +46,8 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
+                        android:maxLines="1"
+                       android:imeOptions="actionNext"
                         android:hint="@string/session_name" />
                 </LinearLayout>
 
@@ -68,6 +70,7 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
+                        android:maxLines="1"
                         android:hint="@string/session_board" />
                 </LinearLayout>
 
@@ -90,6 +93,8 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
+
+                        android:maxLines="1"
                         android:hint="@string/search_standard" />
                 </LinearLayout>
 
@@ -112,6 +117,7 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
+                        android:maxLines="1"
                         android:hint="Subject" />
                 </LinearLayout>
 
@@ -144,8 +150,8 @@
 
                     <Button
                         android:id="@+id/add_session_btn"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
+                        android:layout_width="@dimen/_25sdp"
+                        android:layout_height="@dimen/_25sdp"
                         android:layout_gravity="center"
                         android:layout_marginBottom="@dimen/_2sdp"
                         android:layout_marginLeft="@dimen/_5sdp"
@@ -307,6 +313,7 @@
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_25sdp"
                             android:layout_weight="1"
+                            android:maxLines="1"
                             android:hint="@string/area" />
 
                         <AutoCompleteTextView
@@ -315,6 +322,7 @@
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_25sdp"
                             android:layout_weight="1"
+                            android:maxLines="1"
                             android:hint="City" />
                     </LinearLayout>
                 </LinearLayout>
@@ -339,6 +347,7 @@
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_25sdp"
                             android:layout_weight="1"
+                            android:maxLines="1"
                             android:hint="@string/state" />
 
                         <AutoCompleteTextView
@@ -348,6 +357,7 @@
                             android:layout_height="@dimen/_25sdp"
                             android:layout_weight="1"
                             android:hint="@string/zipcode"
+                            android:maxLines="1"
                             android:inputType="number" />
                     </LinearLayout>
                 </LinearLayout>
@@ -372,6 +382,7 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
+                        android:imeOptions="actionNext"
                         android:hint="@string/description" />
                 </LinearLayout>
 
@@ -417,6 +428,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
                         android:hint="@string/session_price"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:imeOptions="actionNext"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -440,6 +454,8 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
+                        android:inputType="number"
+                        android:maxLines="1"
                         android:hint="@string/sports" />
                 </LinearLayout>
 
@@ -502,26 +518,28 @@
 
             <ImageView
                 android:id="@+id/session_email"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_35sdp"
-                android:src="@drawable/s_e" />
+                android:src="@drawable/s_e"
+                android:visibility="visible"/>
 
             <ImageView
                 android:id="@+id/session_search"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_85sdp"
-                android:src="@drawable/s_ser" />
+                android:src="@drawable/s_ser"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/session_cal"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/_95sdp"
+                android:layout_marginLeft="@dimen/_195sdp"
                 android:src="@drawable/s_cal" />
         </LinearLayout>
     </LinearLayout>

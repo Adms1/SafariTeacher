@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Adapter.StudentAttendanceAdapter;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Util;
@@ -61,7 +63,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
 
         rootView = studentAttendanceBinding.getRoot();
         mContext = getActivity().getApplicationContext();
-
+        ((DashBoardActivity) getActivity()).setActionBar(2,"true");
         initViews();
         setListners();
 
@@ -114,22 +116,27 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
         studentAttendanceBinding.sessionCal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ComponentName cn;
-                if (isPackageInstalled("com.android.calendar", getActivity())) {
-                    Intent i = new Intent();
-                    cn = new ComponentName("com.android.calendar", "com.android.calendar.LaunchActivity");
-                    i.setComponent(cn);
-                    startActivity(i);
-                } else {
-                    Intent i = new Intent();
-                    cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
-                    i.setComponent(cn);
-                    startActivity(i);
-                }
+                Fragment fragment = new SessionFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+//                ComponentName cn;
+//                if (isPackageInstalled("com.android.calendar", getActivity())) {
+//                    Intent i = new Intent();
+//                    cn = new ComponentName("com.android.calendar", "com.android.calendar.LaunchActivity");
+//                    i.setComponent(cn);
+//                    startActivity(i);
+//                } else {
+//                    Intent i = new Intent();
+//                    cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
+//                    i.setComponent(cn);
+//                    startActivity(i);
+//                }
 
             }
         });
-
     }
     public static boolean isPackageInstalled(String packagename, Context context) {
         PackageManager pm = context.getPackageManager();

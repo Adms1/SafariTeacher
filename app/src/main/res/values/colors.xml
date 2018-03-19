@@ -21,4 +21,5 @@
     <color name="absent">#d15151</color>
     <color name="leave">#dccc43</color>
     <color name="remarks">#f2552c</color>
+    <color name="transparent">#80ffffff</color>
 </resources>
