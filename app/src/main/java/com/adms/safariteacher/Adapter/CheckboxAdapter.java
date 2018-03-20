@@ -34,6 +34,7 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.MyView
     static String starttimeStr = "", endtimeStr;
     Button add_session_btn, end_session_btn;
     static TextView start_time_txt, end_time_txt;
+    private static boolean isFromDate = false;
 
     public CheckboxAdapter(Context mContext, FragmentActivity activity, ArrayList<Integer> checkboxArray) {
         this.mContext = mContext;
@@ -69,6 +70,7 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.MyView
         add_session_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isFromDate=true;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(activity.getFragmentManager(), "Select time");
             }
@@ -76,6 +78,7 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.MyView
         start_time_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isFromDate=false;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(activity.getFragmentManager(), "Select time");
             }
@@ -133,11 +136,13 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.MyView
             } else {
                 hour_of_12_hour_format = hourOfDay;
             }
-
-            starttimeStr = hour_of_12_hour_format + ":" + minute + ":" + status;
-            endtimeStr = hour_of_12_hour_format + ":" + minute + ":" + status;
+            if (isFromDate) {
+                starttimeStr = hour_of_12_hour_format + ":" + minute + ":" + status;
+            } else {
+                endtimeStr = hour_of_12_hour_format + ":" + minute + ":" + status;
+            }
             Log.d("startTime", starttimeStr + "endTime" + endtimeStr);
-            start_time_txt.setText(starttimeStr);
+//            start_time_txt.setText(starttimeStr);
         }
     }
 //    public ArrayList<String> getTime() {

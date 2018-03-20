@@ -79,18 +79,20 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     TextView end_date_txt;
     static TextView sun_start_time_txt;
     static TextView sun_end_time_txt;
-    TextView mon_start_time_txt;
-    TextView mon_end_time_txt;
-    TextView tue_start_time_txt;
-    TextView tue_end_time_txt;
-    TextView wed_start_time_txt;
-    TextView wed_end_time_txt;
-    TextView thu_start_time_txt;
-    TextView thu_end_time_txt;
-    TextView fri_end_time_txt;
-    TextView fri_start_time_txt;
-    TextView sat_end_time_txt;
-    TextView sat_start_time_txt;
+    static TextView mon_start_time_txt;
+    static TextView mon_end_time_txt;
+    static TextView tue_start_time_txt;
+    static TextView tue_end_time_txt;
+    static TextView wed_start_time_txt;
+    static TextView wed_end_time_txt;
+    static TextView thu_start_time_txt;
+    static TextView thu_end_time_txt;
+    static TextView fri_end_time_txt;
+    static TextView fri_start_time_txt;
+    static TextView sat_end_time_txt;
+    static TextView sat_start_time_txt;
+    //    static Button sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,
+//            sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn;
     RecyclerView day_name_rcView;
     static LinearLayout sun_start_linear, mon_start_linear, tue_start_linear, wed_start_linear, thu_start_linear, fri_start_linear, sat_start_linear,
             sun_end_linear, mon_end_linear, tue_end_linear, wed_end_linear, thu_end_linear, fri_end_linear, sat_end_linear;
@@ -100,6 +102,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     int mYear, mMonth, mDay;
     private static String dateFinal;
     private static boolean isFromDate = false;
+    private static boolean isFromDatesun = false;//, isFromDatemon = false, isFromDatetue = false, isFromDatewed = false, isFromDatethu = false, isFromDatefri = false, isFromDatesat = false;
     private com.wdullaer.materialdatetimepicker.date.DatePickerDialog datePickerDialog;
     ArrayList<String> hoursArray;
     AddSessionTimeAdapter addSessionTimeAdapter;
@@ -479,19 +482,19 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         sat_end_time_txt = (TextView) popularDialog.findViewById(R.id.sat_start_time_txt);
         sat_start_time_txt = (TextView) popularDialog.findViewById(R.id.sat_end_time_txt);
         sun_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        mon_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        tue_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        wed_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        thu_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        fri_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        sat_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        sun_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        mon_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        tue_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        wed_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        thu_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        fri_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
-        sat_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        mon_start_linear = (LinearLayout) popularDialog.findViewById(R.id.mon_start_linear);
+        tue_start_linear = (LinearLayout) popularDialog.findViewById(R.id.tue_start_linear);
+        wed_start_linear = (LinearLayout) popularDialog.findViewById(R.id.wed_start_linear);
+        thu_start_linear = (LinearLayout) popularDialog.findViewById(R.id.thu_start_linear);
+        fri_start_linear = (LinearLayout) popularDialog.findViewById(R.id.fri_start_linear);
+        sat_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sat_start_linear);
+        sun_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_end_linear);
+        mon_end_linear = (LinearLayout) popularDialog.findViewById(R.id.mon_end_linear);
+        tue_end_linear = (LinearLayout) popularDialog.findViewById(R.id.tue_end_linear);
+        wed_end_linear = (LinearLayout) popularDialog.findViewById(R.id.wed_end_linear);
+        thu_end_linear = (LinearLayout) popularDialog.findViewById(R.id.thu_end_linear);
+        fri_end_linear = (LinearLayout) popularDialog.findViewById(R.id.fri_end_linear);
+        sat_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sat_end_linear);
 
 
         day_name_rcView = (RecyclerView) popularDialog.findViewById(R.id.day_name_rcView);
@@ -535,7 +538,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         sun_start_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = true;
+                isFromDatesun = true;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -544,7 +547,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         sun_end_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = false;
+                isFromDatesun = false;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -552,7 +555,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         mon_start_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = true;
+                isFromDatesun = true;
+               // isFromDatemon = true;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -561,7 +565,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         mon_end_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = false;
+              //  isFromDatemon = false;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -569,7 +573,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         tue_start_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = true;
+               // isFromDatetue = true;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -578,7 +582,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         tue_end_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = false;
+              //  isFromDatetue = false;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -586,7 +590,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         wed_start_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = true;
+              //  isFromDatewed = true;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -595,7 +599,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         wed_end_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = false;
+               // isFromDatewed = false;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -603,7 +607,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         thu_start_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = true;
+               // isFromDatethu = true;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -612,7 +616,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         thu_end_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = false;
+               // isFromDatethu = false;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -620,7 +624,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         fri_start_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = true;
+                //isFromDatefri = true;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -629,7 +633,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         fri_end_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = false;
+               /// isFromDatefri = false;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -637,7 +641,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         sat_start_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = true;
+               // isFromDatesat = true;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -646,7 +650,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         sat_end_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate = false;
+               // isFromDatesat = false;
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
@@ -775,14 +779,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 
         @Override
         public void onTimeSet(android.widget.TimePicker view, int hourOfDay, int minute) {
-//            displayCurrentTime.setText("Selected Time: " + String.valueOf(hourOfDay) + " : " + String.valueOf(minute));
-//            if(hourOfDay>12){
-//                displayCurrentTime.setText("Selected Time: " + String.valueOf(hourOfDay) + " : " + String.valueOf(minute)+" "+"PM");
-//            }else{
-//                displayCurrentTime.setText("Selected Time: " + String.valueOf(hourOfDay) + " : " + String.valueOf(minute)+" "+"AM");
-//            }
             String status = "AM";
-
             if (hourOfDay > 11) {
                 // If the hour is greater than or equal to 12
                 // Then the current AM PM status is PM
@@ -800,11 +797,41 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             } else {
                 hour_of_12_hour_format = hourOfDay;
             }
-            if (isFromDate) {
+            if (isFromDatesun) {
                 sun_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
             } else {
                 sun_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
             }
+//            if (isFromDatemon) {
+//                mon_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            } else {
+//                mon_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            }
+//            if (isFromDatetue) {
+//                tue_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            } else {
+//                tue_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            }
+//            if (isFromDatewed) {
+//                wed_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            } else {
+//                wed_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            }
+//            if (isFromDatethu) {
+//                thu_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            } else {
+//                thu_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            }
+//            if (isFromDatefri) {
+//                fri_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            } else {
+//                fri_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            }
+//            if (isFromDatesat) {
+//                sat_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            } else {
+//                sat_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+//            }
 
         }
     }
