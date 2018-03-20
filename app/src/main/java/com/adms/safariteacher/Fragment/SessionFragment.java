@@ -1,16 +1,10 @@
 package com.adms.safariteacher.Fragment;
 
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -29,18 +23,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
-import com.adms.safariteacher.Adapter.AddSessionTimeAdapter;
+import com.adms.safariteacher.Activities.DrawableCalendarEvent;
+import com.adms.safariteacher.Adapter.SessionViewStudentListAdapter;
 import com.adms.safariteacher.Adapter.StudentAttendanceAdapter;
-import com.adms.safariteacher.DrawableCalendarEvent;
 import com.adms.safariteacher.R;
-import com.adms.safariteacher.Util;
+import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentCalendarBinding;
-import com.adms.safariteacher.databinding.FragmentStudentAttendanceBinding;
-import com.github.tibolte.agendacalendarview.AgendaCalendarView;
 import com.github.tibolte.agendacalendarview.CalendarPickerController;
 import com.github.tibolte.agendacalendarview.models.CalendarEvent;
 import com.github.tibolte.agendacalendarview.models.DayItem;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,6 +51,9 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     Button cancel_btn, add_attendance_btn, edit_session_btn;
     String sessionnameStr, sessionstrattimeStr = "", sessionendtimeStr = "", sessionDateStr = "";
     TextView start_time_txt, end_time_txt, session_title_txt, date_txt;
+    RecyclerView studentnamelist_rcView;
+    SessionViewStudentListAdapter sessionViewStudentListAdapter;
+    ArrayList<String> arrayList;
 
     public SessionFragment() {
     }
@@ -90,7 +84,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         List<CalendarEvent> eventList = new ArrayList<>();
         mockList(eventList);
 
-        calendarBinding.agendaCalendarView.init(eventList, minDate, maxDate, Locale.getDefault(), this);
+
+        calendarBinding.agendaCalendarView.init(eventList, minDate, maxDate, Locale.US, this);
     }
 
     public void setListner() {
@@ -170,7 +165,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
     @Override
     public void onEventSelected(CalendarEvent event) {
-//        Log.d("EventName", "" +event.getStartTime().getTime());
         if (!event.getTitle().equals("No events")) {
             parseTodaysDate(String.valueOf(event.getStartTime().getTime()), String.valueOf(event.getEndTime().getTime()));
             sessionnameStr = event.getTitle();
@@ -185,13 +179,13 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     public void onScrollToDate(Calendar calendar) {
         Log.d("month", String.valueOf(calendar.getTime()));
         String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
-        String outputPattern = "MMMM-yyyy";
+        String outputPattern = "MMMM yyyy";
 
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
-        Date date = null, startdateTime = null, enddateTime = null;
-        String str = null, StartTimeStr = null, EndTimeStr = null;
+        Date date = null;
+        String str = null;
         try {
             date = inputFormat.parse(String.valueOf(calendar.getTime()));
             str = outputFormat.format(date);
@@ -239,7 +233,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         sessionDialog = new Dialog(getActivity(), R.style.Theme_Dialog);
         Window window = sessionDialog.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
-//        sessionDialog.getWindow().getAttributes().verticalMargin = 0.10F;
         wlp.gravity = Gravity.CENTER;
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setAttributes(wlp);
@@ -248,7 +241,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
         sessionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         sessionDialog.setCancelable(false);
-        sessionDialog.setContentView(R.layout.dialog_session);
+        sessionDialog.setContentView(R.layout.dialog_view_session);
         sessionDialog.show();
 
         cancel_btn = (Button) sessionDialog.findViewById(R.id.cancel_btn);
@@ -258,11 +251,32 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         start_time_txt = (TextView) sessionDialog.findViewById(R.id.start_time_txt);
         end_time_txt = (TextView) sessionDialog.findViewById(R.id.end_time_txt);
         date_txt = (TextView) sessionDialog.findViewById(R.id.date_txt);
+        studentnamelist_rcView = (RecyclerView) sessionDialog.findViewById(R.id.student_name_list_rcView);
 
         date_txt.setText(sessionDateStr);
         session_title_txt.setText(sessionnameStr);
         start_time_txt.setText(sessionstrattimeStr);
         end_time_txt.setText(sessionendtimeStr);
+        arrayList = new ArrayList<>();
+//        ArrayList<String> name = new ArrayList<>();
+        arrayList.add("Amit Shah");
+        arrayList.add("Nehal Patel");
+        arrayList.add("Sujal Shah");
+        arrayList.add("---------");
+        arrayList.add("---------");
+
+//        for (int i = 0; i < name; i++) {
+//            arrayList.add(String.valueOf(i));
+//            if (i > 3) {
+//                arrayList.add("--------");
+//            }
+//        }
+//        Log.d("arrayList", "" + arrayList.size());
+        sessionViewStudentListAdapter = new SessionViewStudentListAdapter(mContext, arrayList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+        studentnamelist_rcView.setLayoutManager(mLayoutManager);
+        studentnamelist_rcView.setItemAnimator(new DefaultItemAnimator());
+        studentnamelist_rcView.setAdapter(sessionViewStudentListAdapter);
 
         cancel_btn.setOnClickListener(new View.OnClickListener() {
             @Override

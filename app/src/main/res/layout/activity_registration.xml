@@ -78,6 +78,7 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:drawableRight="@drawable/email_white"
+                    android:inputType="textEmailAddress"
                     android:hint="@string/user_id" />
 
                 <EditText
@@ -87,6 +88,7 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:drawableRight="@drawable/password_white"
+                    android:inputType="textPassword"
                     android:hint="@string/user_pass" />
 
                 <EditText
@@ -96,9 +98,10 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:drawableRight="@drawable/mobile"
-                    android:hint="@string/phone_no" />
+                    android:hint="@string/phone_no"
+                    android:inputType="number"/>
 
-                <EditText
+                <Button
                     android:id="@+id/date_of_birth_edt"
                     style="@style/AutoComplete"
                     android:layout_width="match_parent"

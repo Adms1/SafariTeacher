@@ -447,7 +447,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:layout_marginTop="@dimen/_2sdp"
-                        android:src="@drawable/sport"/>
+                        android:src="@drawable/spot"/>
 
                     <AutoCompleteTextView
                         android:id="@+id/sports_edt"

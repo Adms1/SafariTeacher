@@ -8,31 +8,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_3sdp"
         android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:layout_marginTop="@dimen/_3sdp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/session_name_txt_view"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_gravity="center"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginLeft="@dimen/_60sdp"
+            android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
-            android:layout_marginLeft="@dimen/_45sdp"
             android:text="Session Name"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_5sdp"
+            android:layout_height="@dimen/_25sdp"
             android:layout_marginLeft="@dimen/_2sdp"
-            android:layout_weight="0.1"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:text=":"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
@@ -40,29 +36,26 @@
 
         <TextView
             android:id="@+id/session_title_txt"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_weight="1.2"
-            android:gravity="center"
+            android:layout_width="@dimen/_160sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:gravity="start|center_vertical"
             android:paddingLeft="@dimen/_1sdp"
-            android:textSize="@dimen/_12sdp"
             android:textColor="@color/text_color"
+            android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="center"
-        android:weightSum="3">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/date_txt_view"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/_40sdp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:layout_marginLeft="@dimen/_55sdp"
+            android:layout_marginLeft="@dimen/_75sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
             android:text="Date"
@@ -71,10 +64,9 @@
             android:textStyle="normal" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="@dimen/_5sdp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_2sdp"
-            android:layout_weight="0.1"
             android:gravity="center_vertical"
             android:text=":"
             android:textColor="@color/text_color"
@@ -83,38 +75,38 @@
 
         <TextView
             android:id="@+id/date_txt"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/_150sdp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.28"
             android:gravity="start"
             android:paddingLeft="@dimen/_1sdp"
-            android:textSize="@dimen/_12sdp"
             android:textColor="@color/text_color"
+            android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="6">
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/start_time_txt_view"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_weight="2.1"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginLeft="@dimen/_60sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
             android:text="Time"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
-            android:textStyle="normal"/>
+            android:textStyle="normal" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_width="@dimen/_5sdp"
+            android:layout_height="@dimen/_25sdp"
             android:layout_marginLeft="@dimen/_2sdp"
-            android:layout_weight="0.32"
             android:gravity="center_vertical"
             android:text=":"
             android:textColor="@color/text_color"
@@ -123,20 +115,19 @@
 
         <TextView
             android:id="@+id/start_time_txt"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_weight="1.3"
-            android:gravity="center_vertical"
+            android:layout_width="@dimen/_55sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:gravity="center|center_vertical"
             android:paddingLeft="@dimen/_1sdp"
             android:text="10:00"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
+
         <TextView
             android:id="@+id/end_time_txt_view"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_weight="0.7"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
             android:text="To"
@@ -145,22 +136,20 @@
             android:textStyle="normal" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_5sdp"
+            android:layout_height="@dimen/_25sdp"
             android:layout_marginLeft="@dimen/_2sdp"
-            android:layout_weight="0.1"
             android:gravity="center_vertical"
             android:text=":"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
             android:textStyle="normal"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/end_time_txt"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_weight="1.3"
+            android:layout_width="@dimen/_55sdp"
+            android:layout_height="@dimen/_25sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_1sdp"
             android:text="11:00"
@@ -168,6 +157,7 @@
             android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.1dp"
@@ -175,48 +165,89 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_150sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_marginTop="@dimen/_10sdp"
         android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/student_name_list_rcView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/_1sdp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginLeft="@dimen/_7sdp"
+        android:layout_marginRight="@dimen/_7sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:orientation="horizontal"
+        android:weightSum="3">
 
         <Button
             android:id="@+id/edit_session_btn"
-            android:layout_width="@dimen/_250sdp"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/_6sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="@drawable/submit_shape"
+            android:layout_weight="1"
+            android:background="@drawable/session_view_btn"
             android:gravity="center"
             android:text="Edit Session"
-            android:textColor="@color/blue"
-            android:textSize="@dimen/_12sdp" />
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_11sdp" />
 
         <Button
             android:id="@+id/add_attendance_btn"
-            android:layout_width="@dimen/_250sdp"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/_6sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="@drawable/submit_shape"
+            android:layout_weight="1"
+            android:background="@drawable/session_view_btn"
             android:gravity="center"
             android:text="Add Attendance"
-            android:textColor="@color/blue"
-            android:textSize="@dimen/_12sdp" />
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_10sdp" />
 
         <Button
-            android:id="@+id/cancel_btn"
-            android:layout_width="@dimen/_250sdp"
-            android:layout_height="@dimen/_35sdp"
+            android:id="@+id/add_student_btn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/_6sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="@drawable/submit_shape"
+            android:layout_weight="1"
+            android:background="@drawable/session_view_btn"
             android:gravity="center"
-            android:text="Cancel"
-            android:textColor="@color/blue"
-            android:textSize="@dimen/_12sdp" />
+            android:text="Add Student"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_10sdp" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/cancel_btn"
+        android:layout_width="@dimen/_130sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/_6sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@drawable/submit_shape"
+        android:gravity="center"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="bold" />
 </LinearLayout>

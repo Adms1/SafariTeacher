@@ -7,11 +7,8 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.RadioGroup;
 
-import com.adms.safariteacher.Fragment.StudentAttendanceFragment;
 import com.adms.safariteacher.R;
-import com.adms.safariteacher.Util;
 import com.adms.safariteacher.databinding.ActivityRegistrationBinding;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -32,18 +29,13 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
         super.onCreate(savedInstanceState);
         registrationBinding = DataBindingUtil.setContentView(this, R.layout.activity_registration);
         mContext = RegistrationActivity.this;
-//        flag = getIntent().getStringExtra("flag");
 
         init();
         setListner();
     }
 
     public void init() {
-//        if (flag.equalsIgnoreCase("1")){
-//            registrationBinding.teacherChk.setVisibility(View.GONE);
-//        }else{
-//            registrationBinding.teacherChk.setVisibility(View.VISIBLE);
-//        }
+
         calendar = Calendar.getInstance();
         Year = calendar.get(Calendar.YEAR);
         Month = calendar.get(Calendar.MONTH);

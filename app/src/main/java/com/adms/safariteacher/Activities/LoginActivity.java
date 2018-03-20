@@ -14,15 +14,12 @@ public class LoginActivity extends AppCompatActivity {
 
     ActivityLoginBinding loginScreenBinding;
     Context mContext;
-    String flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loginScreenBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         mContext = LoginActivity.this;
-        flag = getIntent().getStringExtra("flag");
-//        Log.d("flag",flag);
         setListner();
     }
 
@@ -31,7 +28,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent inregister = new Intent(mContext, RegistrationActivity.class);
-                inregister.putExtra("flag", flag);
                 startActivity(inregister);
             }
         });

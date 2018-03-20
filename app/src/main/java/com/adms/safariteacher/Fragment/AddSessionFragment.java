@@ -1,40 +1,31 @@
 package com.adms.safariteacher.Fragment;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.ComponentName;
+import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -43,16 +34,19 @@ import android.widget.TextView;
 import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Adapter.AddSessionTimeAdapter;
 import com.adms.safariteacher.Adapter.AlertListAdapter;
+import com.adms.safariteacher.Adapter.CheckboxAdapter;
 import com.adms.safariteacher.R;
-import com.adms.safariteacher.Util;
+import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentAddSessionBinding;
-import com.adms.safariteacher.onViewClick;
+import com.adms.safariteacher.Interface.onViewClick;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -79,9 +73,27 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     AlertListAdapter alertListAdapter;
 
     //Use for AddSession Time Dialog
+
     private AlertDialog alertDialogAndroid = null;
-    TextView start_date_txt, end_date_txt;
-    RecyclerView session_time_list_rcView;
+    TextView start_date_txt;
+    TextView end_date_txt;
+    static TextView sun_start_time_txt;
+    static TextView sun_end_time_txt;
+    TextView mon_start_time_txt;
+    TextView mon_end_time_txt;
+    TextView tue_start_time_txt;
+    TextView tue_end_time_txt;
+    TextView wed_start_time_txt;
+    TextView wed_end_time_txt;
+    TextView thu_start_time_txt;
+    TextView thu_end_time_txt;
+    TextView fri_end_time_txt;
+    TextView fri_start_time_txt;
+    TextView sat_end_time_txt;
+    TextView sat_start_time_txt;
+    RecyclerView day_name_rcView;
+    static LinearLayout sun_start_linear, mon_start_linear, tue_start_linear, wed_start_linear, thu_start_linear, fri_start_linear, sat_start_linear,
+            sun_end_linear, mon_end_linear, tue_end_linear, wed_end_linear, thu_end_linear, fri_end_linear, sat_end_linear;
     Button done_btn;
     int Year, Month, Day;
     Calendar calendar;
@@ -107,9 +119,9 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         mContext = getActivity().getApplicationContext();
         flag = getArguments().getString("flag");
         if (flag.equalsIgnoreCase("edit")) {
-            ((DashBoardActivity) getActivity()).setActionBar(1,"edit");
-        }else {
-            ((DashBoardActivity) getActivity()).setActionBar(1,"add");
+            ((DashBoardActivity) getActivity()).setActionBar(1, "edit");
+        } else {
+            ((DashBoardActivity) getActivity()).setActionBar(1, "add");
         }
         initViews();
         setListners();
@@ -424,7 +436,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 
         popularDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         popularDialog.setCancelable(false);
-        popularDialog.setContentView(R.layout.dialog_add_session_time);
+        popularDialog.setContentView(R.layout.add_session_dialog);
         popularDialog.show();
 //        LayoutInflater lInflater = (LayoutInflater) mContext
 //                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -452,7 +464,38 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         Day = calendar.get(Calendar.DAY_OF_MONTH);
         start_date_txt = (TextView) popularDialog.findViewById(R.id.start_date_txt);
         end_date_txt = (TextView) popularDialog.findViewById(R.id.end_date_txt);
-        session_time_list_rcView = (RecyclerView) popularDialog.findViewById(R.id.session_time_list_rcView);
+        sun_start_time_txt = (TextView) popularDialog.findViewById(R.id.sun_start_time_txt);
+        sun_end_time_txt = (TextView) popularDialog.findViewById(R.id.sun_end_time_txt);
+        mon_start_time_txt = (TextView) popularDialog.findViewById(R.id.mon_start_time_txt);
+        mon_end_time_txt = (TextView) popularDialog.findViewById(R.id.mon_end_time_txt);
+        tue_start_time_txt = (TextView) popularDialog.findViewById(R.id.tue_start_time_txt);
+        tue_end_time_txt = (TextView) popularDialog.findViewById(R.id.tue_end_time_txt);
+        wed_start_time_txt = (TextView) popularDialog.findViewById(R.id.wed_start_time_txt);
+        wed_end_time_txt = (TextView) popularDialog.findViewById(R.id.wed_end_time_txt);
+        thu_start_time_txt = (TextView) popularDialog.findViewById(R.id.thu_start_time_txt);
+        thu_end_time_txt = (TextView) popularDialog.findViewById(R.id.thu_end_time_txt);
+        fri_end_time_txt = (TextView) popularDialog.findViewById(R.id.fri_start_time_txt);
+        fri_start_time_txt = (TextView) popularDialog.findViewById(R.id.fri_end_time_txt);
+        sat_end_time_txt = (TextView) popularDialog.findViewById(R.id.sat_start_time_txt);
+        sat_start_time_txt = (TextView) popularDialog.findViewById(R.id.sat_end_time_txt);
+        sun_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        mon_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        tue_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        wed_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        thu_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        fri_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        sat_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        sun_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        mon_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        tue_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        wed_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        thu_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        fri_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+        sat_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
+
+
+        day_name_rcView = (RecyclerView) popularDialog.findViewById(R.id.day_name_rcView);
+
         done_btn = (Button) popularDialog.findViewById(R.id.done_btn);
         start_date_txt.setText(Util.getTodaysDate());
         end_date_txt.setText(Util.getTodaysDate());
@@ -486,32 +529,180 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
                 datePickerDialog.setTitle("Select Date From DatePickerDialog");
                 datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
+
             }
         });
-        String time = "";
+        sun_start_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = true;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+
+        sun_end_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = false;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+        mon_start_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = true;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+
+        mon_end_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = false;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+        tue_start_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = true;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+
+        tue_end_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = false;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+        wed_start_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = true;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+
+        wed_end_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = false;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+        thu_start_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = true;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+
+        thu_end_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = false;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+        fri_start_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = true;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+
+        fri_end_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = false;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+        sat_start_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = true;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+
+        sat_end_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate = false;
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+        for (int i = 0; i < 6; i++) {
+            Calendar sCalendar = Calendar.getInstance();
+
+            String dayLongName = new SimpleDateFormat("EE").format(Calendar.MONDAY);
+            Log.d("dayName", "" + dayLongName);
+        }
+//        String time = "07:00 AM";
         hoursArray = new ArrayList<>();
 
-        hoursArray.add("08:00 - 09:00AM");
-        hoursArray.add("09:00 - 10:00AM");
-        hoursArray.add("10:00 - 11:00AM");
-        hoursArray.add("11:00 - 12:00PM");
-        hoursArray.add("01:00 - 02:00PM");
-        hoursArray.add("02:00 - 03:00PM");
-        hoursArray.add("03:00 - 04:00PM");
-        hoursArray.add("04:00 - 05:00PM");
-        hoursArray.add("05:00 - 06:00PM");
-        hoursArray.add("07:00 - 08:00PM");
-
-
+        hoursArray.add("Sunday");
+        hoursArray.add("Monday");
+        hoursArray.add("Tuesday");
+        hoursArray.add("Wednesday");
+        hoursArray.add("Thursday");
+        hoursArray.add("Friday");
+        hoursArray.add("Saturday");
+//        try {
+//            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+//            Date dateObj = sdf.parse(time);
+//
+//            for (int i = 1; i <13; i++) {
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(dateObj);
+//                calendar.add(Calendar.HOUR, i);
+//
+//                String startTime = new SimpleDateFormat("hh:mm a").format(calendar.getTime()).split(" ")[0];
+//
+//                calendar.add(Calendar.HOUR, 1);
+//
+//                String endTime = new SimpleDateFormat("hh:mm a").format(calendar.getTime());
+//
+//                System.out.println("Time here " + startTime + "-" + endTime);
+//
+//                hoursArray.add(startTime + " - " + endTime);
+//            }
+//
+//        } catch (final ParseException e) {
+//            e.printStackTrace();
+//        }
+//
         checkboxArray = new ArrayList<>();
-        for (int k = 0; k < 7; k++) {
+        for (int k = 0; k < 2; k++) {
             checkboxArray.add(k);
         }
-        addSessionTimeAdapter = new AddSessionTimeAdapter(mContext, hoursArray, checkboxArray);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-        session_time_list_rcView.setLayoutManager(mLayoutManager);
-        session_time_list_rcView.setItemAnimator(new DefaultItemAnimator());
-        session_time_list_rcView.setAdapter(addSessionTimeAdapter);
+//        addSessionTimeAdapter = new AddSessionTimeAdapter(mContext,getActivity(), hoursArray, checkboxArray);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+//        day_name_rcView.setLayoutManager(mLayoutManager);
+//        day_name_rcView.setItemAnimator(new DefaultItemAnimator());
+//        day_name_rcView.setAdapter(addSessionTimeAdapter);
+
+//        List<String> days = getDates("20/03/2018", "25/03/2018");
+//        System.out.println(days);
     }
 
     @Override
@@ -535,6 +726,86 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             start_date_txt.setText(dateFinal);
         } else {
             end_date_txt.setText(dateFinal);
+        }
+    }
+
+
+    private static List<String> getDates(String dateString1, String dateString2) {
+        ArrayList<String> days = new ArrayList<String>();
+        DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date date1 = null;
+        Date date2 = null;
+
+        try {
+            date1 = df1.parse(dateString1);
+            date2 = df1.parse(dateString2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+
+        while (!cal1.after(cal2)) {
+            days.add(new SimpleDateFormat("EE").format(cal1.getTime()));
+            cal1.add(Calendar.DATE, 1);
+        }
+
+        Log.d("days", "" + days);
+        return days;
+    }
+
+    public static class TimePicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            TimePickerDialog tpd4 = new TimePickerDialog(getActivity(),
+                    android.app.AlertDialog.THEME_HOLO_LIGHT, this, hour, minute, android.text.format.DateFormat.is24HourFormat(getActivity()));
+
+            return tpd4;
+        }
+
+        @Override
+        public void onTimeSet(android.widget.TimePicker view, int hourOfDay, int minute) {
+//            displayCurrentTime.setText("Selected Time: " + String.valueOf(hourOfDay) + " : " + String.valueOf(minute));
+//            if(hourOfDay>12){
+//                displayCurrentTime.setText("Selected Time: " + String.valueOf(hourOfDay) + " : " + String.valueOf(minute)+" "+"PM");
+//            }else{
+//                displayCurrentTime.setText("Selected Time: " + String.valueOf(hourOfDay) + " : " + String.valueOf(minute)+" "+"AM");
+//            }
+            String status = "AM";
+
+            if (hourOfDay > 11) {
+                // If the hour is greater than or equal to 12
+                // Then the current AM PM status is PM
+                status = "PM";
+            }
+
+            // Initialize a new variable to hold 12 hour format hour value
+            int hour_of_12_hour_format;
+
+            if (hourOfDay > 11) {
+
+                // If the hour is greater than or equal to 12
+                // Then we subtract 12 from the hour to make it 12 hour format time
+                hour_of_12_hour_format = hourOfDay - 12;
+            } else {
+                hour_of_12_hour_format = hourOfDay;
+            }
+            if (isFromDate) {
+                sun_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+            } else {
+                sun_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
+            }
+
         }
     }
 }

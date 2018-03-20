@@ -25,6 +25,7 @@
         <item name="android:imeOptions">actionNext</item>
         <item name="android:singleLine">true</item>
     </style>
+
     <style name="addSessionEditText" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:textColor">@color/gray</item>
         <item name="android:textColorHint">@color/gray</item>
@@ -39,15 +40,18 @@
         <item name="android:imeOptions">actionNext</item>
         <item name="android:singleLine">true</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="Theme_Dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowMinWidthMajor">95%</item>
         <item name="android:windowMinWidthMinor">95%</item>
 
         <!--<item name="@android:textColor">@android:color/primary_text_light</item>-->
     </style>
+
     <style name="DialogSlideAnim" parent="@android:style/Theme.Dialog">
         <!--<item name="android:windowAnimationStyle">@style/DialogAnimation</item>-->
         <item name="android:windowBackground">@null</item>
@@ -55,4 +59,21 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="Add_Session_Time_Button" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_marginTop">@dimen/_5sdp</item>
+        <item name="android:layout_marginLeft">@dimen/_1sdp</item>
+        <item name="android:layout_marginBottom">@dimen/_5sdp</item>
+    </style>
+
+    <style name="Add_Session_Time_Textview" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:gravity">center_vertical</item>
+
+    </style>
 </resources>

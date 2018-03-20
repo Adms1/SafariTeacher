@@ -1,4 +1,4 @@
-package com.adms.safariteacher;
+package com.adms.safariteacher.Activities;
 
 import com.github.tibolte.agendacalendarview.models.BaseCalendarEvent;
 import com.github.tibolte.agendacalendarview.models.CalendarEvent;

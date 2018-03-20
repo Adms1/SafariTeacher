@@ -10,7 +10,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.adms.safariteacher.R;
-import com.adms.safariteacher.onViewClick;
+import com.adms.safariteacher.Interface.onViewClick;
 
 import java.util.ArrayList;
 

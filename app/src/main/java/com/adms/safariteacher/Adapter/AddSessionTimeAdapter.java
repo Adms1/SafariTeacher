@@ -1,6 +1,7 @@
 package com.adms.safariteacher.Adapter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,13 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.adms.safariteacher.R;
-import com.adms.safariteacher.onViewClick;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -30,24 +30,26 @@ public class AddSessionTimeAdapter extends RecyclerView.Adapter<AddSessionTimeAd
     ArrayList<String> getTime = new ArrayList<>();
     ArrayList<Integer> checkboxArray;
     CheckboxAdapter checkboxAdapter;
+    FragmentActivity activity;
 
-    public AddSessionTimeAdapter(Context mContext, ArrayList<String> timegapArray, ArrayList<Integer> checkboxArray) {
+    public AddSessionTimeAdapter(Context mContext, FragmentActivity activity, ArrayList<String> timegapArray, ArrayList<Integer> checkboxArray) {
         this.mContext = mContext;
         this.timegapArray = timegapArray;
         this.checkboxArray = checkboxArray;
+        this.activity = activity;
     }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView time_txt;
-        RecyclerView checkbox_rcView;
+        TextView day_btn;
+        RecyclerView add_time_rcView;
 
         public MyViewHolder(View view) {
             super(view);
 
-            time_txt = (TextView) view.findViewById(R.id.time_txt);
-            checkbox_rcView = (RecyclerView) view.findViewById(R.id.checkbox_rcView);
+            day_btn = (TextView) view.findViewById(R.id.day_btn);
+            add_time_rcView = (RecyclerView) view.findViewById(R.id.add_time_rcView);
         }
     }
 
@@ -61,20 +63,15 @@ public class AddSessionTimeAdapter extends RecyclerView.Adapter<AddSessionTimeAd
 
     @Override
     public void onBindViewHolder(final AddSessionTimeAdapter.MyViewHolder holder, final int position) {
-//        if (timegapArray.size()-2>position) {
-            holder.time_txt.setText(timegapArray.get(position));// + "-" + timegapArray.get(position + 1));
-            Log.d("poisitionId",""+position);
-//        }
 
-//        else if(position==-1) {
-//            holder.time_txt.setText(timegapArray.get(position));
-//        }
-//        Log.d("time",timegapArray.get(position)+"-"+timegapArray.get(position+1));
-        checkboxAdapter = new CheckboxAdapter(mContext,checkboxArray);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext,7);
-        holder.checkbox_rcView.setLayoutManager(mLayoutManager);
-        holder.checkbox_rcView.setItemAnimator(new DefaultItemAnimator());
-        holder.checkbox_rcView.setAdapter(checkboxAdapter);
+        holder.day_btn.setText(timegapArray.get(position));
+        Log.d("poisitionId", "" + position);
+
+        checkboxAdapter = new CheckboxAdapter(mContext, activity,checkboxArray);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+        holder.add_time_rcView.setLayoutManager(mLayoutManager);
+        holder.add_time_rcView.setItemAnimator(new DefaultItemAnimator());
+        holder.add_time_rcView.setAdapter(checkboxAdapter);
     }
 
     @Override

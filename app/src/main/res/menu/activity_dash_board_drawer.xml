@@ -7,7 +7,7 @@
         <item
             android:id="@+id/session"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Session"/>
+            android:title="Session Calendar"/>
         <item
             android:id="@+id/add_session"
             android:icon="@drawable/ic_menu_camera"

@@ -1,12 +1,9 @@
 package com.adms.safariteacher.Fragment;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,17 +20,14 @@ import android.view.ViewGroup;
 import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Adapter.StudentAttendanceAdapter;
 import com.adms.safariteacher.R;
-import com.adms.safariteacher.Util;
-import com.adms.safariteacher.databinding.FragmentAddSessionBinding;
+import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentStudentAttendanceBinding;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class StudentAttendanceFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
