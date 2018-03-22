@@ -493,7 +493,7 @@
 
                 <Button
                     android:id="@+id/submit_btn"
-                    android:layout_width="@dimen/_110sdp"
+                    android:layout_width="@dimen/_130sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_5sdp"
@@ -501,7 +501,8 @@
                     android:gravity="center"
                     android:text="@string/submit"
                     android:textColor="@color/blue"
-                    android:textSize="@dimen/_11sdp" />
+                    android:textSize="@dimen/_11sdp"
+                    android:textStyle="bold"/>
 
             </LinearLayout>
         </ScrollView>

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -25,90 +26,98 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Adapter.AddSessionTimeAdapter;
 import com.adms.safariteacher.Adapter.AlertListAdapter;
-import com.adms.safariteacher.Adapter.CheckboxAdapter;
+import com.adms.safariteacher.Model.Session.SessionDetailModel;
+import com.adms.safariteacher.Model.Session.sessionDataModel;
+import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
+import com.adms.safariteacher.Utility.ApiHandler;
+import com.adms.safariteacher.Utility.AppConfiguration;
 import com.adms.safariteacher.Utility.Util;
+import com.adms.safariteacher.databinding.AddSessionDialogBinding;
 import com.adms.safariteacher.databinding.FragmentAddSessionBinding;
 import com.adms.safariteacher.Interface.onViewClick;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class AddSessionFragment extends Fragment implements com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener {
-    //implements com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener
     private FragmentAddSessionBinding addSessionBinding;
     private View rootView;
     private Context mContext;
-    private Fragment fragment = null;
-    private FragmentManager fragmentManager = null;
-//    String monthDisplayStr, MonthInt, TimeInt, finaldateStr;
-//    String[] spiltmonth;
-//    String[] spilttime;
-//    int Year, Month, Day;
-//    Calendar calendar;
-//    private com.wdullaer.materialdatetimepicker.date.DatePickerDialog datePickerDialog;
-//    int mYear, mMonth, mDay;
-//    com.wdullaer.materialdatetimepicker.time.TimePickerDialog timePickerDialog;
-//    int CalendarHour, CalendarMinute;
-//    private static boolean isFromTime = false;
 
     //Use for Alert Dialog
     ArrayList<String> timegapArray;
     AlertListAdapter alertListAdapter;
 
     //Use for AddSession Time Dialog
-
-    private AlertDialog alertDialogAndroid = null;
     TextView start_date_txt;
     TextView end_date_txt;
-    static TextView sun_start_time_txt;
-    static TextView sun_end_time_txt;
-    static TextView mon_start_time_txt;
-    static TextView mon_end_time_txt;
-    static TextView tue_start_time_txt;
-    static TextView tue_end_time_txt;
-    static TextView wed_start_time_txt;
-    static TextView wed_end_time_txt;
-    static TextView thu_start_time_txt;
-    static TextView thu_end_time_txt;
-    static TextView fri_end_time_txt;
-    static TextView fri_start_time_txt;
-    static TextView sat_end_time_txt;
-    static TextView sat_start_time_txt;
-    //    static Button sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,
-//            sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn,sun_add_session_btn;
+
+    static TextView sun_start_time_txt, sun_end_time_txt, mon_start_time_txt, mon_end_time_txt, tue_start_time_txt,
+            tue_end_time_txt, wed_start_time_txt, wed_end_time_txt, thu_start_time_txt, thu_end_time_txt, fri_end_time_txt,
+            fri_start_time_txt, sat_end_time_txt, sat_start_time_txt;
+
+    static String Tag;
+
+    static Button sun_start_add_session_btn, sun_end_add_session_btn, mon_start_add_session_btn, mon_end_add_session_btn,
+            tue_start_add_session_btn, tue_end_add_session_btn, wed_start_add_session_btn, wed_end_add_session_btn,
+            thu_start_add_session_btn, thu_end_add_session_btn, fri_start_add_session_btn, fri_end_add_session_btn,
+            sat_start_add_session_btn, sat_end_add_session_btn;
     RecyclerView day_name_rcView;
+
     static LinearLayout sun_start_linear, mon_start_linear, tue_start_linear, wed_start_linear, thu_start_linear, fri_start_linear, sat_start_linear,
             sun_end_linear, mon_end_linear, tue_end_linear, wed_end_linear, thu_end_linear, fri_end_linear, sat_end_linear;
+
     Button done_btn;
     int Year, Month, Day;
     Calendar calendar;
     int mYear, mMonth, mDay;
     private static String dateFinal;
     private static boolean isFromDate = false;
-    private static boolean isFromDatesun = false;//, isFromDatemon = false, isFromDatetue = false, isFromDatewed = false, isFromDatethu = false, isFromDatefri = false, isFromDatesat = false;
     private com.wdullaer.materialdatetimepicker.date.DatePickerDialog datePickerDialog;
-    ArrayList<String> hoursArray;
-    AddSessionTimeAdapter addSessionTimeAdapter;
-    ArrayList<Integer> checkboxArray;
     public Dialog popularDialog;
     String flag;
+
+    //Use for selectedSessionTimeValue
+    String coachIdStr, lessionTypeIdStr, sessionNameStr, boardStr, standardStr, streamStr, startDateStr, endDateStr,
+            address1Str, address2Str, regionStr, cityStr, stateStr, zipcodeStr, descriptionStr, sessionamtStr,
+            sessioncapacityStr, alerttimeStr, scheduleStr = "";
+
+    String sunstartTimeStr, sunendTimeStr, finalsunTimeStr, monstartTimeStr, monendTimeStr, finalmonTimeStr,
+            tuestartTimeStr, tueendTimeStr, finaltueTimeStr, wedstartTimeStr, wedendTimeStr, finalwedTimeStr,
+            thustartTimeStr, thuendTimeStr, finalthuTimeStr, fristartTimeStr, friendTimeStr, finalfriTimeStr,
+            satstartTimeStr, satendTimeStr, finalsatTimeStr;
+
+    ArrayList<String> scheduleArray;
+    ArrayList<String> newEnteryArray;
+    SessionDetailModel dataResponse;
+
+    //USe for Autocomplete Textview
+    HashMap<Integer, String> spinnerBoardMap;
+    HashMap<Integer, String> spinnerStandardMap;
+    HashMap<Integer, String> spinnerStreamMap;
+    HashMap<Integer, String> spinnerLessionMap;
+    HashMap<Integer, String> spinnerRegionMap;
 
     public AddSessionFragment() {
     }
@@ -119,7 +128,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         addSessionBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_session, container, false);
 
         rootView = addSessionBinding.getRoot();
-        mContext = getActivity().getApplicationContext();
+        mContext = getActivity();
         flag = getArguments().getString("flag");
         if (flag.equalsIgnoreCase("edit")) {
             ((DashBoardActivity) getActivity()).setActionBar(1, "edit");
@@ -127,6 +136,10 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             ((DashBoardActivity) getActivity()).setActionBar(1, "add");
         }
         initViews();
+        callBoardApi();
+        callstandardApi();
+        callStreamApi();
+        callRegionApi();
         setListners();
 
         return rootView;
@@ -175,43 +188,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     }
 
     public void setListners() {
-//        addSessionBinding.dateLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(AddSessionFragment.this, Year, Month, Day);
-//                datePickerDialog.setThemeDark(false);
-//                datePickerDialog.setOkText("Done");
-//                datePickerDialog.showYearPickerFirst(false);
-//                datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
-//                datePickerDialog.setTitle("Select Date From DatePickerDialog");
-//                datePickerDialog.show(getActivity().getFragmentManager(), "Datepickerdialog");
-//            }
-//        });
-//
-//        addSessionBinding.displayStarttimeTxt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                isFromTime = true;
-//                timePickerDialog = com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(AddSessionFragment.this, CalendarHour, CalendarMinute, false);
-//                timePickerDialog.setThemeDark(false);
-//                timePickerDialog.setOkText("Done");
-//                timePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
-//                timePickerDialog.setTitle("Select Time From TimePickerDialog");
-//                timePickerDialog.show(getActivity().getFragmentManager(), "Timepickerdialog");
-//            }
-//        });
-//        addSessionBinding.displayEndtimeTxt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                isFromTime = false;
-//                timePickerDialog = com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(AddSessionFragment.this, CalendarHour, CalendarMinute, false);
-//                timePickerDialog.setThemeDark(false);
-//                timePickerDialog.setOkText("Done");
-//                timePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
-//                timePickerDialog.setTitle("Select Time From TimePickerDialog");
-//                timePickerDialog.show(getActivity().getFragmentManager(), "Timepickerdialog");
-//            }
-//        });
 
         addSessionBinding.fessStatusRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -220,9 +196,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 switch (radioButtonId) {
                     case R.id.free_rb:
                         addSessionBinding.sessionPriceEdt.setVisibility(View.GONE);
+                        sessionamtStr = "0";
                         break;
                     case R.id.paid_rb:
                         addSessionBinding.sessionPriceEdt.setVisibility(View.VISIBLE);
+                        sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
                         break;
                 }
             }
@@ -244,18 +222,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 fragmentTransaction.replace(R.id.frame, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-//                ComponentName cn;
-//                if (isPackageInstalled("com.android.calendar", getActivity())) {
-//                    Intent i = new Intent();
-//                    cn = new ComponentName("com.android.calendar", "com.android.calendar.LaunchActivity");
-//                    i.setComponent(cn);
-//                    startActivity(i);
-//                } else {
-//                    Intent i = new Intent();
-//                    cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
-//                    i.setComponent(cn);
-//                    startActivity(i);
-//                }
             }
         });
         addSessionBinding.sessionTimeTxt.setOnClickListener(new View.OnClickListener() {
@@ -270,117 +236,14 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 SessionTimeDialog();
             }
         });
+        addSessionBinding.submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                if (!coachIdStr.equalsIgnoreCase(""))
+                callCreateSessionApi();
+            }
+        });
     }
-
-    public static boolean isPackageInstalled(String packagename, Context context) {
-        PackageManager pm = context.getPackageManager();
-        try {
-            pm.getPackageInfo(packagename, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-    }
-
-//    public void getMonthFun(int month) {
-//        SimpleDateFormat monthParse = new SimpleDateFormat("MM");
-//        SimpleDateFormat monthDisplay = new SimpleDateFormat("MMM");
-//        try {
-//            monthDisplayStr = monthDisplay.format(monthParse.parse(String.valueOf(month)));
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        Log.d("month", "" + monthDisplayStr);
-//    }
-
-//    @Override
-//    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-//        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-//
-//        String minuteString = minute < 10 ? "0" + minute : "" + minute;
-//
-//        String secondString = second < 10 ? "0" + second : "" + second;
-//
-//        String time = hourString + "/" + minuteString + "/" + secondString;
-//        Log.d("hours", "" + hourOfDay);
-//        Log.d("Selectedtime", time);
-//
-////        SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm:a");
-////        String strDate = mdformat.format(calendar.getTime());
-////        Log.d("Currenttime",strDate);
-//        if (isFromTime) {
-//            if (hourOfDay > 12) {
-//                addSessionBinding.displayStarttimeTxt.setText(hourString + ":" + minuteString + " PM");
-//            } else {
-//                addSessionBinding.displayStarttimeTxt.setText(hourString + ":" + minuteString + " AM");
-//            }
-//            Log.d("Starttime", time);
-//        } else {
-//            if (hourOfDay > 12) {
-//                addSessionBinding.displayEndtimeTxt.setText(hourString + ":" + minuteString + " PM");
-//            } else {
-//                addSessionBinding.displayEndtimeTxt.setText(hourString + ":" + minuteString + " AM");
-//            }
-//            Log.d("Endtime", time);
-//        }
-//
-//        CalculateTime(addSessionBinding.displayStarttimeTxt.getText().toString(), addSessionBinding.displayEndtimeTxt.getText().toString());
-//    }
-//
-//    public void CalculateTime(String stTime, String enTime) {
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-//        Date startDate = null, endDate = null;
-//        try {
-//            startDate = simpleDateFormat.parse(stTime);
-//            endDate = simpleDateFormat.parse(enTime);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        long difference = endDate.getTime() - startDate.getTime();
-//        if (difference < 0) {
-//            Date dateMax = null, dateMin = null;
-//            try {
-//                dateMax = simpleDateFormat.parse("24:00");
-//                dateMin = simpleDateFormat.parse("00:00");
-//
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//
-//            difference = (dateMax.getTime() - startDate.getTime()) + (endDate.getTime() - dateMin.getTime());
-//        }
-//        int days = (int) (difference / (1000 * 60 * 60 * 24));
-//        int hours = (int) ((difference - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
-//        int min = (int) (difference - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
-//        Log.d("log_tag", "Hours: " + hours + ", Mins: " + min);
-//
-//        addSessionBinding.displayDurationTxt.setText("Duration : " + hours + " hr");
-//    }
-//
-//    @Override
-//    public void onDateSet(com.wdullaer.materialdatetimepicker.date.DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-//        mDay = dayOfMonth;
-//        mMonth = monthOfYear + 1;
-//        mYear = year;
-//        String d, m, y;
-//        d = Integer.toString(mDay);
-//        m = Integer.toString(mMonth);
-//        y = Integer.toString(mYear);
-//
-//        if (mDay < 10) {
-//            d = "0" + d;
-//        }
-//        if (mMonth < 10) {
-//            m = "0" + m;
-//        }
-//
-//        MonthInt = d + "/" + m + "/" + y;
-//        getMonthFun(Integer.parseInt(m));
-//
-//        addSessionBinding.displayDateTxt.setText(d + ", " + monthDisplayStr + " " + y);
-//    }
-
 
     public void TestDialog() {
         final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
@@ -430,7 +293,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         popularDialog = new Dialog(getActivity(), R.style.Theme_Dialog);
         Window window = popularDialog.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
-//        popularDialog.getWindow().getAttributes().verticalMargin = 0.10F;
         wlp.gravity = Gravity.CENTER;
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setAttributes(wlp);
@@ -441,25 +303,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         popularDialog.setCancelable(false);
         popularDialog.setContentView(R.layout.add_session_dialog);
         popularDialog.show();
-//        LayoutInflater lInflater = (LayoutInflater) mContext
-//                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        final View layout = lInflater.inflate(R.layout.dialog_add_session_time, null);
-//
-//        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(getActivity());
-//        alertDialogBuilderUserInput.setView(layout);
-//
-//        alertDialogAndroid = alertDialogBuilderUserInput.create();
-//        alertDialogAndroid.setCancelable(false);
-//        alertDialogAndroid.show();
-//        Window window = alertDialogAndroid.getWindow();
-//        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        WindowManager.LayoutParams wlp = window.getAttributes();
-//
-//        wlp.gravity = Gravity.CENTER;
-//        wlp.flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-//        window.setAttributes(wlp);
-//        alertDialogAndroid.show();
-
 
         calendar = Calendar.getInstance();
         Year = calendar.get(Calendar.YEAR);
@@ -467,6 +310,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         Day = calendar.get(Calendar.DAY_OF_MONTH);
         start_date_txt = (TextView) popularDialog.findViewById(R.id.start_date_txt);
         end_date_txt = (TextView) popularDialog.findViewById(R.id.end_date_txt);
+
         sun_start_time_txt = (TextView) popularDialog.findViewById(R.id.sun_start_time_txt);
         sun_end_time_txt = (TextView) popularDialog.findViewById(R.id.sun_end_time_txt);
         mon_start_time_txt = (TextView) popularDialog.findViewById(R.id.mon_start_time_txt);
@@ -479,8 +323,9 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         thu_end_time_txt = (TextView) popularDialog.findViewById(R.id.thu_end_time_txt);
         fri_end_time_txt = (TextView) popularDialog.findViewById(R.id.fri_start_time_txt);
         fri_start_time_txt = (TextView) popularDialog.findViewById(R.id.fri_end_time_txt);
-        sat_end_time_txt = (TextView) popularDialog.findViewById(R.id.sat_start_time_txt);
-        sat_start_time_txt = (TextView) popularDialog.findViewById(R.id.sat_end_time_txt);
+        sat_end_time_txt = (TextView) popularDialog.findViewById(R.id.sat_end_time_txt);
+        sat_start_time_txt = (TextView) popularDialog.findViewById(R.id.sat_start_time_txt);
+
         sun_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_start_linear);
         mon_start_linear = (LinearLayout) popularDialog.findViewById(R.id.mon_start_linear);
         tue_start_linear = (LinearLayout) popularDialog.findViewById(R.id.tue_start_linear);
@@ -488,6 +333,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         thu_start_linear = (LinearLayout) popularDialog.findViewById(R.id.thu_start_linear);
         fri_start_linear = (LinearLayout) popularDialog.findViewById(R.id.fri_start_linear);
         sat_start_linear = (LinearLayout) popularDialog.findViewById(R.id.sat_start_linear);
+
         sun_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sun_end_linear);
         mon_end_linear = (LinearLayout) popularDialog.findViewById(R.id.mon_end_linear);
         tue_end_linear = (LinearLayout) popularDialog.findViewById(R.id.tue_end_linear);
@@ -495,6 +341,21 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         thu_end_linear = (LinearLayout) popularDialog.findViewById(R.id.thu_end_linear);
         fri_end_linear = (LinearLayout) popularDialog.findViewById(R.id.fri_end_linear);
         sat_end_linear = (LinearLayout) popularDialog.findViewById(R.id.sat_end_linear);
+
+        sun_start_add_session_btn = (Button) popularDialog.findViewById(R.id.sun_start_add_session_btn);
+        sun_end_add_session_btn = (Button) popularDialog.findViewById(R.id.sun_end_add_session_btn);
+        mon_start_add_session_btn = (Button) popularDialog.findViewById(R.id.mon_start_add_session_btn);
+        mon_end_add_session_btn = (Button) popularDialog.findViewById(R.id.mon_end_add_session_btn);
+        tue_start_add_session_btn = (Button) popularDialog.findViewById(R.id.tue_start_add_session_btn);
+        tue_end_add_session_btn = (Button) popularDialog.findViewById(R.id.tue_end_add_session_btn);
+        wed_start_add_session_btn = (Button) popularDialog.findViewById(R.id.wed_start_add_session_btn);
+        wed_end_add_session_btn = (Button) popularDialog.findViewById(R.id.wed_end_add_session_btn);
+        thu_start_add_session_btn = (Button) popularDialog.findViewById(R.id.thu_start_add_session_btn);
+        thu_end_add_session_btn = (Button) popularDialog.findViewById(R.id.tue_end_add_session_btn);
+        fri_start_add_session_btn = (Button) popularDialog.findViewById(R.id.fri_start_add_session_btn);
+        fri_end_add_session_btn = (Button) popularDialog.findViewById(R.id.fri_end_add_session_btn);
+        sat_start_add_session_btn = (Button) popularDialog.findViewById(R.id.sat_start_add_session_btn);
+        sat_end_add_session_btn = (Button) popularDialog.findViewById(R.id.sat_end_add_session_btn);
 
 
         day_name_rcView = (RecyclerView) popularDialog.findViewById(R.id.day_name_rcView);
@@ -505,7 +366,97 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         done_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                popularDialog.dismiss();
+                scheduleArray = new ArrayList<>();
+                newEnteryArray = new ArrayList<>();
+                scheduleStr = "";
+
+                if (!sun_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !sun_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    sunstartTimeStr = sun_start_time_txt.getText().toString();
+                    sunendTimeStr = sun_end_time_txt.getText().toString();
+                    finalsunTimeStr = "sun" + "," + sunstartTimeStr + "-" + sunendTimeStr;
+                    Log.d("SundayTime", finalsunTimeStr);
+                    scheduleArray.add(finalsunTimeStr);
+                } else {
+//                    Util.ping(mContext, "Please Select Time.");
+
+                }
+                if (!mon_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !mon_end_time_txt.getText().toString().equalsIgnoreCase("")) {
+                    monstartTimeStr = mon_start_time_txt.getText().toString();
+                    monendTimeStr = mon_end_time_txt.getText().toString();
+                    finalmonTimeStr = "mon" + "," + monstartTimeStr + "-" + monendTimeStr;
+                    scheduleArray.add(finalmonTimeStr);
+                } else {
+//                    Util.ping(mContext, "Please Select Time.");
+
+                }
+                if (!tue_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !tue_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    tuestartTimeStr = tue_start_time_txt.getText().toString();
+                    tueendTimeStr = tue_end_time_txt.getText().toString();
+                    finaltueTimeStr = "tue" + "," + tuestartTimeStr + "-" + tueendTimeStr;
+                    scheduleArray.add(finaltueTimeStr);
+                } else {
+//                    Util.ping(mContext, "Please Select Time.");
+
+                }
+                if (!wed_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !wed_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    wedstartTimeStr = wed_start_time_txt.getText().toString();
+                    wedendTimeStr = wed_end_time_txt.getText().toString();
+                    finalwedTimeStr = "wed" + "," + wedstartTimeStr + "-" + wedendTimeStr;
+                    scheduleArray.add(finalwedTimeStr);
+                } else {
+//                    Util.ping(mContext, "Please Select Time.");
+
+                }
+                if (!thu_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !thu_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    thustartTimeStr = thu_start_time_txt.getText().toString();
+                    thuendTimeStr = thu_end_time_txt.getText().toString();
+                    finalthuTimeStr = "thu" + "," + thustartTimeStr + "-" + thuendTimeStr;
+                    scheduleArray.add(finalthuTimeStr);
+                } else {
+//                    Util.ping(mContext, "Please Select Time.");
+
+                }
+                if (!fri_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !fri_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    fristartTimeStr = fri_start_time_txt.getText().toString();
+                    friendTimeStr = fri_end_time_txt.getText().toString();
+                    finalfriTimeStr = "fri" + "," + fristartTimeStr + "-" + friendTimeStr;
+                    scheduleArray.add(finalfriTimeStr);
+                } else {
+//                    Util.ping(mContext, "Please Select Time.");
+
+                }
+                if (!sat_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !sat_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    satstartTimeStr = sat_start_time_txt.getText().toString();
+                    satendTimeStr = sat_end_time_txt.getText().toString();
+                    finalsatTimeStr = "sat" + "," + satstartTimeStr + "-" + satendTimeStr;
+                    scheduleArray.add(finalsatTimeStr);
+                } else {
+//                    Util.ping(mContext, "Please Select Time.");
+                }
+                Log.d("scheduleArray", "" + scheduleArray.size());
+
+                for (int i = 0; i < scheduleArray.size(); i++) {
+                    newEnteryArray.add(scheduleArray.get(i));
+                }
+                Log.d("newEnteryArray", "" + newEnteryArray.size());
+
+                for (String s : newEnteryArray) {
+                    if (!s.equals("")) {
+                        scheduleStr = scheduleStr + "|" + s;
+                    }
+
+                }
+                Log.d("scheduleStr", scheduleStr);
+                if (!scheduleStr.equalsIgnoreCase("")) {
+                    scheduleStr = scheduleStr.substring(1, scheduleStr.length());
+                    Log.d("responseString ", scheduleStr);
+                }
+                if (!scheduleStr.equalsIgnoreCase("")) {
+                    popularDialog.dismiss();
+                } else {
+                    Util.ping(mContext, "Please Select Time.");
+                }
+
             }
         });
         start_date_txt.setOnClickListener(new View.OnClickListener() {
@@ -521,7 +472,9 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
             }
         });
-        end_date_txt.setOnClickListener(new View.OnClickListener() {
+        end_date_txt.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 isFromDate = false;
@@ -535,182 +488,385 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 
             }
         });
-        sun_start_linear.setOnClickListener(new View.OnClickListener() {
+        sun_start_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-                isFromDatesun = true;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
 
-        sun_end_linear.setOnClickListener(new View.OnClickListener() {
+        sun_end_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-                isFromDatesun = false;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
-        mon_start_linear.setOnClickListener(new View.OnClickListener() {
+        mon_start_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-                isFromDatesun = true;
-               // isFromDatemon = true;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
 
-        mon_end_linear.setOnClickListener(new View.OnClickListener() {
+        mon_end_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-              //  isFromDatemon = false;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
-        tue_start_linear.setOnClickListener(new View.OnClickListener() {
+        tue_start_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-               // isFromDatetue = true;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
 
-        tue_end_linear.setOnClickListener(new View.OnClickListener() {
+        tue_end_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-              //  isFromDatetue = false;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
-        wed_start_linear.setOnClickListener(new View.OnClickListener() {
+        wed_start_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-              //  isFromDatewed = true;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
 
-        wed_end_linear.setOnClickListener(new View.OnClickListener() {
+        wed_end_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-               // isFromDatewed = false;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
-        thu_start_linear.setOnClickListener(new View.OnClickListener() {
+        thu_start_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-               // isFromDatethu = true;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
 
-        thu_end_linear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               // isFromDatethu = false;
-                TimePicker mTimePicker = new TimePicker();
-                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
-            }
-        });
-        fri_start_linear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //isFromDatefri = true;
-                TimePicker mTimePicker = new TimePicker();
-                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
-            }
-        });
+        thu_end_linear.setOnClickListener(new View.OnClickListener()
 
-        fri_end_linear.setOnClickListener(new View.OnClickListener() {
+        {
             @Override
             public void onClick(View view) {
-               /// isFromDatefri = false;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
-        sat_start_linear.setOnClickListener(new View.OnClickListener() {
+        fri_start_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-               // isFromDatesat = true;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
 
-        sat_end_linear.setOnClickListener(new View.OnClickListener() {
+        fri_end_linear.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
-               // isFromDatesat = false;
+                Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
         });
-        for (int i = 0; i < 6; i++) {
-            Calendar sCalendar = Calendar.getInstance();
+        sat_start_linear.setOnClickListener(new View.OnClickListener()
 
-            String dayLongName = new SimpleDateFormat("EE").format(Calendar.MONDAY);
-            Log.d("dayName", "" + dayLongName);
-        }
-//        String time = "07:00 AM";
-        hoursArray = new ArrayList<>();
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
 
-        hoursArray.add("Sunday");
-        hoursArray.add("Monday");
-        hoursArray.add("Tuesday");
-        hoursArray.add("Wednesday");
-        hoursArray.add("Thursday");
-        hoursArray.add("Friday");
-        hoursArray.add("Saturday");
-//        try {
-//            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-//            Date dateObj = sdf.parse(time);
-//
-//            for (int i = 1; i <13; i++) {
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTime(dateObj);
-//                calendar.add(Calendar.HOUR, i);
-//
-//                String startTime = new SimpleDateFormat("hh:mm a").format(calendar.getTime()).split(" ")[0];
-//
-//                calendar.add(Calendar.HOUR, 1);
-//
-//                String endTime = new SimpleDateFormat("hh:mm a").format(calendar.getTime());
-//
-//                System.out.println("Time here " + startTime + "-" + endTime);
-//
-//                hoursArray.add(startTime + " - " + endTime);
-//            }
-//
-//        } catch (final ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-        checkboxArray = new ArrayList<>();
-        for (int k = 0; k < 2; k++) {
-            checkboxArray.add(k);
-        }
-//        addSessionTimeAdapter = new AddSessionTimeAdapter(mContext,getActivity(), hoursArray, checkboxArray);
-//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-//        day_name_rcView.setLayoutManager(mLayoutManager);
-//        day_name_rcView.setItemAnimator(new DefaultItemAnimator());
-//        day_name_rcView.setAdapter(addSessionTimeAdapter);
+        sat_end_linear.setOnClickListener(new View.OnClickListener()
 
-//        List<String> days = getDates("20/03/2018", "25/03/2018");
-//        System.out.println(days);
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+            }
+        });
+
+        sun_start_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                sun_start_add_session_btn.setText("+");
+                sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!sun_start_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    sun_start_time_txt.setText("Add");
+                }
+
+            }
+        });
+        sun_end_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                sun_end_add_session_btn.setText("+");
+                sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!sun_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    sun_end_time_txt.setText("Add");
+                }
+            }
+        });
+        mon_start_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                mon_start_add_session_btn.setText("+");
+                mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!mon_start_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    mon_start_time_txt.setText("Add");
+                }
+            }
+        });
+        mon_end_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                mon_end_add_session_btn.setText("+");
+                mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!mon_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    mon_end_time_txt.setText("Add");
+                }
+            }
+        });
+        tue_start_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                tue_start_add_session_btn.setText("+");
+                tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!tue_start_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    tue_start_time_txt.setText("Add");
+                }
+            }
+        });
+        tue_end_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                tue_end_add_session_btn.setText("+");
+                tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!tue_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    tue_end_time_txt.setText("Add");
+                }
+            }
+        });
+        wed_start_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                wed_start_add_session_btn.setText("+");
+                wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!wed_start_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    wed_start_time_txt.setText("Add");
+                }
+            }
+        });
+        wed_end_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                wed_end_add_session_btn.setText("+");
+                wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!wed_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    wed_end_time_txt.setText("Add");
+                }
+            }
+        });
+        thu_start_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                thu_start_add_session_btn.setText("+");
+                thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!thu_start_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    thu_start_time_txt.setText("Add");
+                }
+            }
+        });
+        thu_end_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                thu_end_add_session_btn.setText("+");
+                thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!thu_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    thu_end_time_txt.setText("Add");
+                }
+            }
+        });
+        fri_start_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                fri_start_add_session_btn.setText("+");
+                fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!fri_start_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    fri_start_time_txt.setText("Add");
+                }
+            }
+        });
+        fri_end_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                fri_end_add_session_btn.setText("+");
+                fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!fri_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    fri_end_time_txt.setText("Add");
+                }
+            }
+        });
+        sat_start_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                sat_start_add_session_btn.setText("+");
+                sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!sat_start_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    sat_start_time_txt.setText("Add");
+                }
+            }
+        });
+        sat_end_add_session_btn.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+                Tag = view.getTag().toString();
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(getActivity().getFragmentManager(), "Select time");
+                sun_end_add_session_btn.setText("+");
+                sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                if (!sat_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                    sat_end_time_txt.setText("Add");
+                }
+
+            }
+        });
     }
 
     @Override
-    public void onDateSet(com.wdullaer.materialdatetimepicker.date.DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+    public void onDateSet(com.wdullaer.materialdatetimepicker.date.DatePickerDialog view,
+                          int year, int monthOfYear, int dayOfMonth) {
         mDay = dayOfMonth;
         mMonth = monthOfYear + 1;
         mYear = year;
@@ -733,36 +889,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         }
     }
 
-
-    private static List<String> getDates(String dateString1, String dateString2) {
-        ArrayList<String> days = new ArrayList<String>();
-        DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy");
-
-        Date date1 = null;
-        Date date2 = null;
-
-        try {
-            date1 = df1.parse(dateString1);
-            date2 = df1.parse(dateString2);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(date1);
-
-
-        Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(date2);
-
-        while (!cal1.after(cal2)) {
-            days.add(new SimpleDateFormat("EE").format(cal1.getTime()));
-            cal1.add(Calendar.DATE, 1);
-        }
-
-        Log.d("days", "" + days);
-        return days;
-    }
 
     public static class TimePicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
@@ -797,43 +923,596 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             } else {
                 hour_of_12_hour_format = hourOfDay;
             }
-            if (isFromDatesun) {
-                sun_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-            } else {
-                sun_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-            }
-//            if (isFromDatemon) {
-//                mon_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            } else {
-//                mon_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            }
-//            if (isFromDatetue) {
-//                tue_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            } else {
-//                tue_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            }
-//            if (isFromDatewed) {
-//                wed_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            } else {
-//                wed_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            }
-//            if (isFromDatethu) {
-//                thu_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            } else {
-//                thu_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            }
-//            if (isFromDatefri) {
-//                fri_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            } else {
-//                fri_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            }
-//            if (isFromDatesat) {
-//                sat_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            } else {
-//                sat_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + ":" + status);
-//            }
 
+            switch (Tag) {
+                case "0":
+                    sun_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    sun_start_add_session_btn.setText("x");
+                    sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "1":
+                    sun_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    sun_end_add_session_btn.setText("x");
+                    sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "2":
+                    mon_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    mon_start_add_session_btn.setText("x");
+                    mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "3":
+                    mon_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    mon_end_add_session_btn.setText("x");
+                    mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "4":
+                    tue_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    tue_start_add_session_btn.setText("x");
+                    tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "5":
+                    tue_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    tue_end_add_session_btn.setText("x");
+                    tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "6":
+                    wed_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    wed_start_add_session_btn.setText("x");
+                    wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "7":
+                    wed_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    wed_end_add_session_btn.setText("x");
+                    wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "8":
+                    thu_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    thu_start_add_session_btn.setText("x");
+                    thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "9":
+                    thu_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    thu_end_add_session_btn.setText("x");
+                    thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "10":
+                    fri_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    fri_start_add_session_btn.setText("x");
+                    fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "11":
+                    fri_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    fri_end_add_session_btn.setText("x");
+                    fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "12":
+                    sat_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    sat_start_add_session_btn.setText("x");
+                    sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "13":
+                    sat_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    sat_end_add_session_btn.setText("x");
+                    sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                default:
+            }
         }
+    }
+
+    public void getSelectedSessionTimeValue() {
+        
+        coachIdStr = AppConfiguration.coachId;
+        lessionTypeIdStr = "7";
+        sessionNameStr = addSessionBinding.sessionNameEdt.getText().toString();
+        boardStr = addSessionBinding.boardNameEdt.getText().toString();
+        standardStr = addSessionBinding.standardEdt.getText().toString();
+        streamStr = addSessionBinding.subjectEdt.getText().toString();
+        address1Str = addSessionBinding.addressEdt.getText().toString();
+        address2Str = addSessionBinding.addressEdt.getText().toString();
+        regionStr = addSessionBinding.areaEdt.getText().toString();
+        cityStr = addSessionBinding.cityEdt.getText().toString();
+        stateStr = addSessionBinding.stateEdt.getText().toString();
+        zipcodeStr = addSessionBinding.zipcodeEdt.getText().toString();
+        descriptionStr = addSessionBinding.descriptionEdt.getText().toString();
+        sessioncapacityStr = addSessionBinding.sportsEdt.getText().toString();
+        alerttimeStr = addSessionBinding.alertBtn.getText().toString();
+        startDateStr = start_date_txt.getText().toString();
+        endDateStr = end_date_txt.getText().toString();
+
+
+    }
+
+    //Use for Create Session
+    public void callCreateSessionApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().getCreate_Session(getNewSessionDetail(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel sessionDetailModel, Response response) {
+                    Util.dismissDialog();
+                    if (sessionDetailModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionDetailModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionDetailModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (sessionDetailModel.getSuccess().equalsIgnoreCase("True")) {
+
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getNewSessionDetail() {
+        getSelectedSessionTimeValue();
+        Map<String, String> map = new HashMap<>();
+        map.put("CoachID", coachIdStr);
+        map.put("LessionTypeID", lessionTypeIdStr);
+        map.put("SessionName", sessionNameStr);
+        map.put("Board", boardStr);
+        map.put("Standard", standardStr);
+        map.put("Stream", streamStr);
+        map.put("StartDate", startDateStr);
+        map.put("EndDate", endDateStr);
+        map.put("Address1", address1Str);
+        map.put("Address2", address2Str);
+        map.put("Region", regionStr);
+        map.put("City", cityStr);
+        map.put("State", stateStr);
+        map.put("Zipcode", zipcodeStr);
+        map.put("Description", descriptionStr);
+        map.put("SessionAmount", sessionamtStr);
+        map.put("SessionCapacity", sessioncapacityStr);
+        map.put("AlertTime", alerttimeStr);
+        map.put("Schedule", scheduleStr);
+        return map;
+    }
+
+    //Use for Board
+    public void callBoardApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Board(getBoardDetail(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillBoard();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getBoardDetail() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillBoard() {
+        ArrayList<Integer> BoardId = new ArrayList<Integer>();
+        for (int i = 0; i < dataResponse.getData().size(); i++) {
+            BoardId.add(Integer.valueOf(dataResponse.getData().get(i).getBoardID()));
+        }
+        ArrayList<String> BoardName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            BoardName.add(dataResponse.getData().get(j).getBoardName());
+        }
+
+        String[] spinnertermIdArray = new String[BoardId.size()];
+
+        spinnerBoardMap = new HashMap<Integer, String>();
+        for (int i = 0; i < BoardId.size(); i++) {
+            spinnerBoardMap.put(i, String.valueOf(BoardId.get(i)));
+            spinnertermIdArray[i] = BoardName.get(i).trim();
+        }
+//        try {
+//            Field popup = Spinner.class.getDeclaredField("mPopup");
+//            popup.setAccessible(true);
+//
+//            // Get private mPopup member variable and try cast to ListPopupWindow
+//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.boardNameEdt);
+//
+//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
+//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+//            // silently fail...
+//        }
+
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
+        addSessionBinding.boardNameEdt.setThreshold(1);
+        addSessionBinding.boardNameEdt.setAdapter(adapterTerm);
+
+    }
+
+    //Use for standard
+    public void callstandardApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Standard(getstandardDetail(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.dismissDialog();
+
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillStandard();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getstandardDetail() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillStandard() {
+        ArrayList<Integer> StandardId = new ArrayList<Integer>();
+        for (int i = 0; i < dataResponse.getData().size(); i++) {
+            StandardId.add(Integer.valueOf(dataResponse.getData().get(i).getStandardID()));
+        }
+        ArrayList<String> StandardName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            StandardName.add(dataResponse.getData().get(j).getStandardName());
+        }
+
+        String[] spinnertermIdArray = new String[StandardId.size()];
+
+        spinnerStandardMap = new HashMap<Integer, String>();
+        for (int i = 0; i < StandardId.size(); i++) {
+            spinnerStandardMap.put(i, String.valueOf(StandardId.get(i)));
+            spinnertermIdArray[i] = StandardName.get(i).trim();
+        }
+//        try {
+//            Field popup = Spinner.class.getDeclaredField("mPopup");
+//            popup.setAccessible(true);
+//
+//            // Get private mPopup member variable and try cast to ListPopupWindow
+//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.standardEdt);
+//
+//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
+//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+//            // silently fail...
+//        }
+
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
+        addSessionBinding.standardEdt.setThreshold(1);
+        addSessionBinding.standardEdt.setAdapter(adapterTerm);
+    }
+
+    //Use for Stream
+    public void callStreamApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Stream(getStreamDeatil(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.dismissDialog();
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillStream();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getStreamDeatil() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillStream() {
+        ArrayList<Integer> StreamId = new ArrayList<Integer>();
+        for (int i = 0; i < dataResponse.getData().size(); i++) {
+            StreamId.add(Integer.valueOf(dataResponse.getData().get(i).getStreamID()));
+        }
+        ArrayList<String> StreamName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            StreamName.add(dataResponse.getData().get(j).getStreamName());
+        }
+
+        String[] spinnertermIdArray = new String[StreamId.size()];
+
+        spinnerStreamMap = new HashMap<Integer, String>();
+        for (int i = 0; i < StreamId.size(); i++) {
+            spinnerStreamMap.put(i, String.valueOf(StreamId.get(i)));
+            spinnertermIdArray[i] = StreamName.get(i).trim();
+        }
+//        try {
+//            Field popup = Spinner.class.getDeclaredField("mPopup");
+//            popup.setAccessible(true);
+//
+//            // Get private mPopup member variable and try cast to ListPopupWindow
+//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.subjectEdt);
+//
+//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
+//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+//            // silently fail...
+//        }
+
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
+        addSessionBinding.boardNameEdt.setThreshold(1);
+        addSessionBinding.subjectEdt.setAdapter(adapterTerm);
+    }
+
+    //Use for Lession
+    public void callLessionApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Lesson(getLessionDeatil(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillLession();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getLessionDeatil() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillLession() {
+        ArrayList<Integer> StreamId = new ArrayList<Integer>();
+        for (int i = 0; i < dataResponse.getData().size(); i++) {
+            StreamId.add(Integer.valueOf(dataResponse.getData().get(i).getStreamID()));
+        }
+        ArrayList<String> StreamName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            StreamName.add(dataResponse.getData().get(j).getStreamName());
+        }
+
+        String[] spinnertermIdArray = new String[StreamId.size()];
+
+        spinnerStreamMap = new HashMap<Integer, String>();
+        for (int i = 0; i < StreamId.size(); i++) {
+            spinnerStreamMap.put(i, String.valueOf(StreamId.get(i)));
+            spinnertermIdArray[i] = StreamName.get(i).trim();
+        }
+//        try {
+//            Field popup = Spinner.class.getDeclaredField("mPopup");
+//            popup.setAccessible(true);
+//
+//            // Get private mPopup member variable and try cast to ListPopupWindow
+//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.subjectEdt);
+//
+//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
+//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+//            // silently fail...
+//        }
+
+//        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
+//        addSessionBinding.boardNameEdt.setThreshold(1);
+//        addSessionBinding.subjectEdt.setAdapter(adapterTerm);
+    }
+
+    //Use for Region
+    public void callRegionApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Region(getRegionDeatil(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.dismissDialog();
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillArea();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getRegionDeatil() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillArea() {
+        ArrayList<Integer> AreaId = new ArrayList<Integer>();
+        for (int i = 0; i < dataResponse.getData().size(); i++) {
+            AreaId.add(Integer.valueOf(dataResponse.getData().get(i).getRegionID()));
+        }
+        ArrayList<String> AreaName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            AreaName.add(dataResponse.getData().get(j).getRegionName());
+        }
+
+        String[] spinnertermIdArray = new String[AreaId.size()];
+
+        spinnerRegionMap = new HashMap<Integer, String>();
+        for (int i = 0; i < AreaId.size(); i++) {
+            spinnerRegionMap.put(i, String.valueOf(AreaId.get(i)));
+            spinnertermIdArray[i] = AreaName.get(i).trim();
+        }
+//        try {
+//            Field popup = Spinner.class.getDeclaredField("mPopup");
+//            popup.setAccessible(true);
+//
+//            // Get private mPopup member variable and try cast to ListPopupWindow
+//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.subjectEdt);
+//
+//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
+//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+//            // silently fail...
+//        }
+
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
+        addSessionBinding.areaEdt.setThreshold(1);
+        addSessionBinding.areaEdt.setAdapter(adapterTerm);
     }
 }
 

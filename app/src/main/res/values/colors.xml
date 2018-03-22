@@ -5,7 +5,6 @@
     <color name="colorAccent">#FF4081</color>
 
 
-
     <color name="search_class">#4Dffffff</color>
     <color name="search_boder">#f2552c</color>
     <color name="text_color">#000000</color>
@@ -22,4 +21,13 @@
     <color name="leave">#dccc43</color>
     <color name="remarks">#f2552c</color>
     <color name="transparent">#80ffffff</color>
+    <color name="yellow_dark">#ffd990</color>
+    <color name="yellow_light">#f9f2e5</color>
+    <color name="blue_dark">#8cc0f0</color>
+    <color name="blue_light">#e5f0f9</color>
+    <color name="red_dark">#f98f8f</color>
+    <color name="red_light">#f7e7e7</color>
+    <color name="green_dark">#93cdc8</color>
+    <color name="green_light">#e1faf8</color>
+
 </resources>

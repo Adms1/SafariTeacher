@@ -131,7 +131,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         Log.d("ADMSTime", "StartTime" + startTime3 + "EndTime" + endTime3);
 
         DrawableCalendarEvent event3 = new DrawableCalendarEvent("Yoga Class", "", "Satelite",
-                ContextCompat.getColor(mContext, R.color.absent), startTime3, endTime3, true, R.drawable.img_location);
+                ContextCompat.getColor(mContext, R.color.red_dark), startTime3, endTime3, true, R.drawable.img_location);
 
         eventList.add(event3);
         startTime3.set(Calendar.HOUR_OF_DAY, 16);
@@ -139,7 +139,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         endTime3.set(Calendar.HOUR_OF_DAY, 17);
         endTime3.set(Calendar.MINUTE, 0);
         DrawableCalendarEvent event4 = new DrawableCalendarEvent("Music Class", "", "Satelite2",
-                ContextCompat.getColor(mContext, R.color.leave), startTime3, endTime3, true, R.drawable.img_location);
+                ContextCompat.getColor(mContext, R.color.yellow_dark), startTime3, endTime3, true, R.drawable.img_location);
 
         eventList.add(event4);
 
@@ -153,7 +153,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         endTime4.set(Calendar.MINUTE, 0);
 
         DrawableCalendarEvent event5 = new DrawableCalendarEvent("Dance Class", "", "Paldi",
-                ContextCompat.getColor(mContext, R.color.present), startTime4, endTime4, true, R.drawable.img_location);
+                ContextCompat.getColor(mContext, R.color.green_dark), startTime4, endTime4, true, R.drawable.img_location);
 
         eventList.add(event5);
     }

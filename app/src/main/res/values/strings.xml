@@ -64,4 +64,15 @@
 
     <!--Important-->
     <string name="googleplus_sha">DF:DD:F8:1D:1F:BA:43:06:D3:92:25:F5:39:28:E1:3C:3F:FA:8C:06</string>
+    <string name="facebook_app_id">155683868477558</string>
+    <string name="fb_login_protocol_scheme">fb155683868477558</string>
+
+    <!--Webservice String-->
+    <string name="internet_error">Internet Connection !</string>
+    <string name="internet_connection_error">ClassSafariTeacher requires an internet connection.Make sure Wi-Fi or mobile networks are turned on, then try again.</string>
+    <string name="something_wrong">Something Wrong</string>
+    <string name="blank">Blank Filed Not Allowed</string>
+    <string name="false_msg">Record not found</string>
+    <string name="true_msg">Send Successfully</string>
+    <string name="validation_msg">Enter Proper Value</string>
 </resources>

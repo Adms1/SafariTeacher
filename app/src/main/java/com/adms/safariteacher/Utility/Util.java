@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.adms.safariteacher.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 /**
  * Created by admsandroid on 3/8/2018.
@@ -27,7 +29,8 @@ public class Util {
 
     static Context context;
     public static Dialog dialog;
-
+    public static final String MyPREFERENCES = "MyPrefs";
+    public static SharedPreferences sharedpreferences;
     public static boolean checkNetwork(Context context) {
         boolean wifiAvailable = false;
         boolean mobileAvailable = false;
@@ -44,8 +47,19 @@ public class Util {
         return wifiAvailable || mobileAvailable;
     }
 
+    public static boolean isNetworkConnected(Context ctxt) {
+        ConnectivityManager cm = (ConnectivityManager) ctxt
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null) {
+            // There are no active networks.
+            return false;
+        } else
+            return true;
+    }
+
     public static void showCustomDialog(String title, String str, Activity activity) {
-        context=activity;
+        context = activity;
         // custom dialog
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
 // ...Irrelevant code for customizing the buttons and title
@@ -75,6 +89,7 @@ public class Util {
         });
 
     }
+
     public static void showDialog(Context context) {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -118,9 +133,10 @@ public class Util {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm:a");
         String strDate = mdformat.format(calendar.getTime());
-        Log.d("Currenttime",strDate);
+        Log.d("Currenttime", strDate);
         return strDate;
     }
+
     public static void ping(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
@@ -129,4 +145,25 @@ public class Util {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
+    public static boolean isValidEmaillId(String email) {
+
+        return Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$").matcher(email).matches();
+    }
+    public static void setPref(Context context, String key, String value) {
+        sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    public static String getPref(Context context, String key) {
+        sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        String value = sharedpreferences.getString(key, "");
+        return value;
+    }
 }

@@ -31,7 +31,7 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.MyView
     private Context mContext;
     ArrayList<Integer> checkboxArray;
     FragmentActivity activity;
-    static String starttimeStr = "", endtimeStr;
+    static String starttimeStr = "", endtimeStr="";
     Button add_session_btn, end_session_btn;
     static TextView start_time_txt, end_time_txt;
     private static boolean isFromDate = false;
@@ -67,22 +67,33 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.MyView
 
     @Override
     public void onBindViewHolder(final CheckboxAdapter.MyViewHolder holder, final int position) {
-        add_session_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isFromDate=true;
-                TimePicker mTimePicker = new TimePicker();
-                mTimePicker.show(activity.getFragmentManager(), "Select time");
-            }
-        });
+//        add_session_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                isFromDate=true;
+//                TimePicker mTimePicker = new TimePicker();
+//                mTimePicker.show(activity.getFragmentManager(), "Select time");
+//            }
+//        });
         start_time_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isFromDate=false;
+                isFromDate=true;
+                starttimeStr="";
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(activity.getFragmentManager(), "Select time");
             }
         });
+        end_time_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isFromDate=false;
+                endtimeStr="";
+                TimePicker mTimePicker = new TimePicker();
+                mTimePicker.show(activity.getFragmentManager(), "Select time");
+            }
+        });
+
 
 //        if (!starttimeStr.equalsIgnoreCase("")) {
 //       start_time_txt.setText(starttimeStr);

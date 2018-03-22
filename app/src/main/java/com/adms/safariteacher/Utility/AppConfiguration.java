@@ -5,6 +5,10 @@ package com.adms.safariteacher.Utility;
  */
 
 public class AppConfiguration {
-    public static final String BASEURL = "";// use for office
+    public static final String BASEURL = "http://192.168.1.20:8088/WebService.asmx/";// use for office
 //  public static final String BASEURL = ""; // use for client
+
+
+    public static String coachId;
+
 }
