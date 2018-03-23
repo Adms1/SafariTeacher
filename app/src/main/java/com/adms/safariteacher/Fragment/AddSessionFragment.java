@@ -19,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,11 +51,17 @@ import com.adms.safariteacher.databinding.FragmentAddSessionBinding;
 import com.adms.safariteacher.Interface.onViewClick;
 
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.RetrofitError;
@@ -369,6 +376,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         done_btn = (Button) popularDialog.findViewById(R.id.done_btn);
         start_date_txt.setText(Util.getTodaysDate());
         end_date_txt.setText(Util.getTodaysDate());
+
+
+        List<String> days = getDates(start_date_txt.getText().toString(), end_date_txt.getText().toString());
+        System.out.println(days);
+
         done_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -804,7 +816,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             }
         });
         fri_start_add_session_btn.setOnClickListener(new View.OnClickListener()
-
         {
             @Override
             public void onClick(View view) {
@@ -820,7 +831,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             }
         });
         fri_end_add_session_btn.setOnClickListener(new View.OnClickListener()
-
         {
             @Override
             public void onClick(View view) {
@@ -836,7 +846,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             }
         });
         sat_start_add_session_btn.setOnClickListener(new View.OnClickListener()
-
         {
             @Override
             public void onClick(View view) {
@@ -852,7 +861,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             }
         });
         sat_end_add_session_btn.setOnClickListener(new View.OnClickListener()
-
         {
             @Override
             public void onClick(View view) {
@@ -865,10 +873,262 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 if (!sat_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
                     sat_end_time_txt.setText("Add");
                 }
-
             }
         });
     }
+
+    private static List<String> getDates(String dateString1, String dateString2) {
+        ArrayList<String> days = new ArrayList<String>();
+        DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date date1 = null;
+        Date date2 = null;
+
+        try {
+            date1 = df1.parse(dateString1);
+            date2 = df1.parse(dateString2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+
+        while (!cal1.after(cal2)) {
+            days.add(new SimpleDateFormat("EE").format(cal1.getTime()));
+            cal1.add(Calendar.DATE, 1);
+
+        }
+        Log.d("days", "" + days.size());
+
+        for (int i = 0; i < days.size(); i++) {
+            switch (days.get(i)) {
+                case "Sun":
+                    sun_start_linear.setEnabled(true);
+                    sun_end_linear.setEnabled(true);
+                    sun_start_linear.setAlpha(1);
+                    sun_end_linear.setAlpha(1);
+                    sun_start_add_session_btn.setEnabled(true);
+                    sun_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Mon":
+                    mon_start_linear.setEnabled(true);
+                    mon_end_linear.setEnabled(true);
+                    mon_start_linear.setAlpha(1);
+                    mon_end_linear.setAlpha(1);
+                    mon_start_add_session_btn.setEnabled(true);
+                    mon_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Tue":
+                    tue_start_linear.setEnabled(true);
+                    tue_end_linear.setEnabled(true);
+                    tue_start_linear.setAlpha(1);
+                    tue_end_linear.setAlpha(1);
+                    tue_start_add_session_btn.setEnabled(true);
+                    tue_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Wed":
+                    wed_start_linear.setEnabled(true);
+                    wed_end_linear.setEnabled(true);
+                    wed_start_linear.setAlpha(1);
+                    wed_end_linear.setAlpha(1);
+                    wed_start_add_session_btn.setEnabled(true);
+                    wed_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Thu":
+                    thu_start_linear.setEnabled(true);
+                    thu_end_linear.setEnabled(true);
+                    thu_start_linear.setAlpha(1);
+                    thu_end_linear.setAlpha(1);
+                    thu_start_add_session_btn.setEnabled(true);
+                    thu_end_add_session_btn.setEnabled(true);
+                    break;
+//                case "Fri":
+//                    fri_start_linear.setEnabled(true);
+//                    fri_end_linear.setEnabled(true);
+//                    fri_start_linear.setAlpha(1);
+//                    fri_end_linear.setAlpha(1);
+//                    fri_start_add_session_btn.setEnabled(true);
+//                    fri_end_add_session_btn.setEnabled(true);
+//                    break;
+                case "Sat":
+                    sat_start_linear.setEnabled(true);
+                    sat_end_linear.setEnabled(true);
+                    sat_start_linear.setAlpha(1);
+                    sat_end_linear.setAlpha(1);
+                    sat_start_add_session_btn.setEnabled(true);
+                    sat_end_add_session_btn.setEnabled(true);
+                    break;
+                default:
+                    sun_start_linear.setEnabled(false);
+                    sun_end_linear.setEnabled(false);
+                    sun_start_linear.setAlpha(0.2f);
+                    sun_end_linear.setAlpha(0.2f);
+                    sun_start_add_session_btn.setEnabled(false);
+                    sun_end_add_session_btn.setEnabled(false);
+
+                    mon_start_linear.setEnabled(false);
+                    mon_end_linear.setEnabled(false);
+                    mon_start_linear.setAlpha(0.2f);
+                    mon_end_linear.setAlpha(0.2f);
+                    mon_start_add_session_btn.setEnabled(false);
+                    mon_end_add_session_btn.setEnabled(false);
+
+                    tue_start_linear.setEnabled(false);
+                    tue_end_linear.setEnabled(false);
+                    tue_start_linear.setAlpha(0.2f);
+                    tue_end_linear.setAlpha(0.2f);
+                    tue_start_add_session_btn.setEnabled(false);
+                    tue_end_add_session_btn.setEnabled(false);
+
+                    wed_start_linear.setEnabled(false);
+                    wed_end_linear.setEnabled(false);
+                    wed_start_linear.setAlpha(0.2f);
+                    wed_end_linear.setAlpha(0.2f);
+                    wed_start_add_session_btn.setEnabled(false);
+                    wed_end_add_session_btn.setEnabled(false);
+
+                    thu_start_linear.setEnabled(false);
+                    thu_end_linear.setEnabled(false);
+                    thu_start_linear.setAlpha(0.2f);
+                    thu_end_linear.setAlpha(0.2f);
+                    thu_start_add_session_btn.setEnabled(false);
+                    thu_end_add_session_btn.setEnabled(false);
+
+//                    fri_start_linear.setEnabled(false);
+//                    fri_end_linear.setEnabled(false);
+//                    fri_start_linear.setAlpha(0.2f);
+//                    fri_end_linear.setAlpha(0.2f);
+//                    fri_start_add_session_btn.setEnabled(false);
+//                    fri_end_add_session_btn.setEnabled(false);
+
+                    sat_start_linear.setEnabled(false);
+                    sat_end_linear.setEnabled(false);
+                    sat_start_linear.setAlpha(0.2f);
+                    sat_end_linear.setAlpha(0.2f);
+                    sat_start_add_session_btn.setEnabled(false);
+                    sat_end_add_session_btn.setEnabled(false);
+            }
+        }
+        return days;
+    }
+
+//        for (int i = 0; i < days.size(); i++) {
+//        if (!dayname.equalsIgnoreCase(sun_start_time_txt.getTag().toString())) {
+//            sun_start_linear.setEnabled(false);
+//            sun_end_linear.setEnabled(false);
+//            sun_start_linear.setAlpha(0.2f);
+//            sun_end_linear.setAlpha(0.2f);
+//            sun_start_add_session_btn.setEnabled(false);
+//            sun_end_add_session_btn.setEnabled(false);
+//        } else {
+//            sun_start_linear.setEnabled(true);
+//            sun_end_linear.setEnabled(true);
+//            sun_start_linear.setAlpha(1);
+//            sun_end_linear.setAlpha(1);
+//            sun_start_add_session_btn.setEnabled(true);
+//            sun_end_add_session_btn.setEnabled(true);
+//
+//        }
+//        if (!dayname.equalsIgnoreCase(mon_start_time_txt.getTag().toString())) {
+//            mon_start_linear.setEnabled(false);
+//            mon_end_linear.setEnabled(false);
+//            mon_start_linear.setAlpha(0.2f);
+//            mon_end_linear.setAlpha(0.2f);
+//            mon_start_add_session_btn.setEnabled(false);
+//            mon_end_add_session_btn.setEnabled(false);
+//        } else {
+//            mon_start_linear.setEnabled(true);
+//            mon_end_linear.setEnabled(true);
+//            mon_start_linear.setAlpha(1);
+//            mon_end_linear.setAlpha(1);
+//            mon_start_add_session_btn.setEnabled(true);
+//            mon_end_add_session_btn.setEnabled(true);
+//        }
+//        if (!dayname.equalsIgnoreCase(tue_start_time_txt.getTag().toString())) {
+//            tue_start_linear.setEnabled(false);
+//            tue_end_linear.setEnabled(false);
+//            tue_start_linear.setAlpha(0.2f);
+//            tue_end_linear.setAlpha(0.2f);
+//            tue_start_add_session_btn.setEnabled(false);
+//            tue_end_add_session_btn.setEnabled(false);
+//        } else {
+//            tue_start_linear.setEnabled(true);
+//            tue_end_linear.setEnabled(true);
+//            tue_start_linear.setAlpha(1);
+//            tue_end_linear.setAlpha(1);
+//            tue_start_add_session_btn.setEnabled(true);
+//            tue_end_add_session_btn.setEnabled(true);
+//        }
+//        if (!dayname.equalsIgnoreCase(wed_start_time_txt.getTag().toString())) {
+//            wed_start_linear.setEnabled(false);
+//            wed_end_linear.setEnabled(false);
+//            wed_start_linear.setAlpha(0.2f);
+//            wed_end_linear.setAlpha(0.2f);
+//            wed_start_add_session_btn.setEnabled(false);
+//            wed_end_add_session_btn.setEnabled(false);
+//        } else {
+//            wed_start_linear.setEnabled(true);
+//            wed_end_linear.setEnabled(true);
+//            wed_start_linear.setAlpha(1);
+//            wed_end_linear.setAlpha(1);
+//            wed_start_add_session_btn.setEnabled(true);
+//            wed_end_add_session_btn.setEnabled(true);
+//        }
+//        if (!dayname.equalsIgnoreCase(thu_start_time_txt.getTag().toString())) {
+//            thu_start_linear.setEnabled(false);
+//            thu_end_linear.setEnabled(false);
+//            thu_start_linear.setAlpha(0.2f);
+//            thu_end_linear.setAlpha(0.2f);
+//            thu_start_add_session_btn.setEnabled(false);
+//            thu_end_add_session_btn.setEnabled(false);
+//        } else {
+//            thu_start_linear.setEnabled(true);
+//            thu_end_linear.setEnabled(true);
+//            thu_start_linear.setAlpha(1);
+//            thu_end_linear.setAlpha(1);
+//            thu_start_add_session_btn.setEnabled(true);
+//            thu_end_add_session_btn.setEnabled(true);
+//        }
+//        if (!dayname.equalsIgnoreCase(fri_start_time_txt.getTag().toString())) {
+//            fri_start_linear.setEnabled(false);
+//            fri_end_linear.setEnabled(false);
+//            fri_start_linear.setAlpha(0.2f);
+//            fri_end_linear.setAlpha(0.2f);
+//            fri_start_add_session_btn.setEnabled(false);
+//            fri_end_add_session_btn.setEnabled(false);
+//        } else {
+//            fri_start_linear.setEnabled(true);
+//            fri_end_linear.setEnabled(true);
+//            fri_start_linear.setAlpha(1);
+//            fri_end_linear.setAlpha(1);
+//            fri_start_add_session_btn.setEnabled(true);
+//            fri_end_add_session_btn.setEnabled(true);
+//        }
+//        if (!dayname.equalsIgnoreCase(sat_start_time_txt.getTag().toString())) {
+//            sat_start_linear.setEnabled(false);
+//            sat_end_linear.setEnabled(false);
+//            sat_start_linear.setAlpha(0.2f);
+//            sat_end_linear.setAlpha(0.2f);
+//            sat_start_add_session_btn.setEnabled(false);
+//            sat_end_add_session_btn.setEnabled(false);
+//        } else {
+//            sat_start_linear.setEnabled(true);
+//            sat_end_linear.setEnabled(true);
+//            sat_start_linear.setAlpha(1);
+//            sat_end_linear.setAlpha(1);
+//            sat_start_add_session_btn.setEnabled(true);
+//            sat_end_add_session_btn.setEnabled(true);
+//        }
+//        }
+
+//    }
+
+//}
 
     @Override
     public void onDateSet(com.wdullaer.materialdatetimepicker.date.DatePickerDialog view,
@@ -893,7 +1153,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         } else {
             end_date_txt.setText(dateFinal);
         }
+        List<String> days = getDates(start_date_txt.getText().toString(), end_date_txt.getText().toString());
+        System.out.println(days);
+
     }
+
 
 
     public static class TimePicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
@@ -922,7 +1186,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             int hour_of_12_hour_format;
 
             if (hourOfDay > 11) {
-
                 // If the hour is greater than or equal to 12
                 // Then we subtract 12 from the hour to make it 12 hour format time
                 hour_of_12_hour_format = hourOfDay - 12;
@@ -1018,6 +1281,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 default:
             }
         }
+
     }
 
     public void getSelectedSessionTimeValue() {

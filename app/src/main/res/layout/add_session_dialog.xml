@@ -196,6 +196,7 @@
                         style="@style/Add_Session_Time_Textview"
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="match_parent"
+                        android:tag="Sun"
                         android:text="Add" />
 
                     <Button
@@ -206,10 +207,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="0"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="0"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -237,10 +238,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="1"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="1"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -272,6 +273,7 @@
                         style="@style/Add_Session_Time_Textview"
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="match_parent"
+                        android:tag="Mon"
                         android:text="Add" />
 
                     <Button
@@ -282,10 +284,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="2"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="2"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -313,10 +315,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="3"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="3"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -348,6 +350,7 @@
                         style="@style/Add_Session_Time_Textview"
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="match_parent"
+                        android:tag="Tue"
                         android:text="Add" />
 
                     <Button
@@ -358,10 +361,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="4"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="4"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -389,10 +392,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="5"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="5"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -424,6 +427,7 @@
                         style="@style/Add_Session_Time_Textview"
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="match_parent"
+                        android:tag="Wed"
                         android:text="Add" />
 
                     <Button
@@ -434,10 +438,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="6"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="6"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -465,10 +469,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="7"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="7"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -501,6 +505,7 @@
                         style="@style/Add_Session_Time_Textview"
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="match_parent"
+                        android:tag="Thu"
                         android:text="Add" />
 
                     <Button
@@ -511,10 +516,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="8"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="8"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -542,10 +547,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="9"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="9"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -577,7 +582,8 @@
                         style="@style/Add_Session_Time_Textview"
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="match_parent"
-                        android:text="Add" />
+                        android:text="Add"
+                        android:tag="Fri"/>
 
                     <Button
                         android:id="@+id/fri_start_add_session_btn"
@@ -587,10 +593,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="10"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="10"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -618,10 +624,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="11"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="11"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -653,7 +659,8 @@
                         style="@style/Add_Session_Time_Textview"
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="match_parent"
-                        android:text="Add" />
+                        android:text="Add"
+                        android:tag="Sat"/>
 
                     <Button
                         android:id="@+id/sat_start_add_session_btn"
@@ -663,10 +670,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="12"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="12"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -694,10 +701,10 @@
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
                         android:gravity="center"
+                        android:tag="13"
                         android:text="+"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_13sdp"
-                        android:tag="13"/>
+                        android:textSize="@dimen/_13sdp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -714,6 +721,6 @@
             android:text="Done"
             android:textColor="@color/blue"
             android:textSize="@dimen/_12sdp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 </layout>

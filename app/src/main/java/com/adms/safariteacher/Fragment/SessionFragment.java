@@ -27,6 +27,8 @@ import com.adms.safariteacher.Activities.DrawableCalendarEvent;
 import com.adms.safariteacher.Adapter.SessionViewStudentListAdapter;
 import com.adms.safariteacher.Adapter.StudentAttendanceAdapter;
 import com.adms.safariteacher.Model.Session.SessionDetailModel;
+import com.adms.safariteacher.Model.Session.SessionFullDetail;
+import com.adms.safariteacher.Model.Session.sessionDataModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
 import com.adms.safariteacher.Utility.Util;
@@ -61,6 +63,10 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     RecyclerView studentnamelist_rcView;
     SessionViewStudentListAdapter sessionViewStudentListAdapter;
     ArrayList<String> arrayList;
+    SessionDetailModel finalsessionfullDetailModel;
+    List<String> listDataHeader;
+    HashMap<String, ArrayList<SessionFullDetail>> listDataChild;
+    List<CalendarEvent> eventList = new ArrayList<>();
 
     public SessionFragment() {
     }
@@ -71,11 +77,13 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         calendarBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_calendar, container, false);
 
         rootView = calendarBinding.getRoot();
-        mContext = getActivity().getApplicationContext();
+        mContext = getActivity();
 
         ((DashBoardActivity) getActivity()).setActionBar(0, "true");
+        callGetSessionDetailApi();
 
-        init();
+
+
         setListner();
         return rootView;
     }
@@ -88,10 +96,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 //        minDate.set(Calendar.DAY_OF_MONTH,0);
         maxDate.add(Calendar.YEAR, 1);
 
-        List<CalendarEvent> eventList = new ArrayList<>();
+
         mockList(eventList);
-
-
         calendarBinding.agendaCalendarView.init(eventList, minDate, maxDate, Locale.US, this);
     }
 
@@ -110,90 +116,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 fragmentTransaction.commit();
             }
         });
-    }
-
-    private void mockList(List<CalendarEvent> eventList) {
-        long startDate = 0, endDate = 0;
-//        Calendar startTime1 = Calendar.getInstance();
-//        Calendar endTime1 = Calendar.getInstance();
-//        endTime1.add(Calendar.MONTH, 1);
-//        BaseCalendarEvent event1 = new BaseCalendarEvent("Thibault travels in Iceland", "A wonderful journey!", "Iceland",
-//                ContextCompat.getColor(this, android.R.color.holo_red_light), startTime1, endTime1, true);
-//        eventList.add(event1);
-//
-//        Calendar startTime2 = Calendar.getInstance();
-//        startTime2.add(Calendar.DAY_OF_YEAR, 1);
-//        Calendar endTime2 = Calendar.getInstance();
-//        endTime2.add(Calendar.DAY_OF_YEAR, 3);
-//        BaseCalendarEvent event2 = new BaseCalendarEvent("Visit to Dalvík", "A beautiful small town", "Dalvík",
-//                ContextCompat.getColor(this, R.color.blue_selected), startTime2, endTime2, true);
-//        eventList.add(event2);
-        Calendar startTime3 = Calendar.getInstance();
-        Calendar endTime3 = Calendar.getInstance();
-
-//        startTime3.set(Calendar.HOUR_OF_DAY, 14);
-//        startTime3.set(Calendar.MINUTE, 0);
-//        endTime3.set(Calendar.HOUR_OF_DAY, 15);
-//        endTime3.set(Calendar.MINUTE, 0);
-        Log.d("ADMSTime", "StartTime" + startTime3 + "EndTime" + endTime3);
-        try {
-            String dateString = "24/03/2018 2:00 PM";
-            String enddateString = "24/03/2018 3:00 PM";
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a",Locale.getDefault() );
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy hh:mm a",Locale.getDefault());
-            Date date = sdf.parse(dateString);
-            Date date1 = sdf1.parse(enddateString);
-
-
-            startDate = date.getTime();
-            endDate = date1.getTime();
-            Log.d("FirstTime", "first event :" + startDate + endDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-//        long id, int color, String title, String description, String location, long dateStart, long dateEnd, int allDay, String duration, int drawableId
-        DrawableCalendarEvent event3 = new DrawableCalendarEvent(1, R.color.search_boder, "Yoga Class", "Yoga good for health", "PaldiRiverfront", startDate, endDate, 2, "1 hours", 1);
-        eventList.add(event3);
-        try {
-            String dateString = "24/03/2018 4:00 PM";
-            String enddateString = "24/03/2018 5:00 PM";
-            SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy hh:mm a",Locale.getDefault());
-            SimpleDateFormat sdf3 = new SimpleDateFormat("dd/MM/yyyy hh:mm a",Locale.getDefault());
-            Date date = sdf2.parse(dateString);
-            Date date1 = sdf3.parse(enddateString);
-
-
-            startDate = date.getTime();
-            endDate = date1.getTime();
-            Log.d("SecondTime", "Second event :" + startDate + endDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        DrawableCalendarEvent event4 = new DrawableCalendarEvent(2, R.color.search_boder, "Dance Class", "Dance good for health", "PaldiRiverfront", startDate, endDate, 2, "1 hours", 1);
-        eventList.add(event4);
-
-//        startTime3.set(Calendar.HOUR_OF_DAY, 16);
-//        startTime3.set(Calendar.MINUTE, 0);
-//        endTime3.set(Calendar.HOUR_OF_DAY, 17);
-//        endTime3.set(Calendar.MINUTE, 0);
-//        DrawableCalendarEvent event4 = new DrawableCalendarEvent("Music Class", "", "Satelite2",
-//                ContextCompat.getColor(mContext, R.color.yellow_dark), startTime3, endTime3, true, R.drawable.img_location);
-//
-//        eventList.add(event4);
-//
-//        Calendar startTime4 = Calendar.getInstance();
-//        Calendar endTime4 = Calendar.getInstance();
-//        startTime4.add(Calendar.DAY_OF_YEAR, 1);
-//        endTime4.add(Calendar.DAY_OF_YEAR, 1);
-//        startTime4.set(Calendar.HOUR_OF_DAY, 9);
-//        startTime4.set(Calendar.MINUTE, 0);
-//        endTime4.set(Calendar.HOUR_OF_DAY, 15);
-//        endTime4.set(Calendar.MINUTE, 0);
-//
-//        DrawableCalendarEvent event5 = new DrawableCalendarEvent("Dance Class", "", "Paldi",
-//                ContextCompat.getColor(mContext, R.color.green_dark), startTime4, endTime4, true, R.drawable.img_location);
-//
-//        eventList.add(event5);
     }
 
     @Override
@@ -357,7 +279,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     //Use for Get AllSession Detail
     public void callGetSessionDetailApi() {
         if (Util.isNetworkConnected(mContext)) {
-
             Util.showDialog(mContext);
             ApiHandler.getApiService().get_SessionDetailByCoachID(getsessionDetail(), new retrofit.Callback<SessionDetailModel>() {
                 @Override
@@ -372,13 +293,34 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         return;
                     }
                     if (sessionInfo.getSuccess().equalsIgnoreCase("false")) {
-                        Util.ping(mContext, getString(R.string.false_msg));
+                        Util.dismissDialog();
+                        if (sessionInfo.getData() != null) {
+                            Util.ping(mContext, getString(R.string.false_msg));
+                        }
                         return;
                     }
                     if (sessionInfo.getSuccess().equalsIgnoreCase("True")) {
                         Util.dismissDialog();
-                        if (sessionInfo.getData().size() > 0) {
+                        if (sessionInfo.getData() != null) {
+                            finalsessionfullDetailModel = sessionInfo;
 
+                            Log.d("DataModel", "" + finalsessionfullDetailModel.getData().size());
+//                            listDataHeader = new ArrayList<>();
+//                            listDataChild = new HashMap<String, ArrayList<SessionFullDetail>>();
+//
+//                            for (int i = 0; i < finalsessionfullDetailModel.getData().size(); i++) {
+//                                listDataHeader.add(finalsessionfullDetailModel.getData().get(i).getSessionDate());
+//                                Log.d("header", "" + listDataHeader);
+//                                ArrayList<SessionFullDetail> row = new ArrayList<SessionFullDetail>();
+//                                for (int j = 0; j < finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().size(); j++) {
+//                                    row.add(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j));
+//                                    Log.d("row", "" + row);
+//                                }
+//                                listDataChild.put(listDataHeader.get(i), row);
+//                                Log.d("child", "" + listDataChild);
+//                            }
+                            init();
+//                            mockList(eventList);
                         }
                     }
                 }
@@ -398,8 +340,91 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
     private Map<String, String> getsessionDetail() {
         Map<String, String> map = new HashMap<>();
-        map.put("CoachID",Util.getPref(mContext,"coachID"));
+        map.put("CoachID", "15");//Util.getPref(mContext, "coachID"));
         return map;
     }
+
+    public void mockList(List<CalendarEvent> eventList) {
+        long startDate = 0, endDate = 0;
+//
+        listDataHeader = new ArrayList<>();
+        for (int i = 0; i < finalsessionfullDetailModel.getData().size(); i++) {
+            for (int j = 0; j < finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().size(); j++) {
+                String[] spiltTime = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime().split("\\-");
+                try {
+                    String dateString = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionDate() + " " + spiltTime[0];
+                    String enddateString = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionDate() + " " + spiltTime[1];
+                    Log.d("StartDate and EndDate :", dateString + " " + enddateString);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.getDefault());
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.getDefault());
+                    Date date = sdf.parse(dateString);
+                    Date date1 = sdf1.parse(enddateString);
+
+                    startDate = date.getTime();
+                    endDate = date1.getTime();
+                    Log.d("FirstTime", "first event :" + startDate + endDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                DrawableCalendarEvent event = new DrawableCalendarEvent(Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID()),
+                        getResources().getColor(R.color.red_dark), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
+                        finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName(),
+                        startDate, endDate, 0, "1 hours", 1);
+                eventList.add(event);
+            }
+
+        }
+
+
+//        Log.d("eventList", "" + eventList);
+
+
+
+
+//        try {
+////            String dateString = "24/03/2018 2:00 PM";
+////            String enddateString = "24/03/2018 3:00 PM";
+//            Log.d("DataMOckSize",""+finalsessionfullDetailModel.getData().size());
+//            String[] spiltTime = finalsessionfullDetailModel.getData().get(0).getSessionFullDetails().get(0).getSessionTime().split("\\-");
+//            String dateString = finalsessionfullDetailModel.getData().get(0).getSessionFullDetails().get(0).getSessionDate() + " " + spiltTime[0];
+//            String enddateString = finalsessionfullDetailModel.getData().get(0).getSessionFullDetails().get(0).getSessionDate() + " " + spiltTime[1];
+////
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.getDefault());
+//            SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.getDefault());
+//            Date date = sdf.parse(dateString);
+//            Date date1 = sdf1.parse(enddateString);
+//
+//
+//            startDate = date.getTime();
+//            endDate = date1.getTime();
+//            Log.d("FirstTime", "first event :" + startDate + endDate);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+////        long id, int color, String title, String description, String location, long dateStart, long dateEnd, int allDay, String duration, int drawableId
+//        DrawableCalendarEvent event3 = new DrawableCalendarEvent(1, R.color.search_boder, "Yoga Class", "Yoga good for health", "PaldiRiverfront", startDate, endDate, 0, "1 hours", 1);
+//        eventList.add(event3);
+
+//        try {
+//            String dateString = "24/03/2018 4:00 PM";
+//            String enddateString = "24/03/2018 5:00 PM";
+//            SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy hh:mm a",Locale.getDefault());
+//            SimpleDateFormat sdf3 = new SimpleDateFormat("dd/MM/yyyy hh:mm a",Locale.getDefault());
+//            Date date = sdf2.parse(dateString);
+//            Date date1 = sdf3.parse(enddateString);
+//
+//
+//            startDate = date.getTime();
+//            endDate = date1.getTime();
+//            Log.d("SecondTime", "Second event :" + startDate + endDate);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        DrawableCalendarEvent event4 = new DrawableCalendarEvent(2, R.color.search_boder, "Dance Class", "Dance good for health", "PaldiRiverfront", startDate, endDate, 2, "1 hours", 1);
+//        eventList.add(event4);
+//
+
+    }
+
 }
 

@@ -3,6 +3,9 @@ package com.adms.safariteacher.Model.Session;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by admsandroid on 3/22/2018.
  */
@@ -41,6 +44,9 @@ public class sessionDataModel {
     @SerializedName("Region_ID")
     @Expose
     private String regionID;
+    @SerializedName("RegionName")
+    @Expose
+    private String regionName;
     @SerializedName("RegionDescription")
     @Expose
     private String regionDescription;
@@ -80,219 +86,70 @@ public class sessionDataModel {
     @SerializedName("CreateDate")
     @Expose
     private String createDate;
-    @SerializedName("SessionDetail_ID")
+    @SerializedName("SessionDate")
     @Expose
-    private String sessionDetailID;
-    @SerializedName("SessionName")
+    private String sessionDate;
+    @SerializedName("SessionDetail")
     @Expose
-    private String sessionName;
-    @SerializedName("Days")
-    @Expose
-    private String days;
-    @SerializedName("StartTime")
-    @Expose
-    private String startTime;
-    @SerializedName("EndTime")
-    @Expose
-    private String endTime;
-    @SerializedName("AddressLine1")
-    @Expose
-    private String addressLine1;
-    @SerializedName("AddressLine2")
-    @Expose
-    private String addressLine2;
-    @SerializedName("RegionName")
-    @Expose
-    private String regionName;
-    @SerializedName("AddressCity")
-    @Expose
-    private String addressCity;
-    @SerializedName("AddressState")
-    @Expose
-    private String addressState;
-    @SerializedName("AddressZipCode")
-    @Expose
-    private String addressZipCode;
+    private List<SessionFullDetail> sessionFullDetails = new ArrayList<SessionFullDetail>();
 
-    public String getSessionDetailID() {
-        return sessionDetailID;
+    public String getSessionDate() {
+        return sessionDate;
     }
 
-    public void setSessionDetailID(String sessionDetailID) {
-        this.sessionDetailID = sessionDetailID;
+    public void setSessionDate(String sessionDate) {
+        this.sessionDate = sessionDate;
     }
 
-    public String getSessionName() {
-        return sessionName;
+
+    public List<SessionFullDetail> getSessionFullDetails() {
+        return sessionFullDetails;
     }
 
-    public void setSessionName(String sessionName) {
-        this.sessionName = sessionName;
+    public void setSessionFullDetails(List<SessionFullDetail> sessionFullDetails) {
+        this.sessionFullDetails = sessionFullDetails;
     }
 
-    public String getDays() {
-        return days;
+    public String getBoardID() {
+        return boardID;
     }
 
-    public void setDays(String days) {
-        this.days = days;
+    public void setBoardID(String boardID) {
+        this.boardID = boardID;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getBoardName() {
+        return boardName;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setBoardName(String boardName) {
+        this.boardName = boardName;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getBoardAbbr() {
+        return boardAbbr;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setBoardAbbr(String boardAbbr) {
+        this.boardAbbr = boardAbbr;
     }
 
-    public String getAddressLine1() {
-        return addressLine1;
+    public String getBoardOrder() {
+        return boardOrder;
     }
 
-    public void setAddressLine1(String addressLine1) {
-        this.addressLine1 = addressLine1;
+    public void setBoardOrder(String boardOrder) {
+        this.boardOrder = boardOrder;
     }
 
-    public String getAddressLine2() {
-        return addressLine2;
+    public String getBoardDiscription() {
+        return boardDiscription;
     }
 
-    public void setAddressLine2(String addressLine2) {
-        this.addressLine2 = addressLine2;
-    }
-    public String getAddressCity() {
-        return addressCity;
+    public void setBoardDiscription(String boardDiscription) {
+        this.boardDiscription = boardDiscription;
     }
 
-    public void setAddressCity(String addressCity) {
-        this.addressCity = addressCity;
-    }
-
-    public String getAddressState() {
-        return addressState;
-    }
-
-    public void setAddressState(String addressState) {
-        this.addressState = addressState;
-    }
-
-    public String getAddressZipCode() {
-        return addressZipCode;
-    }
-
-    public void setAddressZipCode(String addressZipCode) {
-        this.addressZipCode = addressZipCode;
-    }
-    public String getStreamID() {
-        return streamID;
-    }
-
-    public void setStreamID(String streamID) {
-        this.streamID = streamID;
-    }
-
-    public String getStreamName() {
-        return streamName;
-    }
-
-    public void setStreamName(String streamName) {
-        this.streamName = streamName;
-    }
-
-    public String getStreamAbbr() {
-        return streamAbbr;
-    }
-
-    public void setStreamAbbr(String streamAbbr) {
-        this.streamAbbr = streamAbbr;
-    }
-
-    public String getStreamOrder() {
-        return streamOrder;
-    }
-
-    public void setStreamOrder(String streamOrder) {
-        this.streamOrder = streamOrder;
-    }
-
-    public String getStreamDescription() {
-        return streamDescription;
-    }
-
-    public void setStreamDescription(String streamDescription) {
-        this.streamDescription = streamDescription;
-    }
-    public String getStandardID() {
-        return standardID;
-    }
-
-    public void setStandardID(String standardID) {
-        this.standardID = standardID;
-    }
-
-    public String getStandardName() {
-        return standardName;
-    }
-
-    public void setStandardName(String standardName) {
-        this.standardName = standardName;
-    }
-
-    public String getStandardAbbr() {
-        return standardAbbr;
-    }
-
-    public void setStandardAbbr(String standardAbbr) {
-        this.standardAbbr = standardAbbr;
-    }
-
-    public String getStandardOrder() {
-        return standardOrder;
-    }
-
-    public void setStandardOrder(String standardOrder) {
-        this.standardOrder = standardOrder;
-    }
-
-    public String getStandardDescription() {
-        return standardDescription;
-    }
-
-    public void setStandardDescription(String standardDescription) {
-        this.standardDescription = standardDescription;
-    }
-    public String getRegionID() {
-        return regionID;
-    }
-
-    public void setRegionID(String regionID) {
-        this.regionID = regionID;
-    }
-
-    public String getRegionName() {
-        return regionName;
-    }
-
-    public void setRegionName(String regionName) {
-        this.regionName = regionName;
-    }
-
-    public String getRegionDescription() {
-        return regionDescription;
-    }
-
-    public void setRegionDescription(String regionDescription) {
-        this.regionDescription = regionDescription;
-    }
     public String getLessonTypeID() {
         return lessonTypeID;
     }
@@ -332,44 +189,109 @@ public class sessionDataModel {
     public void setLessonTypeDescription(String lessonTypeDescription) {
         this.lessonTypeDescription = lessonTypeDescription;
     }
-    public String getBoardID() {
-        return boardID;
+
+    public String getRegionID() {
+        return regionID;
     }
 
-    public void setBoardID(String boardID) {
-        this.boardID = boardID;
+    public void setRegionID(String regionID) {
+        this.regionID = regionID;
     }
 
-    public String getBoardName() {
-        return boardName;
+    public String getRegionName() {
+        return regionName;
     }
 
-    public void setBoardName(String boardName) {
-        this.boardName = boardName;
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
     }
 
-    public String getBoardAbbr() {
-        return boardAbbr;
+    public String getRegionDescription() {
+        return regionDescription;
     }
 
-    public void setBoardAbbr(String boardAbbr) {
-        this.boardAbbr = boardAbbr;
+    public void setRegionDescription(String regionDescription) {
+        this.regionDescription = regionDescription;
     }
 
-    public String getBoardOrder() {
-        return boardOrder;
+    public String getStandardID() {
+        return standardID;
     }
 
-    public void setBoardOrder(String boardOrder) {
-        this.boardOrder = boardOrder;
+    public void setStandardID(String standardID) {
+        this.standardID = standardID;
     }
 
-    public String getBoardDiscription() {
-        return boardDiscription;
+    public String getStandardName() {
+        return standardName;
     }
 
-    public void setBoardDiscription(String boardDiscription) {
-        this.boardDiscription = boardDiscription;
+    public void setStandardName(String standardName) {
+        this.standardName = standardName;
+    }
+
+    public String getStandardAbbr() {
+        return standardAbbr;
+    }
+
+    public void setStandardAbbr(String standardAbbr) {
+        this.standardAbbr = standardAbbr;
+    }
+
+    public String getStandardOrder() {
+        return standardOrder;
+    }
+
+    public void setStandardOrder(String standardOrder) {
+        this.standardOrder = standardOrder;
+    }
+
+    public String getStandardDescription() {
+        return standardDescription;
+    }
+
+    public void setStandardDescription(String standardDescription) {
+        this.standardDescription = standardDescription;
+    }
+
+    public String getStreamID() {
+        return streamID;
+    }
+
+    public void setStreamID(String streamID) {
+        this.streamID = streamID;
+    }
+
+    public String getStreamName() {
+        return streamName;
+    }
+
+    public void setStreamName(String streamName) {
+        this.streamName = streamName;
+    }
+
+    public String getStreamAbbr() {
+        return streamAbbr;
+    }
+
+    public void setStreamAbbr(String streamAbbr) {
+        this.streamAbbr = streamAbbr;
+    }
+
+    public String getStreamOrder() {
+        return streamOrder;
+    }
+
+    public void setStreamOrder(String streamOrder) {
+        this.streamOrder = streamOrder;
+    }
+
+    public String getStreamDescription() {
+        return streamDescription;
+    }
+
+    public void setStreamDescription(String streamDescription) {
+        this.streamDescription = streamDescription;
     }
 
     public String getIsActive() {
