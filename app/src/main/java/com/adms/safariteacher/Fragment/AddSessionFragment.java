@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -70,9 +71,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     AlertListAdapter alertListAdapter;
 
     //Use for AddSession Time Dialog
-    TextView start_date_txt;
-    TextView end_date_txt;
-
+    TextView start_date_txt, end_date_txt;
+    AddSessionDialogBinding sessionDialogBinding;
     static TextView sun_start_time_txt, sun_end_time_txt, mon_start_time_txt, mon_end_time_txt, tue_start_time_txt,
             tue_end_time_txt, wed_start_time_txt, wed_end_time_txt, thu_start_time_txt, thu_end_time_txt, fri_end_time_txt,
             fri_start_time_txt, sat_end_time_txt, sat_start_time_txt;
@@ -99,9 +99,9 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     String flag;
 
     //Use for selectedSessionTimeValue
-    String coachIdStr, lessionTypeIdStr, sessionNameStr, boardStr, standardStr, streamStr, startDateStr, endDateStr,
-            address1Str, address2Str, regionStr, cityStr, stateStr, zipcodeStr, descriptionStr, sessionamtStr,
-            sessioncapacityStr, alerttimeStr, scheduleStr = "";
+    String coachIdStr, lessionTypeNameStr = "", sessionNameStr = "", boardStr = "", standardStr = "", streamStr = "", startDateStr, endDateStr,
+            address1Str = "", address2Str = "", regionStr = "", cityStr = "", stateStr = "", zipcodeStr = "", descriptionStr = "", sessionamtStr = "0",
+            sessioncapacityStr = "", alerttimeStr = "", scheduleStr = "", sessiontypeStr = "1";
 
     String sunstartTimeStr, sunendTimeStr, finalsunTimeStr, monstartTimeStr, monendTimeStr, finalmonTimeStr,
             tuestartTimeStr, tueendTimeStr, finaltueTimeStr, wedstartTimeStr, wedendTimeStr, finalwedTimeStr,
@@ -111,13 +111,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     ArrayList<String> scheduleArray;
     ArrayList<String> newEnteryArray;
     SessionDetailModel dataResponse;
-
-    //USe for Autocomplete Textview
-    HashMap<Integer, String> spinnerBoardMap;
-    HashMap<Integer, String> spinnerStandardMap;
-    HashMap<Integer, String> spinnerStreamMap;
-    HashMap<Integer, String> spinnerLessionMap;
-    HashMap<Integer, String> spinnerRegionMap;
 
     public AddSessionFragment() {
     }
@@ -135,11 +128,14 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         } else {
             ((DashBoardActivity) getActivity()).setActionBar(1, "add");
         }
+        coachIdStr = Util.getPref(mContext, "coachID");
         initViews();
         callBoardApi();
         callstandardApi();
         callStreamApi();
+        callLessionApi();
         callRegionApi();
+
         setListners();
 
         return rootView;
@@ -188,7 +184,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     }
 
     public void setListners() {
-
         addSessionBinding.fessStatusRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -205,14 +200,27 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 }
             }
         });
+        addSessionBinding.sessionTypeRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int radioButtonId = addSessionBinding.sessionTypeRg.getCheckedRadioButtonId();
+                switch (radioButtonId) {
+                    case R.id.recurring_rb:
+                        sessiontypeStr = "1";
+                        break;
+                    case R.id.single_rb:
+                        sessiontypeStr = "2";
+                        break;
+
+                }
+            }
+        });
         addSessionBinding.alertBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TestDialog();
-
             }
         });
-
         addSessionBinding.sessionCal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,12 +232,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 fragmentTransaction.commit();
             }
         });
-        addSessionBinding.sessionTimeTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SessionTimeDialog();
-            }
-        });
         addSessionBinding.addSessionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -239,8 +241,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         addSessionBinding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (!coachIdStr.equalsIgnoreCase(""))
-                callCreateSessionApi();
+                sessionNameStr = addSessionBinding.sessionNameEdt.getText().toString();
+                if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
+                    callCreateSessionApi();
+                } else {
+                    addSessionBinding.sessionNameEdt.setError("Please Enter Session Name.");
+                }
             }
         });
     }
@@ -321,8 +327,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         wed_end_time_txt = (TextView) popularDialog.findViewById(R.id.wed_end_time_txt);
         thu_start_time_txt = (TextView) popularDialog.findViewById(R.id.thu_start_time_txt);
         thu_end_time_txt = (TextView) popularDialog.findViewById(R.id.thu_end_time_txt);
-        fri_end_time_txt = (TextView) popularDialog.findViewById(R.id.fri_start_time_txt);
-        fri_start_time_txt = (TextView) popularDialog.findViewById(R.id.fri_end_time_txt);
+        fri_end_time_txt = (TextView) popularDialog.findViewById(R.id.fri_end_time_txt);
+        fri_start_time_txt = (TextView) popularDialog.findViewById(R.id.fri_start_time_txt);
         sat_end_time_txt = (TextView) popularDialog.findViewById(R.id.sat_end_time_txt);
         sat_start_time_txt = (TextView) popularDialog.findViewById(R.id.sat_start_time_txt);
 
@@ -1015,13 +1021,10 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     }
 
     public void getSelectedSessionTimeValue() {
-        
-        coachIdStr = AppConfiguration.coachId;
-        lessionTypeIdStr = "7";
-        sessionNameStr = addSessionBinding.sessionNameEdt.getText().toString();
+        lessionTypeNameStr = addSessionBinding.subjectEdt.getText().toString();
         boardStr = addSessionBinding.boardNameEdt.getText().toString();
         standardStr = addSessionBinding.standardEdt.getText().toString();
-        streamStr = addSessionBinding.subjectEdt.getText().toString();
+        streamStr = addSessionBinding.streamEdt.getText().toString();
         address1Str = addSessionBinding.addressEdt.getText().toString();
         address2Str = addSessionBinding.addressEdt.getText().toString();
         regionStr = addSessionBinding.areaEdt.getText().toString();
@@ -1059,7 +1062,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         return;
                     }
                     if (sessionDetailModel.getSuccess().equalsIgnoreCase("True")) {
-
+                        Util.dismissDialog();
+                        Util.ping(mContext, "Create New Session Sucessfully.");
                     }
                 }
 
@@ -1080,13 +1084,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         getSelectedSessionTimeValue();
         Map<String, String> map = new HashMap<>();
         map.put("CoachID", coachIdStr);
-        map.put("LessionTypeID", lessionTypeIdStr);
+        map.put("SessionTypeID", sessiontypeStr);
         map.put("SessionName", sessionNameStr);
         map.put("Board", boardStr);
         map.put("Standard", standardStr);
         map.put("Stream", streamStr);
-        map.put("StartDate", startDateStr);
-        map.put("EndDate", endDateStr);
+        map.put("LessionTypeName", lessionTypeNameStr);
         map.put("Address1", address1Str);
         map.put("Address2", address2Str);
         map.put("Region", regionStr);
@@ -1097,6 +1100,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         map.put("SessionAmount", sessionamtStr);
         map.put("SessionCapacity", sessioncapacityStr);
         map.put("AlertTime", alerttimeStr);
+        map.put("StartDate", startDateStr);
+        map.put("EndDate", endDateStr);
         map.put("Schedule", scheduleStr);
         return map;
     }
@@ -1150,35 +1155,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     }
 
     public void fillBoard() {
-        ArrayList<Integer> BoardId = new ArrayList<Integer>();
-        for (int i = 0; i < dataResponse.getData().size(); i++) {
-            BoardId.add(Integer.valueOf(dataResponse.getData().get(i).getBoardID()));
-        }
         ArrayList<String> BoardName = new ArrayList<String>();
         for (int j = 0; j < dataResponse.getData().size(); j++) {
             BoardName.add(dataResponse.getData().get(j).getBoardName());
         }
-
-        String[] spinnertermIdArray = new String[BoardId.size()];
-
-        spinnerBoardMap = new HashMap<Integer, String>();
-        for (int i = 0; i < BoardId.size(); i++) {
-            spinnerBoardMap.put(i, String.valueOf(BoardId.get(i)));
-            spinnertermIdArray[i] = BoardName.get(i).trim();
-        }
-//        try {
-//            Field popup = Spinner.class.getDeclaredField("mPopup");
-//            popup.setAccessible(true);
-//
-//            // Get private mPopup member variable and try cast to ListPopupWindow
-//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.boardNameEdt);
-//
-//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
-//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
-//            // silently fail...
-//        }
-
-        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, BoardName);
         addSessionBinding.boardNameEdt.setThreshold(1);
         addSessionBinding.boardNameEdt.setAdapter(adapterTerm);
 
@@ -1235,35 +1216,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     }
 
     public void fillStandard() {
-        ArrayList<Integer> StandardId = new ArrayList<Integer>();
-        for (int i = 0; i < dataResponse.getData().size(); i++) {
-            StandardId.add(Integer.valueOf(dataResponse.getData().get(i).getStandardID()));
-        }
         ArrayList<String> StandardName = new ArrayList<String>();
         for (int j = 0; j < dataResponse.getData().size(); j++) {
             StandardName.add(dataResponse.getData().get(j).getStandardName());
         }
-
-        String[] spinnertermIdArray = new String[StandardId.size()];
-
-        spinnerStandardMap = new HashMap<Integer, String>();
-        for (int i = 0; i < StandardId.size(); i++) {
-            spinnerStandardMap.put(i, String.valueOf(StandardId.get(i)));
-            spinnertermIdArray[i] = StandardName.get(i).trim();
-        }
-//        try {
-//            Field popup = Spinner.class.getDeclaredField("mPopup");
-//            popup.setAccessible(true);
-//
-//            // Get private mPopup member variable and try cast to ListPopupWindow
-//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.standardEdt);
-//
-//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
-//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
-//            // silently fail...
-//        }
-
-        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, StandardName);
         addSessionBinding.standardEdt.setThreshold(1);
         addSessionBinding.standardEdt.setAdapter(adapterTerm);
     }
@@ -1318,44 +1275,21 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     }
 
     public void fillStream() {
-        ArrayList<Integer> StreamId = new ArrayList<Integer>();
-        for (int i = 0; i < dataResponse.getData().size(); i++) {
-            StreamId.add(Integer.valueOf(dataResponse.getData().get(i).getStreamID()));
-        }
+
         ArrayList<String> StreamName = new ArrayList<String>();
         for (int j = 0; j < dataResponse.getData().size(); j++) {
             StreamName.add(dataResponse.getData().get(j).getStreamName());
         }
-
-        String[] spinnertermIdArray = new String[StreamId.size()];
-
-        spinnerStreamMap = new HashMap<Integer, String>();
-        for (int i = 0; i < StreamId.size(); i++) {
-            spinnerStreamMap.put(i, String.valueOf(StreamId.get(i)));
-            spinnertermIdArray[i] = StreamName.get(i).trim();
-        }
-//        try {
-//            Field popup = Spinner.class.getDeclaredField("mPopup");
-//            popup.setAccessible(true);
-//
-//            // Get private mPopup member variable and try cast to ListPopupWindow
-//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.subjectEdt);
-//
-//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
-//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
-//            // silently fail...
-//        }
-
-        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
-        addSessionBinding.boardNameEdt.setThreshold(1);
-        addSessionBinding.subjectEdt.setAdapter(adapterTerm);
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, StreamName);
+        addSessionBinding.streamEdt.setThreshold(1);
+        addSessionBinding.streamEdt.setAdapter(adapterTerm);
     }
 
     //Use for Lession
     public void callLessionApi() {
         if (Util.isNetworkConnected(mContext)) {
 
-            Util.showDialog(mContext);
+//            Util.showDialog(mContext);
             ApiHandler.getApiService().get_Lesson(getLessionDeatil(), new retrofit.Callback<SessionDetailModel>() {
                 @Override
                 public void success(SessionDetailModel boardInfo, Response response) {
@@ -1373,6 +1307,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         return;
                     }
                     if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
                         if (boardInfo.getData().size() > 0) {
                             dataResponse = boardInfo;
                             fillLession();
@@ -1399,37 +1334,15 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     }
 
     public void fillLession() {
-        ArrayList<Integer> StreamId = new ArrayList<Integer>();
-        for (int i = 0; i < dataResponse.getData().size(); i++) {
-            StreamId.add(Integer.valueOf(dataResponse.getData().get(i).getStreamID()));
-        }
-        ArrayList<String> StreamName = new ArrayList<String>();
+
+        ArrayList<String> LessionName = new ArrayList<String>();
         for (int j = 0; j < dataResponse.getData().size(); j++) {
-            StreamName.add(dataResponse.getData().get(j).getStreamName());
+            LessionName.add(dataResponse.getData().get(j).getLessonTypeName());
         }
 
-        String[] spinnertermIdArray = new String[StreamId.size()];
-
-        spinnerStreamMap = new HashMap<Integer, String>();
-        for (int i = 0; i < StreamId.size(); i++) {
-            spinnerStreamMap.put(i, String.valueOf(StreamId.get(i)));
-            spinnertermIdArray[i] = StreamName.get(i).trim();
-        }
-//        try {
-//            Field popup = Spinner.class.getDeclaredField("mPopup");
-//            popup.setAccessible(true);
-//
-//            // Get private mPopup member variable and try cast to ListPopupWindow
-//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.subjectEdt);
-//
-//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
-//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
-//            // silently fail...
-//        }
-
-//        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
-//        addSessionBinding.boardNameEdt.setThreshold(1);
-//        addSessionBinding.subjectEdt.setAdapter(adapterTerm);
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, LessionName);
+        addSessionBinding.subjectEdt.setThreshold(1);
+        addSessionBinding.subjectEdt.setAdapter(adapterTerm);
     }
 
     //Use for Region
@@ -1482,35 +1395,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     }
 
     public void fillArea() {
-        ArrayList<Integer> AreaId = new ArrayList<Integer>();
-        for (int i = 0; i < dataResponse.getData().size(); i++) {
-            AreaId.add(Integer.valueOf(dataResponse.getData().get(i).getRegionID()));
-        }
         ArrayList<String> AreaName = new ArrayList<String>();
         for (int j = 0; j < dataResponse.getData().size(); j++) {
             AreaName.add(dataResponse.getData().get(j).getRegionName());
         }
-
-        String[] spinnertermIdArray = new String[AreaId.size()];
-
-        spinnerRegionMap = new HashMap<Integer, String>();
-        for (int i = 0; i < AreaId.size(); i++) {
-            spinnerRegionMap.put(i, String.valueOf(AreaId.get(i)));
-            spinnertermIdArray[i] = AreaName.get(i).trim();
-        }
-//        try {
-//            Field popup = Spinner.class.getDeclaredField("mPopup");
-//            popup.setAccessible(true);
-//
-//            // Get private mPopup member variable and try cast to ListPopupWindow
-//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addSessionBinding.subjectEdt);
-//
-//            popupWindow.setHeight(spinnertermIdArray.length > 4 ? 500 : spinnertermIdArray.length * 100);
-//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
-//            // silently fail...
-//        }
-
-        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnertermIdArray);
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, AreaName);
         addSessionBinding.areaEdt.setThreshold(1);
         addSessionBinding.areaEdt.setAdapter(adapterTerm);
     }

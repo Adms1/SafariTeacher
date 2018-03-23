@@ -29,6 +29,43 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginRight="@dimen/_5sdp"
+                    android:orientation="horizontal">
+
+                    <RadioGroup
+                        android:id="@+id/session_type_rg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:layout_marginLeft="@dimen/_22sdp"
+                        android:layout_marginRight="@dimen/_2sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/recurring_rb"
+                            android:layout_width="@dimen/_80sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:button="@drawable/absent_radio_type"
+                            android:checked="true"
+                            android:paddingLeft="@dimen/_2sdp"
+                            android:text="@string/recurring" />
+
+                        <RadioButton
+                            android:id="@+id/single_rb"
+                            android:layout_width="@dimen/_80sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_margin="@dimen/_1sdp"
+                            android:button="@drawable/absent_radio_type"
+                            android:paddingLeft="@dimen/_2sdp"
+                            android:text="@string/single" />
+                    </RadioGroup>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
                     android:layout_marginTop="@dimen/_3sdp"
                     android:orientation="horizontal">
 
@@ -46,9 +83,9 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
-                        android:maxLines="1"
-                       android:imeOptions="actionNext"
-                        android:hint="@string/session_name" />
+                        android:hint="@string/session_name"
+                        android:imeOptions="actionNext"
+                        android:maxLines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -70,8 +107,8 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
-                        android:maxLines="1"
-                        android:hint="@string/session_board" />
+                        android:hint="@string/session_board"
+                        android:maxLines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -94,8 +131,32 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
 
-                        android:maxLines="1"
-                        android:hint="@string/search_standard" />
+                        android:hint="@string/search_standard"
+                        android:maxLines="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/_15sdp"
+                        android:layout_height="@dimen/_15sdp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_2sdp" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/stream_edt"
+                        style="@style/addSessionEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_25sdp"
+
+                        android:hint="@string/stream"
+                        android:maxLines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -117,8 +178,8 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
-                        android:maxLines="1"
-                        android:hint="Subject" />
+                        android:hint="Subject"
+                        android:maxLines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -313,8 +374,8 @@
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_25sdp"
                             android:layout_weight="1"
-                            android:maxLines="1"
-                            android:hint="@string/area" />
+                            android:hint="@string/area"
+                            android:maxLines="1" />
 
                         <AutoCompleteTextView
                             android:id="@+id/city_edt"
@@ -322,8 +383,8 @@
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_25sdp"
                             android:layout_weight="1"
-                            android:maxLines="1"
-                            android:hint="City" />
+                            android:hint="City"
+                            android:maxLines="1" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -347,8 +408,8 @@
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_25sdp"
                             android:layout_weight="1"
-                            android:maxLines="1"
-                            android:hint="@string/state" />
+                            android:hint="@string/state"
+                            android:maxLines="1" />
 
                         <AutoCompleteTextView
                             android:id="@+id/zipcode_edt"
@@ -357,8 +418,8 @@
                             android:layout_height="@dimen/_25sdp"
                             android:layout_weight="1"
                             android:hint="@string/zipcode"
-                            android:maxLines="1"
-                            android:inputType="number" />
+                            android:inputType="number"
+                            android:maxLines="1" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -382,8 +443,8 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
-                        android:imeOptions="actionNext"
-                        android:hint="@string/description" />
+                        android:hint="@string/description"
+                        android:imeOptions="actionNext" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -428,9 +489,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
                         android:hint="@string/session_price"
+                        android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLines="1"
-                        android:imeOptions="actionNext"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -447,16 +508,16 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:layout_marginTop="@dimen/_2sdp"
-                        android:src="@drawable/spot"/>
+                        android:src="@drawable/spot" />
 
                     <AutoCompleteTextView
                         android:id="@+id/sports_edt"
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
+                        android:hint="@string/sports"
                         android:inputType="number"
-                        android:maxLines="1"
-                        android:hint="@string/sports" />
+                        android:maxLines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -502,7 +563,7 @@
                     android:text="@string/submit"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_11sdp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </ScrollView>
@@ -524,7 +585,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_35sdp"
                 android:src="@drawable/s_e"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/session_search"
@@ -533,7 +594,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_85sdp"
                 android:src="@drawable/s_ser"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/session_cal"

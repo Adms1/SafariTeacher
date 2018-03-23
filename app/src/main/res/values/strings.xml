@@ -23,6 +23,7 @@
     <string name="session_standard">Standard</string>
     <string name="search_board">Board</string>
     <string name="search_standard">Standard</string>
+    <string name="stream">Stream</string>
     <string name="session_board">Board</string>
     <string name="address">Address</string>
     <string name="duration">Duration : 00hr</string>
@@ -35,6 +36,8 @@
     <string name="remarks">Remarks</string>
     <string name="free_radio">Free</string>
     <string name="paid_radio">Paid</string>
+    <string name="recurring">Recurring</string>
+    <string name="single">Single</string>
     <!--string for naigation drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

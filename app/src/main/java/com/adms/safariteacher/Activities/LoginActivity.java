@@ -235,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
     private Map<String, String> getTeacherLoginDetail() {
 
         Map<String, String> map = new HashMap<>();
-        map.put("Username", usernameStr);
+        map.put("EmailAddress", usernameStr);
         map.put("Password", passwordStr);
 
         return map;

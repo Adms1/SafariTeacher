@@ -51,4 +51,8 @@ public interface WebServices {
     @FormUrlEncoded
     @POST("/Get_Stream")
     public void get_Stream(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Get_SessionDetailByCoachID")
+    public void get_SessionDetailByCoachID(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
 }

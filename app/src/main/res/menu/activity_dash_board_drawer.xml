@@ -6,8 +6,9 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/session"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Session Calendar"/>
+            android:icon="@drawable/s_cal"
+            android:title="Session Calendar"
+            android:iconTint="@color/search_boder"/>
         <item
             android:id="@+id/add_session"
             android:icon="@drawable/ic_menu_camera"
