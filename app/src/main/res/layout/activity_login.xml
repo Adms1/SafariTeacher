@@ -114,7 +114,7 @@
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_25sdp"
-                android:background="@drawable/login_btn"
+                android:background="@drawable/register_btn"
                 android:text="Login"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

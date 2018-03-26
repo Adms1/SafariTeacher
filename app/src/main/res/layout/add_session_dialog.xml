@@ -187,8 +187,10 @@
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="0">
 
                     <TextView
@@ -206,6 +208,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="0"
                         android:text="+"
@@ -219,8 +222,10 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
                     android:layout_marginLeft="@dimen/_5sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="1">
 
                     <TextView
@@ -237,6 +242,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="1"
                         android:text="+"
@@ -264,8 +270,10 @@
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="2">
 
                     <TextView
@@ -283,6 +291,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="2"
                         android:text="+"
@@ -296,8 +305,10 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
                     android:layout_marginLeft="@dimen/_5sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="3">
 
                     <TextView
@@ -314,6 +325,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="3"
                         android:text="+"
@@ -341,8 +353,10 @@
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="4">
 
                     <TextView
@@ -360,6 +374,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="4"
                         android:text="+"
@@ -373,8 +388,10 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
                     android:layout_marginLeft="@dimen/_5sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="5">
 
                     <TextView
@@ -391,6 +408,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="5"
                         android:text="+"
@@ -418,8 +436,10 @@
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="6">
 
                     <TextView
@@ -437,6 +457,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="6"
                         android:text="+"
@@ -450,8 +471,10 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
                     android:layout_marginLeft="@dimen/_5sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="7">
 
                     <TextView
@@ -468,6 +491,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="7"
                         android:text="+"
@@ -496,8 +520,10 @@
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="8">
 
                     <TextView
@@ -515,6 +541,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="8"
                         android:text="+"
@@ -528,8 +555,10 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
                     android:layout_marginLeft="@dimen/_5sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="9">
 
                     <TextView
@@ -546,6 +575,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="9"
                         android:text="+"
@@ -573,8 +603,10 @@
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="10">
 
                     <TextView
@@ -582,8 +614,8 @@
                         style="@style/Add_Session_Time_Textview"
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="match_parent"
-                        android:text="Add"
-                        android:tag="Fri"/>
+                        android:tag="Fri"
+                        android:text="Add" />
 
                     <Button
                         android:id="@+id/fri_start_add_session_btn"
@@ -592,6 +624,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="10"
                         android:text="+"
@@ -605,8 +638,10 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
                     android:layout_marginLeft="@dimen/_5sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="11">
 
                     <TextView
@@ -623,6 +658,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="11"
                         android:text="+"
@@ -650,8 +686,10 @@
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="12">
 
                     <TextView
@@ -659,8 +697,8 @@
                         style="@style/Add_Session_Time_Textview"
                         android:layout_width="@dimen/_70sdp"
                         android:layout_height="match_parent"
-                        android:text="Add"
-                        android:tag="Sat"/>
+                        android:tag="Sat"
+                        android:text="Add" />
 
                     <Button
                         android:id="@+id/sat_start_add_session_btn"
@@ -669,6 +707,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="12"
                         android:text="+"
@@ -682,8 +721,10 @@
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_1sdp"
                     android:layout_marginLeft="@dimen/_5sdp"
+                    android:alpha="0.2"
                     android:background="@drawable/linear_shape"
                     android:orientation="horizontal"
+                    android:saveEnabled="false"
                     android:tag="13">
 
                     <TextView
@@ -700,6 +741,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:background="@drawable/round_btn"
+                        android:enabled="false"
                         android:gravity="center"
                         android:tag="13"
                         android:text="+"
@@ -709,18 +751,40 @@
             </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/done_btn"
-            android:layout_width="@dimen/_130sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/_6sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="@drawable/submit_shape"
-            android:gravity="center"
-            android:text="Done"
-            android:textColor="@color/blue"
-            android:textSize="@dimen/_12sdp"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancel_btn"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/_6sdp"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/submit_shape"
+                android:gravity="center"
+                android:text="Cancel"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/done_btn"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/_6sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/submit_shape"
+                android:gravity="center"
+                android:text="Done"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 </layout>

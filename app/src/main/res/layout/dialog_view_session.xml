@@ -214,7 +214,7 @@
             android:layout_weight="1.4"
             android:background="@drawable/session_view_btn"
             android:gravity="center"
-            android:text="Add Attendance"
+            android:text="Take Attendance"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp" />

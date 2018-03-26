@@ -55,4 +55,12 @@ public interface WebServices {
     @FormUrlEncoded
     @POST("/Get_SessionDetailByCoachID")
     public void get_SessionDetailByCoachID(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Get_SessionDetailByCoachIDAndSessionID")
+    public void get_SessionDetailBySessionID(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Update_Session")
+    public void get_Update_Session(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
 }

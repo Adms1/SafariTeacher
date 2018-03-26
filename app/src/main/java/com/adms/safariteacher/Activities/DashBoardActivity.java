@@ -15,7 +15,9 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.adms.safariteacher.Fragment.AddFamilyFragment;
 import com.adms.safariteacher.Fragment.AddSessionFragment;
+import com.adms.safariteacher.Fragment.OldFamilyListFragment;
 import com.adms.safariteacher.Fragment.SessionFragment;
 import com.adms.safariteacher.Fragment.StudentAttendanceFragment;
 import com.adms.safariteacher.R;
@@ -30,6 +32,7 @@ public class DashBoardActivity extends AppCompatActivity {
 
     private static final String TAG_Session = "Session";
     private static final String TAG_Add_Session = "Add Session";
+    private static final String TAG_Add_Family = "Family List";
     private static final String TAG_Student_Attendance = "Student Attendance";
 
     public static String CURRENT_TAG = TAG_Session;
@@ -151,6 +154,9 @@ public class DashBoardActivity extends AppCompatActivity {
                 args.putString("flag", "Add");
                 addSessionFragment.setArguments(args);
                 return addSessionFragment;
+            case 2:
+                OldFamilyListFragment oldFamilyFragment = new OldFamilyListFragment();
+                return oldFamilyFragment;
 //            case 2:
 //                StudentAttendanceFragment studentAttendanceFragment = new StudentAttendanceFragment();
 //                return studentAttendanceFragment;
@@ -177,6 +183,10 @@ public class DashBoardActivity extends AppCompatActivity {
                     case R.id.add_session:
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_Add_Session;
+                        break;
+                    case R.id.family_list:
+                        navItemIndex = 2;
+                        CURRENT_TAG = TAG_Add_Family;
                         break;
 //                    case R.id.student_attendance:
 //                        navItemIndex = 2;
@@ -247,13 +257,16 @@ public class DashBoardActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void setActionBar(int session,String flag) {
-        if (session==1 && flag.equalsIgnoreCase("edit")) {
+    public void setActionBar(int session, String flag) {
+        if (session == 1 && flag.equalsIgnoreCase("edit")) {
             getSupportActionBar().setTitle("Edit Session");
-        } else if(session==1 && flag.equalsIgnoreCase("add")){
+        } else if (session == 1 && flag.equalsIgnoreCase("add")) {
             getSupportActionBar().setTitle("Add Session");
-        }
-        else {
+        } else if (session == 10 && flag.equalsIgnoreCase("false")) {
+            getSupportActionBar().setTitle("Add Family");
+        } else if (session == 11 && flag.equalsIgnoreCase("false")) {
+            getSupportActionBar().setTitle("Add Child");
+        }else {
             getSupportActionBar().setTitle(activityTitles[session]);
         }
     }

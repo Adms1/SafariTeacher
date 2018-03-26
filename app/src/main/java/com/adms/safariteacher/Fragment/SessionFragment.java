@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,10 +24,7 @@ import android.widget.TextView;
 import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Activities.DrawableCalendarEvent;
 import com.adms.safariteacher.Adapter.SessionViewStudentListAdapter;
-import com.adms.safariteacher.Adapter.StudentAttendanceAdapter;
 import com.adms.safariteacher.Model.Session.SessionDetailModel;
-import com.adms.safariteacher.Model.Session.SessionFullDetail;
-import com.adms.safariteacher.Model.Session.sessionDataModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
 import com.adms.safariteacher.Utility.Util;
@@ -58,15 +54,14 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     private Context mContext;
     public Dialog sessionDialog;
     Button cancel_btn, add_attendance_btn, edit_session_btn;
-    String sessionnameStr, sessionstrattimeStr = "", sessionendtimeStr = "", sessionDateStr = "";
+    String sessionnameStr, sessionstrattimeStr = "", sessionendtimeStr = "", sessionDateStr = "", sessionIDStr;
     TextView start_time_txt, end_time_txt, session_title_txt, date_txt;
     RecyclerView studentnamelist_rcView;
     SessionViewStudentListAdapter sessionViewStudentListAdapter;
     ArrayList<String> arrayList;
     SessionDetailModel finalsessionfullDetailModel;
-    List<String> listDataHeader;
-    HashMap<String, ArrayList<SessionFullDetail>> listDataChild;
     List<CalendarEvent> eventList = new ArrayList<>();
+    ArrayList<Integer> colorList = new ArrayList<>();
 
     public SessionFragment() {
     }
@@ -80,8 +75,10 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         mContext = getActivity();
 
         ((DashBoardActivity) getActivity()).setActionBar(0, "true");
+        colorList.add(getResources().getColor(R.color.green_dark));
+        colorList.add(getResources().getColor(R.color.yellow_dark));
+        colorList.add(getResources().getColor(R.color.blue_dark));
         callGetSessionDetailApi();
-
 
 
         setListner();
@@ -128,6 +125,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         if (!event.getTitle().equals("No events")) {
             parseTodaysDate(String.valueOf(event.getStartTime().getTime()), String.valueOf(event.getEndTime().getTime()));
             sessionnameStr = event.getTitle();
+            sessionIDStr = String.valueOf(event.getId());
+            Log.d("sessionID", sessionIDStr);
             SessionDialog();
         } else {
             Util.ping(mContext, "No Event Available...");
@@ -253,6 +252,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Bundle args = new Bundle();
                 args.putString("flag", "edit");
+                args.putString("sessionIDStr", sessionIDStr);
                 fragment.setArguments(args);
                 fragmentTransaction.replace(R.id.frame, fragment);
                 fragmentTransaction.addToBackStack(null);
@@ -305,22 +305,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                             finalsessionfullDetailModel = sessionInfo;
 
                             Log.d("DataModel", "" + finalsessionfullDetailModel.getData().size());
-//                            listDataHeader = new ArrayList<>();
-//                            listDataChild = new HashMap<String, ArrayList<SessionFullDetail>>();
-//
-//                            for (int i = 0; i < finalsessionfullDetailModel.getData().size(); i++) {
-//                                listDataHeader.add(finalsessionfullDetailModel.getData().get(i).getSessionDate());
-//                                Log.d("header", "" + listDataHeader);
-//                                ArrayList<SessionFullDetail> row = new ArrayList<SessionFullDetail>();
-//                                for (int j = 0; j < finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().size(); j++) {
-//                                    row.add(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j));
-//                                    Log.d("row", "" + row);
-//                                }
-//                                listDataChild.put(listDataHeader.get(i), row);
-//                                Log.d("child", "" + listDataChild);
-//                            }
                             init();
-//                            mockList(eventList);
                         }
                     }
                 }
@@ -340,14 +325,13 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
     private Map<String, String> getsessionDetail() {
         Map<String, String> map = new HashMap<>();
-        map.put("CoachID", "15");//Util.getPref(mContext, "coachID"));
+        map.put("CoachID", Util.getPref(mContext, "coachID"));//Util.getPref(mContext, "coachID"));
         return map;
     }
 
     public void mockList(List<CalendarEvent> eventList) {
         long startDate = 0, endDate = 0;
-//
-        listDataHeader = new ArrayList<>();
+
         for (int i = 0; i < finalsessionfullDetailModel.getData().size(); i++) {
             for (int j = 0; j < finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().size(); j++) {
                 String[] spiltTime = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime().split("\\-");
@@ -355,8 +339,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                     String dateString = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionDate() + " " + spiltTime[0];
                     String enddateString = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionDate() + " " + spiltTime[1];
                     Log.d("StartDate and EndDate :", dateString + " " + enddateString);
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.getDefault());
-                    SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.getDefault());
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault());
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault());
                     Date date = sdf.parse(dateString);
                     Date date1 = sdf1.parse(enddateString);
 
@@ -367,9 +351,10 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                     e.printStackTrace();
                 }
                 DrawableCalendarEvent event = new DrawableCalendarEvent(Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID()),
-                        getResources().getColor(R.color.red_dark), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
-                        finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName(),
-                        startDate, endDate, 0, "1 hours", 1);
+                        colorList.get(j), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
+                        finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
+                        finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime()+System.getProperty("line.separator")+finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName(),
+                        startDate, endDate, 0,"10:00 PM-11:00 PM", 1);
                 eventList.add(event);
             }
 
@@ -377,8 +362,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
 
 //        Log.d("eventList", "" + eventList);
-
-
 
 
 //        try {
@@ -425,6 +408,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 //
 
     }
+
 
 }
 
