@@ -49,6 +49,9 @@
     <string name="add_gender">GENDER</string>
     <string name="add_no">NUMBER</string>
     <string name="child">CHILD</string>
+    <string name="family_name">Family Name</string>
+    <string name="up">\u2303</string>
+    <string name="down">\u2304</string>
     <!--string for naigation drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -72,7 +75,7 @@
     <string-array name="nav_item_activity_titles">
         <item>Session Calendar</item>
         <item>Add Session</item>
-        <item>Family List</item>
+        <!--<item>Family List</item>-->
         <item>Student Attendance</item>
 
     </string-array>

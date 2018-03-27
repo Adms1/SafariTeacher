@@ -32,7 +32,7 @@ public class DashBoardActivity extends AppCompatActivity {
 
     private static final String TAG_Session = "Session";
     private static final String TAG_Add_Session = "Add Session";
-    private static final String TAG_Add_Family = "Family List";
+//    private static final String TAG_Add_Family = "Family List";
     private static final String TAG_Student_Attendance = "Student Attendance";
 
     public static String CURRENT_TAG = TAG_Session;
@@ -67,7 +67,7 @@ public class DashBoardActivity extends AppCompatActivity {
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SessionFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SessionFragment()).addToBackStack(null).commit();
             getSupportActionBar().setTitle(activityTitles[navItemIndex]);
         }
 
@@ -117,6 +117,7 @@ public class DashBoardActivity extends AppCompatActivity {
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                         android.R.anim.fade_out);
                 fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commitAllowingStateLoss();
             }
         };
@@ -146,7 +147,7 @@ public class DashBoardActivity extends AppCompatActivity {
         switch (navItemIndex) {
             case 0:
                 // home
-                SessionFragment sessionFragment = new SessionFragment();
+                SessionFragment sessionFragment =SessionFragment.newInstance();
                 return sessionFragment;
             case 1:
                 AddSessionFragment addSessionFragment = new AddSessionFragment();
@@ -154,9 +155,9 @@ public class DashBoardActivity extends AppCompatActivity {
                 args.putString("flag", "Add");
                 addSessionFragment.setArguments(args);
                 return addSessionFragment;
-            case 2:
-                OldFamilyListFragment oldFamilyFragment = new OldFamilyListFragment();
-                return oldFamilyFragment;
+//            case 2:
+//                OldFamilyListFragment oldFamilyFragment = new OldFamilyListFragment();
+//                return oldFamilyFragment;
 //            case 2:
 //                StudentAttendanceFragment studentAttendanceFragment = new StudentAttendanceFragment();
 //                return studentAttendanceFragment;
@@ -184,10 +185,10 @@ public class DashBoardActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_Add_Session;
                         break;
-                    case R.id.family_list:
-                        navItemIndex = 2;
-                        CURRENT_TAG = TAG_Add_Family;
-                        break;
+//                    case R.id.family_list:
+//                        navItemIndex = 2;
+//                        CURRENT_TAG = TAG_Add_Family;
+//                        break;
 //                    case R.id.student_attendance:
 //                        navItemIndex = 2;
 //                        CURRENT_TAG = TAG_Student_Attendance;
@@ -266,6 +267,10 @@ public class DashBoardActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Add Family");
         } else if (session == 11 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Add Child");
+        } else if (session == 12 && flag.equalsIgnoreCase("false")) {
+            getSupportActionBar().setTitle("Payment");
+        } else if (session == 13 && flag.equalsIgnoreCase("false")) {
+            getSupportActionBar().setTitle("Family List");
         }else {
             getSupportActionBar().setTitle(activityTitles[session]);
         }

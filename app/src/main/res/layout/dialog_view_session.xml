@@ -193,9 +193,8 @@
             android:layout_height="@dimen/_30sdp"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/_6sdp"
-            android:layout_marginLeft="@dimen/_55sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:layout_weight="1.4"
+            android:layout_weight="1"
             android:background="@drawable/session_view_btn"
             android:gravity="center"
             android:text="Edit Session"
@@ -211,7 +210,7 @@
             android:layout_marginBottom="@dimen/_6sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:layout_weight="1.4"
+            android:layout_weight="1"
             android:background="@drawable/session_view_btn"
             android:gravity="center"
             android:text="Take Attendance"
@@ -234,7 +233,7 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp"
-            android:visibility="gone" />
+            android:visibility="visible" />
     </LinearLayout>
 
     <Button

@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.facebook.FacebookSdk;
+
 /**
  * Created by admsandroid on 3/20/2018.
  */
@@ -15,5 +17,4 @@ public class MyApp extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
 }

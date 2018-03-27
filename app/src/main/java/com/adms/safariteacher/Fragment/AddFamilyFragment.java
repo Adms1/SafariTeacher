@@ -1,26 +1,19 @@
 package com.adms.safariteacher.Fragment;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
-import com.adms.safariteacher.Activities.RegistrationActivity;
-import com.adms.safariteacher.Adapter.SelectStudentListAdapter;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentAddFamilyBinding;
@@ -28,7 +21,6 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
