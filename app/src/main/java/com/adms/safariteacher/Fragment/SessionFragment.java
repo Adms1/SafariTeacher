@@ -52,6 +52,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
     FragmentCalendarBinding calendarBinding;
     private View rootView;
+    public static SessionFragment fragment;
     private Context mContext;
     public Dialog sessionDialog;
     Button cancel_btn, add_attendance_btn, edit_session_btn, add_student_btn;
@@ -63,9 +64,10 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     SessionDetailModel finalsessionfullDetailModel;
     List<CalendarEvent> eventList = new ArrayList<>();
     ArrayList<Integer> colorList = new ArrayList<>();
-    public static SessionFragment fragment;
+
     public SessionFragment() {
     }
+
 
     @Nullable
     @Override
@@ -79,7 +81,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         colorList.add(getResources().getColor(R.color.green_dark));
         colorList.add(getResources().getColor(R.color.yellow_dark));
         colorList.add(getResources().getColor(R.color.blue_dark));
-//        callGetSessionDetailApi();
+        callGetSessionDetailApi();
 
 
         setListner();
@@ -89,7 +91,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        callGetSessionDetailApi();
+//        callGetSessionDetailApi();
     }
 
     public void init() {
@@ -202,7 +204,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setAttributes(wlp);
 
-        sessionDialog.getWindow().setBackgroundDrawableResource(R.drawable.grid_shape);
+        sessionDialog.getWindow().setBackgroundDrawableResource(R.drawable.session_confirm);
 
         sessionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         sessionDialog.setCancelable(false);

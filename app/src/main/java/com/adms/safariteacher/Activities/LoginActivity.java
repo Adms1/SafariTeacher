@@ -211,7 +211,9 @@ public class LoginActivity extends AppCompatActivity {
                         return;
                     }
                     if (teacherInfoModel.getSuccess().equalsIgnoreCase("True")) {
-                        Util.setPref(mContext, "coachID", teacherInfoModel.getCoachID());
+                        String[]splitCoachID=teacherInfoModel.getCoachID().split("\\,");
+                        Util.setPref(mContext, "coachID",splitCoachID[0]);
+                        Util.setPref(mContext,"coachTypeID",splitCoachID[1]);
                         AppConfiguration.coachId = teacherInfoModel.getCoachID();
 
                         Intent inLogin = new Intent(mContext, DashBoardActivity.class);

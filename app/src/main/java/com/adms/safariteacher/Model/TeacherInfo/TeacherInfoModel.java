@@ -17,7 +17,9 @@ public class TeacherInfoModel {
     @SerializedName("CoachID")
     @Expose
     private String coachID;
-
+    @SerializedName("FamilyID")
+    @Expose
+    private String familyID;
     public String getSuccess() {
         return success;
     }
@@ -40,5 +42,13 @@ public class TeacherInfoModel {
 
     public void setCoachID(String coachID) {
         this.coachID = coachID;
+    }
+
+    public String getFamilyID() {
+        return familyID;
+    }
+
+    public void setFamilyID(String familyID) {
+        this.familyID = familyID;
     }
 }

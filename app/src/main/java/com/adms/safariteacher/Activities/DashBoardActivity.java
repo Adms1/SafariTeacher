@@ -1,5 +1,7 @@
 package com.adms.safariteacher.Activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import com.adms.safariteacher.Fragment.OldFamilyListFragment;
 import com.adms.safariteacher.Fragment.SessionFragment;
 import com.adms.safariteacher.Fragment.StudentAttendanceFragment;
 import com.adms.safariteacher.R;
+import com.adms.safariteacher.Utility.Util;
 
 public class DashBoardActivity extends AppCompatActivity {
     private NavigationView navigationView;
@@ -29,10 +32,11 @@ public class DashBoardActivity extends AppCompatActivity {
     private ImageView imgNavHeaderBg, imgProfile;
     private TextView txtName, txtWebsite;
     private Toolbar toolbar;
+    Context mContex;
 
     private static final String TAG_Session = "Session";
     private static final String TAG_Add_Session = "Add Session";
-//    private static final String TAG_Add_Family = "Family List";
+    //    private static final String TAG_Add_Family = "Family List";
     private static final String TAG_Student_Attendance = "Student Attendance";
 
     public static String CURRENT_TAG = TAG_Session;
@@ -53,7 +57,7 @@ public class DashBoardActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mHandler = new Handler();
-
+        mContex = DashBoardActivity.this;
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -117,8 +121,8 @@ public class DashBoardActivity extends AppCompatActivity {
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                         android.R.anim.fade_out);
                 fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commitAllowingStateLoss();
+                fragmentTransaction.addToBackStack(SessionFragment.class.getName());
+                fragmentTransaction.commit();
             }
         };
 
@@ -147,7 +151,7 @@ public class DashBoardActivity extends AppCompatActivity {
         switch (navItemIndex) {
             case 0:
                 // home
-                SessionFragment sessionFragment =SessionFragment.newInstance();
+                SessionFragment sessionFragment =new SessionFragment();
                 return sessionFragment;
             case 1:
                 AddSessionFragment addSessionFragment = new AddSessionFragment();
@@ -156,13 +160,10 @@ public class DashBoardActivity extends AppCompatActivity {
                 addSessionFragment.setArguments(args);
                 return addSessionFragment;
 //            case 2:
-//                OldFamilyListFragment oldFamilyFragment = new OldFamilyListFragment();
-//                return oldFamilyFragment;
-//            case 2:
 //                StudentAttendanceFragment studentAttendanceFragment = new StudentAttendanceFragment();
 //                return studentAttendanceFragment;
             default:
-                return new SessionFragment();
+                return  new SessionFragment();
         }
     }
 
@@ -185,9 +186,13 @@ public class DashBoardActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_Add_Session;
                         break;
-//                    case R.id.family_list:
-//                        navItemIndex = 2;
-//                        CURRENT_TAG = TAG_Add_Family;
+//                    case R.id.logout:
+////                        navItemIndex = 2;
+//                        Util.setPref(mContex, "coachID", "");
+//                        Util.setPref(mContex, "coachTypeID", "");
+//                        Intent iLogin = new Intent(mContex, LoginActivity.class);
+//                        startActivity(iLogin);
+//                        finish();
 //                        break;
 //                    case R.id.student_attendance:
 //                        navItemIndex = 2;
@@ -271,7 +276,7 @@ public class DashBoardActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Payment");
         } else if (session == 13 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Family List");
-        }else {
+        } else {
             getSupportActionBar().setTitle(activityTitles[session]);
         }
     }

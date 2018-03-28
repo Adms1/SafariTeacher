@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_40sdp"
-            android:src="@drawable/logo" />
+            android:src="@drawable/teacher_safari" />
 
         <LinearLayout
             android:id="@+id/email_pass_linear"

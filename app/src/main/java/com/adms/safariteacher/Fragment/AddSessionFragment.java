@@ -8,6 +8,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
@@ -60,7 +61,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     private FragmentAddSessionBinding addSessionBinding;
     private View rootView;
     private Context mContext;
-
+    public static AddSessionFragment fragment;
     //Use for Alert Dialog
     ArrayList<String> timegapArray;
     AlertListAdapter alertListAdapter;
@@ -88,10 +89,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     Calendar calendar;
     int mYear, mMonth, mDay;
     private static String dateFinal;
+    private static String minuteFinal,hourFinal;
     private static boolean isFromDate = false;
     private com.wdullaer.materialdatetimepicker.date.DatePickerDialog datePickerDialog;
     public Dialog popularDialog;
-    String flag, SeslectedsessionID;
+    String flag, SeslectedsessionID, CoachTypeStr;
 
     //Use for selectedSessionTimeValue
     String coachIdStr, lessionTypeNameStr = "", sessionNameStr = "", boardStr = "", standardStr = "", streamStr = "", startDateStr, endDateStr,
@@ -126,7 +128,27 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         } else {
             ((DashBoardActivity) getActivity()).setActionBar(1, "add");
         }
+
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         coachIdStr = Util.getPref(mContext, "coachID");
+        CoachTypeStr = Util.getPref(mContext, "coachTypeID");
+
+        if (!CoachTypeStr.equalsIgnoreCase("1")) {
+            addSessionBinding.sessionBoardLinear.setVisibility(View.GONE);
+            addSessionBinding.sessionStandardLinear.setVisibility(View.GONE);
+            addSessionBinding.sessionStreamLinear.setVisibility(View.GONE);
+        } else {
+            addSessionBinding.sessionBoardLinear.setVisibility(View.VISIBLE);
+            addSessionBinding.sessionStandardLinear.setVisibility(View.VISIBLE);
+            addSessionBinding.sessionStreamLinear.setVisibility(View.VISIBLE);
+        }
+
 
         if (flag.equalsIgnoreCase("edit")) {
             addSessionBinding.submitBtn.setText("Update");
@@ -142,39 +164,9 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         initViews();
         setListners();
 
-        return rootView;
     }
 
     public void initViews() {
-//        MonthInt = Util.getTodaysDate();
-//        Log.d("Date", MonthInt);
-//        spiltmonth = MonthInt.split("\\/");
-//        getMonthFun(Integer.parseInt(spiltmonth[1]));
-//
-//        TimeInt = Util.getCurrentTime();
-//        Log.d("Time", TimeInt);
-//        spilttime = TimeInt.split("\\:");
-//
-//        calendar = Calendar.getInstance();
-//        Year = calendar.get(Calendar.YEAR);
-//        Month = calendar.get(Calendar.MONTH);
-//        Day = calendar.get(Calendar.DAY_OF_MONTH);
-//        CalendarHour = calendar.get(Calendar.HOUR_OF_DAY);
-//        CalendarMinute = calendar.get(Calendar.MINUTE);
-//        addSessionBinding.displayStarttimeTxt.setText(Util.getCurrentTime());
-//        addSessionBinding.displayEndtimeTxt.setText(Util.getCurrentTime());
-
-
-//        if (Integer.parseInt(spilttime[0]) > 12) {
-//            addSessionBinding.displayStarttimeTxt.setText(Util.getCurrentTime() + "PM");
-//            addSessionBinding.displayEndtimeTxt.setText(Util.getCurrentTime() + "PM");
-//        } else {
-//            addSessionBinding.displayStarttimeTxt.setText(Util.getCurrentTime() + "AM");
-//            addSessionBinding.displayEndtimeTxt.setText(Util.getCurrentTime() + "AM");
-//        }
-//        finaldateStr = spiltmonth[0] + ", " + monthDisplayStr + " " + spiltmonth[2];
-//        addSessionBinding.displayDateTxt.setText(finaldateStr);
-
         timegapArray = new ArrayList<String>();
         timegapArray.add("none");
         timegapArray.add("At time of event");
@@ -311,7 +303,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setAttributes(wlp);
 
-        popularDialog.getWindow().setBackgroundDrawableResource(R.drawable.grid_shape);
+        popularDialog.getWindow().setBackgroundDrawableResource(R.drawable.session_confirm);
 
         popularDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         popularDialog.setCancelable(false);
@@ -538,7 +530,9 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 datePickerDialog.setOkText("Done");
                 datePickerDialog.showYearPickerFirst(false);
                 datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
+                datePickerDialog.setMinDate(Calendar.getInstance());
                 datePickerDialog.setTitle("Select Date From DatePickerDialog");
+
                 datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
             }
         });
@@ -554,6 +548,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 datePickerDialog.showYearPickerFirst(false);
                 datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
                 datePickerDialog.setTitle("Select Date From DatePickerDialog");
+                datePickerDialog.setMinDate(Calendar.getInstance());
                 datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
 
             }
@@ -1117,96 +1112,114 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 
             // Initialize a new variable to hold 12 hour format hour value
             int hour_of_12_hour_format;
-
+            String hour="";
             if (hourOfDay > 11) {
                 // If the hour is greater than or equal to 12
                 // Then we subtract 12 from the hour to make it 12 hour format time
+
                 hour_of_12_hour_format = hourOfDay - 12;
+
             } else {
                 hour_of_12_hour_format = hourOfDay;
             }
 
+            if (hour_of_12_hour_format < 10) {
+                hour = "0" + hour_of_12_hour_format;
+                hourFinal = hour;
+            }else{
+                hourFinal= String.valueOf(hour_of_12_hour_format);
+            }
+            
+            String m = "";
+            if (minute < 10) {
+                m = "0" + minute;
+                minuteFinal = m;
+            } else {
+                minuteFinal = String.valueOf(minute);
+            }
+
+
             switch (Tag) {
                 case "0":
-                    sun_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    sun_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     sun_start_add_session_btn.setText("x");
                     sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "1":
-                    sun_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    sun_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     sun_end_add_session_btn.setText("x");
                     sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "2":
-                    mon_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    mon_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     mon_start_add_session_btn.setText("x");
                     mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "3":
-                    mon_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    mon_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     mon_end_add_session_btn.setText("x");
                     mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "4":
-                    tue_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    tue_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     tue_start_add_session_btn.setText("x");
                     tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "5":
-                    tue_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    tue_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     tue_end_add_session_btn.setText("x");
                     tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "6":
-                    wed_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    wed_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     wed_start_add_session_btn.setText("x");
                     wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "7":
-                    wed_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    wed_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     wed_end_add_session_btn.setText("x");
                     wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "8":
-                    thu_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    thu_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     thu_start_add_session_btn.setText("x");
                     thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "9":
-                    thu_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    thu_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     thu_end_add_session_btn.setText("x");
                     thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "10":
-                    fri_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    fri_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     fri_start_add_session_btn.setText("x");
                     fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "11":
-                    fri_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    fri_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     fri_end_add_session_btn.setText("x");
                     fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "12":
-                    sat_start_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    sat_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     sat_start_add_session_btn.setText("x");
                     sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                     break;
                 case "13":
-                    sat_end_time_txt.setText(hour_of_12_hour_format + ":" + minute + "" + status);
+                    sat_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
                     sat_end_add_session_btn.setText("x");
                     sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
                     sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
@@ -1757,5 +1770,14 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         map.put("Schedule", scheduleStr);
         return map;
     }
+
+
+//    public static AddSessionFragment newInstance() {
+//
+//        if (fragment == null) {
+//            fragment = new AddSessionFragment();
+//        }
+//        return fragment;
+//    }
 }
 

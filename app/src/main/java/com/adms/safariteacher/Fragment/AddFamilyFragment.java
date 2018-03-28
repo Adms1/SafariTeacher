@@ -1,6 +1,7 @@
 package com.adms.safariteacher.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,12 +10,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
+import com.adms.safariteacher.Activities.LoginActivity;
+import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
+import com.adms.safariteacher.Utility.ApiHandler;
 import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentAddFamilyBinding;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -22,20 +30,24 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private FragmentAddFamilyBinding addFamilyBinding;
     private View rootView;
     private Context mContext;
-    String monthDisplayStr, MonthInt, TimeInt, finaldateStr;
-    String[] spiltmonth;
-    String[] spilttime;
+    String MonthInt;
     int Year, Month, Day;
     Calendar calendar;
     private DatePickerDialog datePickerDialog;
     int mYear, mMonth, mDay;
-    String pageTitle;
+    String pageTitle, type, firstNameStr, lastNameStr, emailStr, passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr;
+
 
     public AddFamilyFragment() {
     }
@@ -46,8 +58,9 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         addFamilyBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_family, container, false);
 
         rootView = addFamilyBinding.getRoot();
-        mContext = getActivity().getApplicationContext();
+        mContext = getActivity();
         pageTitle = getArguments().getString("session");
+        type = getArguments().getString("type");
         ((DashBoardActivity) getActivity()).setActionBar(Integer.parseInt(pageTitle), "false");
         initViews();
         setListners();
@@ -56,16 +69,6 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     }
 
     public void initViews() {
-
-        MonthInt = Util.getTodaysDate();
-        Log.d("Date", MonthInt);
-        spiltmonth = MonthInt.split("\\/");
-        getMonthFun(Integer.parseInt(spiltmonth[1]));
-
-        TimeInt = Util.getCurrentTime();
-        Log.d("Time", TimeInt);
-        spilttime = TimeInt.split("\\:");
-
         calendar = Calendar.getInstance();
         Year = calendar.get(Calendar.YEAR);
         Month = calendar.get(Calendar.MONTH);
@@ -99,17 +102,66 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 fragmentTransaction.commit();
             }
         });
-    }
+//        addFamilyBinding.emailEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+//                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+//                    callCheckEmailIdApi();
+//                }
+//                return false;
+//            }
+//        });
+        addFamilyBinding.genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                int radioButtonId = addFamilyBinding.genderGroup.getCheckedRadioButtonId();
+                switch (radioButtonId) {
+                    case R.id.male_chk:
+                        gendarIdStr = addFamilyBinding.maleChk.getTag().toString();
+                        break;
+                    case R.id.female_chk:
+                        gendarIdStr = addFamilyBinding.femaleChk.getTag().toString();
+                        break;
+                    default:
+                }
+            }
+        });
 
-    public void getMonthFun(int month) {
-        SimpleDateFormat monthParse = new SimpleDateFormat("MM");
-        SimpleDateFormat monthDisplay = new SimpleDateFormat("MMM");
-        try {
-            monthDisplayStr = monthDisplay.format(monthParse.parse(String.valueOf(month)));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Log.d("month", "" + monthDisplayStr);
+        addFamilyBinding.registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getInsertedValue();
+                if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
+                    if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
+                        if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
+                            if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() > 6) {
+                                if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
+                                    if (!gendarIdStr.equalsIgnoreCase("")) {
+                                        if (!dateofbirthStr.equalsIgnoreCase("")) {
+                                            callFamilyApi();
+                                        } else {
+                                            addFamilyBinding.dateOfBirthEdt.setError("Enter Proper Birth date.");
+                                        }
+                                    } else {
+                                        addFamilyBinding.femaleChk.setError("Select Gender.");
+                                    }
+                                } else {
+                                    addFamilyBinding.phoneNoEdt.setError("Enter Proper Phone Number.");
+                                }
+                            } else {
+                                addFamilyBinding.passwordEdt.setError("Password length minimum 6.");
+                            }
+                        } else {
+                            addFamilyBinding.emailEdt.setError("Enter Proper EmailId.");
+                        }
+                    } else {
+                        addFamilyBinding.lastNameEdt.setError("Enter Proper LastName .");
+                    }
+                } else {
+                    addFamilyBinding.firstNameEdt.setError("Enter Proper FirstName.");
+                }
+            }
+        });
     }
 
     @Override
@@ -133,5 +185,131 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         addFamilyBinding.dateOfBirthEdt.setText(MonthInt);
 
     }
+
+    //Use for New Family
+    public void callFamilyApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Create_Family(getNewFamilyetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel familyInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (familyInfoModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (familyInfoModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (familyInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (familyInfoModel.getSuccess().equalsIgnoreCase("True")) {
+
+                        Util.setPref(mContext,"FamilyID",familyInfoModel.getFamilyID());
+                        Fragment fragment = new OldFamilyListFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        Bundle args = new Bundle();
+                        args.putString("session", "13");
+                        fragment.setArguments(args);
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getNewFamilyetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("FirstName", firstNameStr);
+        map.put("LastName", lastNameStr);
+        map.put("EmailAddress", emailStr);
+        map.put("Password", passwordStr);
+        map.put("GenderID", gendarIdStr);
+        map.put("DateOfBirth", dateofbirthStr);
+        map.put("PhoneNumber", phonenoStr);
+        map.put("ContactTypeID", contactTypeIDStr);
+        return map;
+    }
+
+    //Use for Check Register emailId exist or not
+    public void callCheckEmailIdApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().getCheckEmailAddress(getcheckEmailidDetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel teacherInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (teacherInfoModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (teacherInfoModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (teacherInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (teacherInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                        addFamilyBinding.emailEdt.setError("Already Exist!");
+                        addFamilyBinding.emailEdt.setText("");
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getcheckEmailidDetail() {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("EmailAddress", addFamilyBinding.emailEdt.getText().toString());
+
+        return map;
+    }
+
+
+    public void getInsertedValue() {
+        firstNameStr = addFamilyBinding.firstNameEdt.getText().toString();
+        lastNameStr = addFamilyBinding.lastNameEdt.getText().toString();
+        emailStr = addFamilyBinding.emailEdt.getText().toString();
+        passwordStr = addFamilyBinding.passwordEdt.getText().toString();
+        phonenoStr = addFamilyBinding.phoneNoEdt.getText().toString();
+        dateofbirthStr = addFamilyBinding.dateOfBirthEdt.getText().toString();
+        if (type.equalsIgnoreCase("Family")) {
+            contactTypeIDStr = "1";
+        } else {
+            contactTypeIDStr = "3";
+        }
+    }
+
 }
 

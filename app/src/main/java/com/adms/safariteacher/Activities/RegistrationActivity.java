@@ -35,7 +35,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
     Calendar calendar;
     private DatePickerDialog datePickerDialog;
     int mYear, mMonth, mDay;
-    String firstNameStr, lastNameStr, emailStr, passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr;
+    String firstNameStr, lastNameStr, emailStr, passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, coachTypeIDStr = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +136,20 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                 }
             }
         });
+        registrationBinding.session1TypeRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int radioButtonId = registrationBinding.session1TypeRg.getCheckedRadioButtonId();
+                switch (radioButtonId) {
+                    case R.id.Academic_rb:
+                        coachTypeIDStr = registrationBinding.AcademicRb.getTag().toString();
+                        break;
+                    case R.id.play_rb:
+                        coachTypeIDStr = registrationBinding.playRb.getTag().toString();
+                        break;
+                }
+            }
+        });
     }
 
     public void getInsertedValue() {
@@ -228,6 +242,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
         map.put("PhoneNumber", phonenoStr);
         map.put("GenderID", gendarIdStr);
         map.put("DateOfBirth", dateofbirthStr);
+        map.put("CoachTypeID", coachTypeIDStr);
         return map;
     }
 
