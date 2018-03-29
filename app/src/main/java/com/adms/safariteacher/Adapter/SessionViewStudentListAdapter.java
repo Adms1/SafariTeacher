@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.adms.safariteacher.Model.Session.sessionDataModel;
 import com.adms.safariteacher.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by admsandroid on 3/20/2018.
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 public class SessionViewStudentListAdapter extends RecyclerView.Adapter<SessionViewStudentListAdapter.MyViewHolder> {
 
     private Context mContext;
-    ArrayList<String> arrayList;
+    List<String> arrayList;
 
     public SessionViewStudentListAdapter(Context mContext, ArrayList<String> arrayList) {
         this.mContext = mContext;

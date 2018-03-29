@@ -45,7 +45,7 @@
     <string name="gender">Gender</string>
     <string name="select">Select From List</string>
     <string name="add_name">NAME</string>
-    <string name="add_age">AGE</string>
+    <string name="add_age">DOB</string>
     <string name="add_gender">GENDER</string>
     <string name="add_no">NUMBER</string>
     <string name="child">CHILD</string>

@@ -89,11 +89,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     Calendar calendar;
     int mYear, mMonth, mDay;
     private static String dateFinal;
-    private static String minuteFinal,hourFinal;
+    private static String minuteFinal, hourFinal;
     private static boolean isFromDate = false;
     private com.wdullaer.materialdatetimepicker.date.DatePickerDialog datePickerDialog;
     public Dialog popularDialog;
-    String flag, SeslectedsessionID, CoachTypeStr;
+    String flag, SeslectedsessionID, CoachTypeStr, studentAvailable;
 
     //Use for selectedSessionTimeValue
     String coachIdStr, lessionTypeNameStr = "", sessionNameStr = "", boardStr = "", standardStr = "", streamStr = "", startDateStr, endDateStr,
@@ -122,6 +122,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         rootView = addSessionBinding.getRoot();
         mContext = getActivity();
         flag = getArguments().getString("flag");
+        studentAvailable = getArguments().getString("studentAvailable");
+        Log.d("studentAvailable",studentAvailable);
         SeslectedsessionID = getArguments().getString("sessionIDStr");
         if (flag.equalsIgnoreCase("edit")) {
             ((DashBoardActivity) getActivity()).setActionBar(1, "edit");
@@ -151,6 +153,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 
 
         if (flag.equalsIgnoreCase("edit")) {
+            if (!studentAvailable.equalsIgnoreCase("0")) {
+                addSessionBinding.sessionTimeLinear.setVisibility(View.GONE);
+            } else {
+                addSessionBinding.sessionTimeLinear.setVisibility(View.VISIBLE);
+            }
             addSessionBinding.submitBtn.setText("Update");
             callEditSessionApi();
         } else {
@@ -186,8 +193,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 int radioButtonId = addSessionBinding.fessStatusRg.getCheckedRadioButtonId();
                 switch (radioButtonId) {
                     case R.id.free_rb:
-                        addSessionBinding.sessionPriceEdt.setVisibility(View.GONE);
                         sessionamtStr = "0";
+                        addSessionBinding.sessionPriceEdt.setVisibility(View.GONE);
                         break;
                     case R.id.paid_rb:
                         addSessionBinding.sessionPriceEdt.setVisibility(View.VISIBLE);
@@ -1112,7 +1119,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 
             // Initialize a new variable to hold 12 hour format hour value
             int hour_of_12_hour_format;
-            String hour="";
+            String hour = "";
             if (hourOfDay > 11) {
                 // If the hour is greater than or equal to 12
                 // Then we subtract 12 from the hour to make it 12 hour format time
@@ -1126,10 +1133,10 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             if (hour_of_12_hour_format < 10) {
                 hour = "0" + hour_of_12_hour_format;
                 hourFinal = hour;
-            }else{
-                hourFinal= String.valueOf(hour_of_12_hour_format);
+            } else {
+                hourFinal = String.valueOf(hour_of_12_hour_format);
             }
-            
+
             String m = "";
             if (minute < 10) {
                 m = "0" + minute;
@@ -1246,8 +1253,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         alerttimeStr = addSessionBinding.alertBtn.getText().toString();
         startDateStr = start_date_txt.getText().toString();
         endDateStr = end_date_txt.getText().toString();
-        sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
-
     }
 
     //Use for Create Session
@@ -1685,7 +1690,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             EditStartDateStr = dataResponse.getData().get(i).getStartDate();
             EditEndDateStr = dataResponse.getData().get(i).getEndDate();
             EditScheduleStr = dataResponse.getData().get(i).getSchedule();
-            addSessionBinding.addSessionBtn.performClick();
+            if (!studentAvailable.equalsIgnoreCase("0")) {
+//                addSessionBinding.addSessionBtn.performClick();
+            }else{
+                addSessionBinding.addSessionBtn.performClick();
+            }
             addSessionBinding.addressEdt.setText(dataResponse.getData().get(i).getAddressLine1());
             addSessionBinding.areaEdt.setText(dataResponse.getData().get(i).getRegionName());
             addSessionBinding.cityEdt.setText(dataResponse.getData().get(i).getAddressCity());

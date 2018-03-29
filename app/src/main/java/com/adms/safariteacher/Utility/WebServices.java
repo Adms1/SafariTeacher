@@ -67,4 +67,20 @@ public interface WebServices {
     @FormUrlEncoded
     @POST("/Create_Family")
     public void get_Create_Family(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Add_FamilyContact")
+    public void get_AddFamilyContact(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Get_FamiliyByFamilyID")
+    public void get_FamiliyByFamilyID(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Session_ContactEnrollment")
+    public void get_Session_ContactEnrollment(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Session_StudentDetail")
+    public void get_Session_StudentDetail(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
 }

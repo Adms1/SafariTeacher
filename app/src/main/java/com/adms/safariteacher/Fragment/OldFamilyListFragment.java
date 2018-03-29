@@ -27,12 +27,21 @@ import com.adms.safariteacher.Adapter.Expandable;
 import com.adms.safariteacher.Adapter.ExpandableSelectStudentListAdapter;
 import com.adms.safariteacher.Interface.onChlidClick;
 import com.adms.safariteacher.Interface.onViewClick;
+import com.adms.safariteacher.Model.TeacherInfo.ChildDetailModel;
+import com.adms.safariteacher.Model.TeacherInfo.FamilyDetailModel;
+import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
+import com.adms.safariteacher.Utility.ApiHandler;
+import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentOldFamilyListBinding;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class OldFamilyListFragment extends Fragment {
@@ -43,14 +52,16 @@ public class OldFamilyListFragment extends Fragment {
     private Fragment fragment = null;
     private FragmentManager fragmentManager = null;
 
-    ArrayList<String> arrayList;
+    List<FamilyDetailModel> finalFamilyDetail;
     List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
+    HashMap<String, List<ChildDetailModel>> listDataChild;
     private int lastExpandedPosition = -1;
     ExpandableSelectStudentListAdapter expandableSelectStudentListAdapter;
     //    Expandable expandable;
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt;
+    String familyIdStr = "", contatIDstr, orderIDStr, sessionIDStr;
+    ArrayList<String> selectedId;
 
     public OldFamilyListFragment() {
     }
@@ -61,43 +72,18 @@ public class OldFamilyListFragment extends Fragment {
         oldFamilyListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_old_family_list, container, false);
 
         rootView = oldFamilyListBinding.getRoot();
-        mContext = getActivity().getApplicationContext();
+        mContext = getActivity();
         ((DashBoardActivity) getActivity()).setActionBar(13, "false");
+        sessionIDStr = Util.getPref(mContext, "SessionID");
+        Log.d("sessionID",sessionIDStr);
         initViews();
         setListners();
-
+        callFamilyListApi();
         return rootView;
     }
 
     public void initViews() {
-        arrayList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            arrayList.add(String.valueOf(i));
-        }
-        Log.d("arrayList", "" + arrayList.size());
-        fillExpLV();
 
-        expandableSelectStudentListAdapter = new ExpandableSelectStudentListAdapter(getActivity(), listDataHeader, listDataChild, new onChlidClick() {
-            @Override
-            public void getChilClick() {
-                Fragment fragment = new AddFamilyFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                Bundle args = new Bundle();
-                args.putString("session", "11");
-                args.putString("type","Child");
-                fragment.setArguments(args);
-                fragmentTransaction.replace(R.id.frame, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        }, new onViewClick() {
-            @Override
-            public void getViewClick() {
-                ConformationDialog();
-            }
-        });
-        oldFamilyListBinding.lvExpfamilylist.setAdapter(expandableSelectStudentListAdapter);
 
     }
 
@@ -111,7 +97,7 @@ public class OldFamilyListFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Bundle args = new Bundle();
                 args.putString("session", "10");
-                args.putString("type","Family");
+                args.putString("type", "Family");
                 fragment.setArguments(args);
                 fragmentTransaction.replace(R.id.frame, fragment);
                 fragmentTransaction.addToBackStack(null);
@@ -142,77 +128,6 @@ public class OldFamilyListFragment extends Fragment {
         });
     }
 
-    //Use for fill Family List
-
-    public void fillExpLV() {
-        listDataHeader = new ArrayList<>();
-        listDataChild = new HashMap<String, List<String>>();
-//
-//        for (int i = 0; i < arrayList.size(); i++) {
-//            listDataHeader.add(arrayList.get(i));
-//            Log.d("header", "" + listDataHeader);
-//            ArrayList<String> row = new ArrayList<String>();
-//            row.add(String.valueOf(1));
-//            Log.d("row", "" + row);
-//            listDataChild.put(listDataHeader.get(i), row);
-//            Log.d("child", "" + listDataChild);
-//        }
-        // Adding child data
-        listDataHeader.add("Top 250");
-        listDataHeader.add("Top 100");
-        listDataHeader.add("Now Showing");
-        listDataHeader.add("Coming Soon..");
-        listDataHeader.add("Hello");
-
-        // Adding child data
-        List<String> top250 = new ArrayList<String>();
-        top250.add("The Shawshank Redemption");
-        top250.add("The Godfather");
-        top250.add("The Godfather: Part II");
-        top250.add("Pulp Fiction");
-        top250.add("The Good, the Bad and the Ugly");
-        top250.add("The Dark Knight");
-        top250.add("12 Angry Men");
-        
-        List<String> top100 = new ArrayList<String>();
-        top100.add("The Shawshank Redemption");
-        top100.add("The Godfather");
-        top100.add("The Godfather: Part II");
-        top100.add("Pulp Fiction");
-        top100.add("The Good, the Bad and the Ugly");
-        top100.add("The Dark Knight");
-        top100.add("12 Angry Men");
-
-        List<String> nowShowing = new ArrayList<String>();
-        nowShowing.add("The Conjuring");
-        nowShowing.add("Despicable Me 2");
-        nowShowing.add("Turbo");
-        nowShowing.add("Grown Ups 2");
-        nowShowing.add("Red 2");
-        nowShowing.add("The Wolverine");
-
-        List<String> comingSoon = new ArrayList<String>();
-        comingSoon.add("2 Guns");
-        comingSoon.add("The Smurfs 2");
-        comingSoon.add("The Spectacular Now");
-        comingSoon.add("The Canyons");
-        comingSoon.add("Europa Report");
-        
-        List<String> hello = new ArrayList<String>();
-        hello.add("The Shawshank Redemption");
-        hello.add("The Godfather");
-        hello.add("The Godfather: Part II");
-        hello.add("Pulp Fiction");
-        hello.add("The Good, the Bad and the Ugly");
-        hello.add("The Dark Knight");
-        hello.add("12 Angry Men");
-
-        listDataChild.put(listDataHeader.get(0), top250);
-        listDataChild.put(listDataHeader.get(1), top100);// Header, Child data
-        listDataChild.put(listDataHeader.get(2), nowShowing);
-        listDataChild.put(listDataHeader.get(3), comingSoon);
-        listDataChild.put(listDataHeader.get(4),hello);
-    }
 
     public void ConformationDialog() {
         confimDialog = new Dialog(getActivity(), R.style.Theme_Dialog);
@@ -232,6 +147,7 @@ public class OldFamilyListFragment extends Fragment {
         confirm_txt = (TextView) confimDialog.findViewById(R.id.confirm_txt);
         cancel_txt = (TextView) confimDialog.findViewById(R.id.cancel_txt);
 
+        getsessionID();
         cancel_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -241,16 +157,12 @@ public class OldFamilyListFragment extends Fragment {
         confirm_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new PaymentFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                Bundle args = new Bundle();
-                args.putString("session", "12");
-                fragment.setArguments(args);
-                fragmentTransaction.replace(R.id.frame, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
 
+                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("")) {
+                    callSessionConfirmationApi();
+                } else {
+                    Util.ping(mContext, "Please fill all Detail");
+                }
                 confimDialog.dismiss();
             }
         });
@@ -258,6 +170,184 @@ public class OldFamilyListFragment extends Fragment {
 
         confimDialog.show();
 
+    }
+
+    //Use for Get FamilyList
+    public void callFamilyListApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_FamiliyByFamilyID(getFamilyListDetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel familyInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (familyInfoModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (familyInfoModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (familyInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (familyInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                        finalFamilyDetail = familyInfoModel.getData();
+                        if (familyInfoModel.getData() != null) {
+                            fillExpLV();
+                            expandableSelectStudentListAdapter = new ExpandableSelectStudentListAdapter(getActivity(), listDataHeader, listDataChild, new onChlidClick() {
+                                @Override
+                                public void getChilClick() {
+                                    getFamilyID();
+                                    Fragment fragment = new AddFamilyFragment();
+                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                    Bundle args = new Bundle();
+                                    args.putString("session", "11");
+                                    args.putString("type", "Child");
+                                    args.putString("familyID", familyIdStr);
+                                    fragment.setArguments(args);
+                                    fragmentTransaction.replace(R.id.frame, fragment);
+                                    fragmentTransaction.addToBackStack(null);
+                                    fragmentTransaction.commit();
+                                }
+                            }, new onViewClick() {
+                                @Override
+                                public void getViewClick() {
+                                    ConformationDialog();
+                                }
+                            });
+                            oldFamilyListBinding.lvExpfamilylist.setAdapter(expandableSelectStudentListAdapter);
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getFamilyListDetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("FamilyID", "0");
+        return map;
+    }
+
+    //Use for fill Family List
+    public void fillExpLV() {
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<String, List<ChildDetailModel>>();
+        for (int i = 0; i < finalFamilyDetail.size(); i++) {
+            listDataHeader.add(finalFamilyDetail.get(i).getFirstName() + "|"
+                    + finalFamilyDetail.get(i).getLastName() + "|"
+                    + finalFamilyDetail.get(i).getContactPhoneNumber() + "|"
+                    + finalFamilyDetail.get(i).getFamilyID() + "|"
+                    + finalFamilyDetail.get(i).getContactID());
+            Log.d("header", "" + listDataHeader);
+            ArrayList<ChildDetailModel> row = new ArrayList<ChildDetailModel>();
+            for (int j = 0; j < finalFamilyDetail.get(i).getFamilyContact().size(); j++) {
+//                if (finalFamilyDetail.get(i).getFamilyContact().get(i) != null) {
+                row.add(finalFamilyDetail.get(i).getFamilyContact().get(j));
+                Log.d("row", "" + row);
+//                }
+
+
+            }
+            listDataChild.put(listDataHeader.get(i), row);
+            Log.d("child", "" + listDataChild);
+        }
+    }
+
+    public void getFamilyID() {
+        selectedId = new ArrayList<String>();
+
+        selectedId = expandableSelectStudentListAdapter.getFamilyID();
+        Log.d("selectedId", "" + selectedId);
+        for (int i = 0; i < selectedId.size(); i++) {
+            familyIdStr = selectedId.get(i);
+            Log.d("selectedIdStr", familyIdStr);
+        }
+    }
+
+    public void getsessionID() {
+        selectedId = new ArrayList<String>();
+
+        selectedId = expandableSelectStudentListAdapter.getSessionDetail();
+        Log.d("selectedId", "" + selectedId);
+        for (int i = 0; i < selectedId.size(); i++) {
+            contatIDstr = selectedId.get(i);
+
+            Log.d("selectedIdStr", contatIDstr);
+        }
+    }
+
+    //Use for Family and Child Session Confirmation
+    public void callSessionConfirmationApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Session_ContactEnrollment(getSessionConfirmationdetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel sessionconfirmationInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (sessionconfirmationInfoModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                        orderIDStr = sessionconfirmationInfoModel.getContactID();
+                        if (!orderIDStr.equalsIgnoreCase("")) {
+                            Fragment fragment = new PaymentFragment();
+                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            Bundle args = new Bundle();
+                            args.putString("orderID", orderIDStr);
+                            fragment.setArguments(args);
+                            fragmentTransaction.replace(R.id.frame, fragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        }else{
+                            Util.ping(mContext,"orderID Not found.");
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getSessionConfirmationdetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("SessionID", sessionIDStr);
+        map.put("ContactID", contatIDstr);
+        return map;
     }
 
 }

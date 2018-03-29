@@ -1,8 +1,11 @@
 package com.adms.safariteacher.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +14,17 @@ import android.widget.RadioGroup;
 
 import com.adms.safariteacher.Interface.onChlidClick;
 import com.adms.safariteacher.Interface.onViewClick;
+import com.adms.safariteacher.Model.TeacherInfo.ChildDetailModel;
+import com.adms.safariteacher.Model.TeacherInfo.FamilyDetailModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.databinding.AddStudentHeaderBinding;
 import com.adms.safariteacher.databinding.ListGroupFamilyListBinding;
 import com.adms.safariteacher.databinding.ListItemSelectStudentBinding;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,11 +36,14 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
 
     private Context mContext;
     private List<String> _listDataHeader;
-    private HashMap<String, List<String>> _listDataChild;
+    private HashMap<String, List<ChildDetailModel>> _listDataChild;
     private onViewClick onViewClick;
     private onChlidClick onChlidClick;
+    String FamilyID;
+    private ArrayList<String> familyIdCheck;
+    private ArrayList<String> sesionDeatil;
 
-    public ExpandableSelectStudentListAdapter(Context mContext, List<String> listDataHeader, HashMap<String, List<String>> listDataChild, onChlidClick onChlidClick, onViewClick session) {
+    public ExpandableSelectStudentListAdapter(Context mContext, List<String> listDataHeader, HashMap<String, List<ChildDetailModel>> listDataChild, onChlidClick onChlidClick, onViewClick session) {
         this.mContext = mContext;
         this._listDataChild = listDataChild;
         this._listDataHeader = listDataHeader;
@@ -54,16 +65,39 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
 
         if (childPosition > 0) {// && childPosition < getChildrenCount(groupPosition) - 1
 
+
             itembinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                     R.layout.list_item_select_student, parent, false);
             convertView = itembinding.getRoot();
+            final ChildDetailModel childDetail = getChild(groupPosition, childPosition - 1);
+            itembinding.nameRb.setText(childDetail.getFirstName() + " " + childDetail.getLastName());
+
+            if (childDetail.getGenderID().equalsIgnoreCase("1")) {
+                itembinding.genderTxt.setText("Male");
+            } else {
+                itembinding.genderTxt.setText("Female");
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            SimpleDateFormat output = new SimpleDateFormat("dd/MM/yyyy");
+            Date d = null;
+            try {
+                d = sdf.parse(childDetail.getDateofBirth());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String formatedate = output.format(d);
+            itembinding.ageTxt.setText(formatedate);
+            itembinding.phoneNoTxt.setText(childDetail.getContactPhoneNumber());
             itembinding.nameRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int i) {
                     int RadioButtonid = itembinding.nameRg.getCheckedRadioButtonId();
                     switch (RadioButtonid) {
                         case R.id.name_rb:
+                            sesionDeatil = new ArrayList<String>();
+                            sesionDeatil.add(childDetail.getContactID());
                             onViewClick.getViewClick();
+                            itembinding.nameRb.setChecked(false);
                             break;
                     }
 
@@ -71,8 +105,17 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
             });
 
         } else {//if (childPosition == 0)
+//            final ChildDetailModel childDetail = getChild(groupPosition, childPosition);
             headerBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                     R.layout.add_student_header, parent, false);
+            Log.d("size", "" + _listDataChild.size());
+//            if (getChild(groupPosition,childPosition)>) {
+//                headerBinding.tableRowHeader.setVisibility(View.GONE);
+//                headerBinding.tableRowNodata.setVisibility(View.VISIBLE);
+//            } else {
+//                headerBinding.tableRowHeader.setVisibility(View.VISIBLE);
+                headerBinding.tableRowNodata.setVisibility(View.GONE);
+//            }
             convertView = headerBinding.getRoot();
         }
 
@@ -82,8 +125,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-                .size() + 1;
+        return this._listDataChild.get(this._listDataHeader.get(groupPosition)).size() + 1;
     }
 
     @Override
@@ -92,8 +134,9 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosititon) {
-        return this._listDataChild.get(this._listDataHeader.get(groupPosition));
+    public ChildDetailModel getChild(int groupPosition, int childPosititon) {
+        return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+                .get(childPosititon);
     }
 
     @Override
@@ -109,9 +152,9 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        ListGroupFamilyListBinding groupbinding;
+        final ListGroupFamilyListBinding groupbinding;
         String headerTitle = (String) getGroup(groupPosition);
-        String[] spiltValue = headerTitle.split("\\|");
+        final String[] spiltValue = headerTitle.split("\\|");
         if (convertView == null) {
 
         }
@@ -128,7 +171,6 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
         } else {
             convertView.setBackgroundResource(R.drawable.fourth_row);
         }
-        String sr = String.valueOf(groupPosition + 1);
 
         if (isExpanded) {
             groupbinding.arrowImg.setBackgroundResource(R.drawable.round_yello);
@@ -137,11 +179,38 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
             groupbinding.arrowImg.setBackgroundResource(R.drawable.round_yello);
             groupbinding.arrowImg.setImageResource(R.drawable.arrow_1_42_down);
         }
+        groupbinding.familynameRb.setText(spiltValue[0] + " " + spiltValue[1]);
+        groupbinding.noTxt.setText(spiltValue[2]);
+        FamilyID = spiltValue[3];
 
+        groupbinding.familynameRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int RadioButtonid = groupbinding.familynameRg.getCheckedRadioButtonId();
+                switch (RadioButtonid) {
+                    case R.id.familyname_rb:
+                        sesionDeatil = new ArrayList<String>();
+                        sesionDeatil.add(spiltValue[4]);
+                        onViewClick.getViewClick();
+                        break;
+                }
+            }
+        });
         groupbinding.addchildTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                familyIdCheck = new ArrayList<String>();
+                familyIdCheck.add(spiltValue[3]);
                 onChlidClick.getChilClick();
+            }
+        });
+
+        groupbinding.noTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.fromParts("tel",spiltValue[2],null));
+                mContext.startActivity(intent);
             }
         });
         return convertView;
@@ -155,6 +224,14 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    public ArrayList<String> getFamilyID() {
+        return familyIdCheck;
+    }
+
+    public ArrayList<String> getSessionDetail() {
+        return sesionDeatil;
     }
 }
 

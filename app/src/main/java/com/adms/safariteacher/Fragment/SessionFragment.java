@@ -26,6 +26,7 @@ import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Activities.DrawableCalendarEvent;
 import com.adms.safariteacher.Adapter.SessionViewStudentListAdapter;
 import com.adms.safariteacher.Model.Session.SessionDetailModel;
+import com.adms.safariteacher.Model.Session.sessionDataModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
 import com.adms.safariteacher.Utility.Util;
@@ -56,14 +57,16 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     private Context mContext;
     public Dialog sessionDialog;
     Button cancel_btn, add_attendance_btn, edit_session_btn, add_student_btn;
-    String sessionnameStr, sessionstrattimeStr = "", sessionendtimeStr = "", sessionDateStr = "", sessionIDStr;
+    String sessionnameStr, sessionstrattimeStr = "", sessionendtimeStr = "", sessionDateStr = "", sessionIDStr, sessionDetailIDStr;
     TextView start_time_txt, end_time_txt, session_title_txt, date_txt;
     RecyclerView studentnamelist_rcView;
     SessionViewStudentListAdapter sessionViewStudentListAdapter;
-    ArrayList<String> arrayList;
+    List<sessionDataModel> arrayList;
     SessionDetailModel finalsessionfullDetailModel;
     List<CalendarEvent> eventList = new ArrayList<>();
     ArrayList<Integer> colorList = new ArrayList<>();
+    int sessionCapacity, arraySize, studentAvailability;
+    ArrayList<String> StudentList;
 
     public SessionFragment() {
     }
@@ -135,6 +138,16 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
             sessionnameStr = event.getTitle();
             sessionIDStr = String.valueOf(event.getId());
             Log.d("sessionID", sessionIDStr);
+            Util.setPref(mContext, "SessionID", sessionIDStr);
+            for (int i = 0; i < finalsessionfullDetailModel.getData().size(); i++) {
+                for (int j = 0; j < finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().size(); j++) {
+                    if (sessionIDStr.equalsIgnoreCase(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID())) {
+                        sessionDetailIDStr = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionDetailID();
+                        sessionCapacity = Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionCapacity());
+                    }
+
+                }
+            }
             SessionDialog();
         } else {
             Util.ping(mContext, "No Event Available...");
@@ -221,22 +234,13 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         studentnamelist_rcView = (RecyclerView) sessionDialog.findViewById(R.id.student_name_list_rcView);
         add_student_btn = (Button) sessionDialog.findViewById(R.id.add_student_btn);
 
+        callGetSessionStudentDetailApi();
+
         date_txt.setText(sessionDateStr);
         session_title_txt.setText(sessionnameStr);
         start_time_txt.setText(sessionstrattimeStr);
         end_time_txt.setText(sessionendtimeStr);
-        arrayList = new ArrayList<>();
-        arrayList.add("Amit Shah");
-        arrayList.add("Nehal Patel");
-        arrayList.add("Sujal Shah");
-        arrayList.add("---------");
-        arrayList.add("---------");
 
-        sessionViewStudentListAdapter = new SessionViewStudentListAdapter(mContext, arrayList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-        studentnamelist_rcView.setLayoutManager(mLayoutManager);
-        studentnamelist_rcView.setItemAnimator(new DefaultItemAnimator());
-        studentnamelist_rcView.setAdapter(sessionViewStudentListAdapter);
 
         cancel_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,6 +258,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 Bundle args = new Bundle();
                 args.putString("flag", "edit");
                 args.putString("sessionIDStr", sessionIDStr);
+                args.putString("studentAvailable", String.valueOf(arraySize));
                 fragment.setArguments(args);
                 fragmentTransaction.replace(R.id.frame, fragment);
                 fragmentTransaction.addToBackStack(null);
@@ -268,6 +273,9 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 Fragment fragment = new StudentAttendanceFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                Bundle args = new Bundle();
+                args.putString("sessionIDStr", sessionIDStr);
+                args.putString("sessionDetailID", sessionDetailIDStr);
                 fragmentTransaction.replace(R.id.frame, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -347,9 +355,10 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
     public void mockList(List<CalendarEvent> eventList) {
         long startDate = 0, endDate = 0;
-
+        int SessionHour = 0;
         for (int i = 0; i < finalsessionfullDetailModel.getData().size(); i++) {
             for (int j = 0; j < finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().size(); j++) {
+
                 String[] spiltTime = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime().split("\\-");
                 try {
                     String dateString = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionDate() + " " + spiltTime[0];
@@ -363,14 +372,40 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                     startDate = date.getTime();
                     endDate = date1.getTime();
                     Log.d("FirstTime", "first event :" + startDate + endDate);
+
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                Date date1, date2;
+                int days, hours, min;
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                try {
+                    date1 = simpleDateFormat.parse(spiltTime[0]);
+                    date2 = simpleDateFormat.parse(spiltTime[1]);
+
+                    long difference = date2.getTime() - date1.getTime();
+                    days = (int) (difference / (1000 * 60 * 60 * 24));
+                    hours = (int) ((difference - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
+                    min = (int) (difference - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
+                    SessionHour = (hours < 0 ? -hours : hours);
+                    Log.i("======= Hours", " :: " + hours);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 DrawableCalendarEvent event = new DrawableCalendarEvent(Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID()),
                         colorList.get(j), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
                         finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
-                        finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime() + System.getProperty("line.separator") + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName(),
-                        startDate, endDate, 0, "10:00 PM-11:00 PM", 1);
+                        finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime()
+                                + " " + "( " + SessionHour + "hrs )" + System.getProperty("line.separator")
+                                + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressLine1()
+                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
+                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
+                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
+                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode() + ".",
+                        startDate, endDate, 0, String.valueOf(SessionHour), 1);
                 eventList.add(event);
             }
 
@@ -426,11 +461,89 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     }
 
     public static SessionFragment newInstance() {
-        if(fragment==null){
+        if (fragment == null) {
             fragment = new SessionFragment();
         }
         return fragment;
     }
+
+
+    //Use for Get SessionStudent Detail
+    public void callGetSessionStudentDetailApi() {
+        if (Util.isNetworkConnected(mContext)) {
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Session_StudentDetail(getsessionStudentDetail(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel sessionStudentInfo, Response response) {
+                    Util.dismissDialog();
+                    if (sessionStudentInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionStudentInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionStudentInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.dismissDialog();
+                        if (sessionStudentInfo.getData() != null) {
+                            Util.ping(mContext, getString(R.string.false_msg));
+                        }
+                        return;
+                    }
+                    if (sessionStudentInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        arrayList = sessionStudentInfo.getData();
+                        StudentList = new ArrayList<>();
+                        arraySize = arrayList.size();
+                        studentAvailability = sessionCapacity - arraySize;
+                        Log.d("capacity", "" + sessionCapacity + "arraySize :" + arraySize + "studentAvailability :" + studentAvailability);
+                        if (arrayList.size() > 0) {
+                            for (int i = 0; i < arrayList.size(); i++) {
+                                StudentList.add(arrayList.get(i).getFirstName());
+                            }
+                            for (int i = 0; i < sessionCapacity - arrayList.size(); i++) {
+                                StudentList.add("-----");
+                            }
+                        } else {
+                            for (int i = 0; i < sessionCapacity; i++) {
+                                StudentList.add("-----");
+                            }
+                        }
+                        Log.d("arrayList", "" + StudentList);
+                        sessionViewStudentListAdapter = new SessionViewStudentListAdapter(mContext, StudentList);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                        studentnamelist_rcView.setLayoutManager(mLayoutManager);
+                        studentnamelist_rcView.setItemAnimator(new DefaultItemAnimator());
+                        studentnamelist_rcView.setAdapter(sessionViewStudentListAdapter);
+
+                        if (studentAvailability > 0) {
+                            add_student_btn.setVisibility(View.VISIBLE);
+                        }else{
+                            add_student_btn.setVisibility(View.GONE);
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getsessionStudentDetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("SesionID", sessionIDStr);
+        return map;
+    }
+
 
 }
 

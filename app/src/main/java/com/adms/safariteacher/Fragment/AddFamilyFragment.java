@@ -1,5 +1,6 @@
 package com.adms.safariteacher.Fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -10,10 +11,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -46,8 +50,9 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     Calendar calendar;
     private DatePickerDialog datePickerDialog;
     int mYear, mMonth, mDay;
-    String pageTitle, type, firstNameStr, lastNameStr, emailStr, passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr;
-
+    String pageTitle, type, firstNameStr, lastNameStr, emailStr, passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr;
+    Dialog confimDialog;
+    TextView cancel_txt, confirm_txt;
 
     public AddFamilyFragment() {
     }
@@ -61,10 +66,12 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         mContext = getActivity();
         pageTitle = getArguments().getString("session");
         type = getArguments().getString("type");
+        familyIDStr = getArguments().getString("familyID");
+        sessionIDStr = Util.getPref(mContext, "SessionID");
         ((DashBoardActivity) getActivity()).setActionBar(Integer.parseInt(pageTitle), "false");
         initViews();
         setListners();
-
+        Log.d("type", type);
         return rootView;
     }
 
@@ -138,7 +145,11 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                                 if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                     if (!gendarIdStr.equalsIgnoreCase("")) {
                                         if (!dateofbirthStr.equalsIgnoreCase("")) {
-                                            callFamilyApi();
+                                            if (type.equalsIgnoreCase("Family")) {
+                                                callFamilyApi();
+                                            } else {
+                                                callNewChildApi();
+                                            }
                                         } else {
                                             addFamilyBinding.dateOfBirthEdt.setError("Enter Proper Birth date.");
                                         }
@@ -209,16 +220,9 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                     }
                     if (familyInfoModel.getSuccess().equalsIgnoreCase("True")) {
 
-                        Util.setPref(mContext,"FamilyID",familyInfoModel.getFamilyID());
-                        Fragment fragment = new OldFamilyListFragment();
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        Bundle args = new Bundle();
-                        args.putString("session", "13");
-                        fragment.setArguments(args);
-                        fragmentTransaction.replace(R.id.frame, fragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        Util.setPref(mContext, "FamilyID", familyInfoModel.getContactID());
+                        contatIDstr = familyInfoModel.getContactID();
+                        ConformationDialog();
                     }
                 }
 
@@ -244,7 +248,6 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         map.put("GenderID", gendarIdStr);
         map.put("DateOfBirth", dateofbirthStr);
         map.put("PhoneNumber", phonenoStr);
-        map.put("ContactTypeID", contactTypeIDStr);
         return map;
     }
 
@@ -309,6 +312,160 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         } else {
             contactTypeIDStr = "3";
         }
+    }
+
+    //Use for Family add NewChild
+    public void callNewChildApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_AddFamilyContact(getNewChildetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel childInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (childInfoModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (childInfoModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (childInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (childInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                        contatIDstr = childInfoModel.getContactID();
+                        ConformationDialog();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getNewChildetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("FamilyID", familyIDStr);
+        map.put("FirstName", firstNameStr);
+        map.put("LastName", lastNameStr);
+        map.put("EmailAddress", emailStr);
+        map.put("Password", passwordStr);
+        map.put("GenderID", gendarIdStr);
+        map.put("DateOfBirth", dateofbirthStr);
+        map.put("PhoneNumber", phonenoStr);
+        map.put("ContactTypeID", contactTypeIDStr);
+        return map;
+    }
+
+    public void ConformationDialog() {
+        confimDialog = new Dialog(getActivity(), R.style.Theme_Dialog);
+        Window window = confimDialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        confimDialog.getWindow().getAttributes().verticalMargin = 0.10f;
+        wlp.gravity = Gravity.CENTER;
+        window.setAttributes(wlp);
+
+        confimDialog.getWindow().setBackgroundDrawableResource(R.drawable.session_confirm);
+
+        confimDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        confimDialog.setCancelable(false);
+        confimDialog.setContentView(R.layout.confirm_session_dialog);
+
+
+        confirm_txt = (TextView) confimDialog.findViewById(R.id.confirm_txt);
+        cancel_txt = (TextView) confimDialog.findViewById(R.id.cancel_txt);
+
+        cancel_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confimDialog.dismiss();
+            }
+        });
+        confirm_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("")) {
+                    callSessionConfirmationApi();
+                } else {
+                    Util.ping(mContext, "Please fill all Detail");
+                }
+                confimDialog.dismiss();
+            }
+        });
+
+
+        confimDialog.show();
+
+    }
+
+    //Use for Family and Child Session Confirmation
+    public void callSessionConfirmationApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Session_ContactEnrollment(getSessionConfirmationdetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel sessionconfirmationInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (sessionconfirmationInfoModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                        orderIDStr = sessionconfirmationInfoModel.getContactID();
+                        if (!orderIDStr.equalsIgnoreCase("")) {
+                            Fragment fragment = new PaymentFragment();
+                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            Bundle args = new Bundle();
+                            args.putString("orderID", orderIDStr);
+                            fragment.setArguments(args);
+                            fragmentTransaction.replace(R.id.frame, fragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        }else{
+                            Util.ping(mContext,"orderID Not found.");
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getSessionConfirmationdetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("SessionID", sessionIDStr);
+        map.put("ContactID", contatIDstr);
+        return map;
     }
 
 }

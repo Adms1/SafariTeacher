@@ -3,6 +3,9 @@ package com.adms.safariteacher.Model.TeacherInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by admsandroid on 3/22/2018.
  */
@@ -17,9 +20,12 @@ public class TeacherInfoModel {
     @SerializedName("CoachID")
     @Expose
     private String coachID;
-    @SerializedName("FamilyID")
+    @SerializedName("ContactID")
     @Expose
-    private String familyID;
+    private String contactID;
+    @SerializedName("Data")
+    @Expose
+    private List<FamilyDetailModel> data = new ArrayList<FamilyDetailModel>();
     public String getSuccess() {
         return success;
     }
@@ -44,11 +50,19 @@ public class TeacherInfoModel {
         this.coachID = coachID;
     }
 
-    public String getFamilyID() {
-        return familyID;
+    public String getContactID() {
+        return contactID;
     }
 
-    public void setFamilyID(String familyID) {
-        this.familyID = familyID;
+    public void setContactID(String contactID) {
+        this.contactID = contactID;
+    }
+
+    public List<FamilyDetailModel> getData() {
+        return data;
+    }
+
+    public void setData(List<FamilyDetailModel> data) {
+        this.data = data;
     }
 }

@@ -17,15 +17,27 @@
             android:paddingBottom="@dimen/_2sdp"
             android:visibility="visible">
 
-            <TextView
-                android:id="@+id/familyname_txt"
-                android:layout_width="@dimen/_115sdp"
+            <RadioGroup
+                android:id="@+id/familyname_rg"
+                android:layout_width="@dimen/_120sdp"
                 android:layout_height="@dimen/_33sdp"
-                android:gravity="start|center_vertical"
-                android:paddingLeft="@dimen/_3sdp"
-                android:text="@string/family_name"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/_10sdp" />
+                android:gravity="center|center_vertical"
+                android:paddingLeft="@dimen/_5sdp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/familyname_rb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:button="@drawable/absent_radio_type"
+                    android:checked="false"
+                    android:paddingLeft="@dimen/_3sdp"
+                    android:tag="1"
+                    android:text="@string/academic"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/_10sdp" />
+
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/no_txt"
@@ -42,9 +54,9 @@
                 android:id="@+id/addchild_txt"
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="@dimen/_28sdp"
+                android:layout_marginTop="@dimen/_1sdp"
                 android:background="@drawable/add_child_btn"
                 android:gravity="center|center_vertical"
-                android:layout_marginTop="@dimen/_1sdp"
                 android:text="Add Child"
                 android:textAlignment="center"
                 android:textAllCaps="true"

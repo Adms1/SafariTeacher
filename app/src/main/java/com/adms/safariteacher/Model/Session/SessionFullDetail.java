@@ -11,6 +11,9 @@ public class SessionFullDetail {
     @SerializedName("Session_ID")
     @Expose
     private String sessionID;
+    @SerializedName("SessionDetail_ID")
+    @Expose
+    private String sessionDetailID;
     @SerializedName("SessionName")
     @Expose
     private String sessionName;
@@ -38,7 +41,12 @@ public class SessionFullDetail {
     @SerializedName("SessionTime")
     @Expose
     private String sessionTime;
-
+    @SerializedName("SessionPrice")
+    @Expose
+    private String sessionPrice;
+    @SerializedName("SessionCapacity")
+    @Expose
+    private String sessionCapacity;
     public String getSessionID() {
         return sessionID;
     }
@@ -117,5 +125,29 @@ public class SessionFullDetail {
 
     public void setSessionTime(String sessionTime) {
         this.sessionTime = sessionTime;
+    }
+
+    public String getSessionDetailID() {
+        return sessionDetailID;
+    }
+
+    public void setSessionDetailID(String sessionDetailID) {
+        this.sessionDetailID = sessionDetailID;
+    }
+
+    public String getSessionPrice() {
+        return sessionPrice;
+    }
+
+    public void setSessionPrice(String sessionPrice) {
+        this.sessionPrice = sessionPrice;
+    }
+
+    public String getSessionCapacity() {
+        return sessionCapacity;
+    }
+
+    public void setSessionCapacity(String sessionCapacity) {
+        this.sessionCapacity = sessionCapacity;
     }
 }

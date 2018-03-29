@@ -16,7 +16,7 @@
             android:id="@+id/session_name_txt_view"
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_25sdp"
-            android:layout_marginLeft="@dimen/_60sdp"
+            android:layout_marginLeft="@dimen/_50sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
             android:text="Session Name"
@@ -95,7 +95,7 @@
             android:id="@+id/start_time_txt_view"
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_25sdp"
-            android:layout_marginLeft="@dimen/_60sdp"
+            android:layout_marginLeft="@dimen/_50sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
             android:text="Time"
@@ -167,7 +167,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_150sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/student_name_list_rcView"

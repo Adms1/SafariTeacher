@@ -31,7 +31,8 @@
             agendaCalendar:calendarDayTextColor="@color/text_color"
             agendaCalendar:calendarHeaderColor="@color/blue"
             agendaCalendar:calendarPastDayTextColor="@color/text_color"
-            agendaCalendar:fabColor="@color/theme_accent" />
+            agendaCalendar:fabColor="@color/theme_accent"
+            android:textSize="@dimen/_14sdp"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/add_event_fab_btn"
