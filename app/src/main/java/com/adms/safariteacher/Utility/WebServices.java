@@ -83,4 +83,8 @@ public interface WebServices {
     @FormUrlEncoded
     @POST("/Session_StudentDetail")
     public void get_Session_StudentDetail(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Add_ClassAttendance")
+    public void get_Add_ClassAttendance(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
 }

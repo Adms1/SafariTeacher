@@ -49,18 +49,18 @@
 
                     <Button
                         android:id="@+id/facebook_img"
-                        android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp"
+                        android:layout_width="@dimen/_37sdp"
+                        android:layout_height="@dimen/_37sdp"
                         android:layout_margin="@dimen/_5sdp"
                         android:background="@drawable/fb" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/gmail_img"
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
+                    android:layout_width="@dimen/_37sdp"
+                    android:layout_height="@dimen/_37sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
-                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_15sdp"
                     android:layout_marginRight="@dimen/_5sdp"
                     android:layout_marginTop="@dimen/_5sdp"
                     android:background="@drawable/google" />
@@ -75,7 +75,7 @@
                 android:text="@string/or"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp"
-                android:textStyle="normal" />
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/email_edt"
@@ -116,7 +116,7 @@
                 android:layout_marginTop="@dimen/_25sdp"
                 android:background="@drawable/register_btn"
                 android:text="Login"
-                android:textAllCaps="false"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
@@ -124,7 +124,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_40sdp"
+                android:layout_marginLeft="@dimen/_22sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:orientation="horizontal">
 
@@ -134,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/register"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_10sdp"
+                    android:textSize="@dimen/_12sdp"
                     android:textStyle="normal" />
 
                 <TextView
@@ -142,10 +142,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_marginLeft="@dimen/_30sdp"
+                    android:layout_marginLeft="@dimen/_20sdp"
                     android:text="@string/forgot_pass"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_10sdp"
+                    android:textSize="@dimen/_12sdp"
                     android:textStyle="normal" />
             </LinearLayout>
         </LinearLayout>

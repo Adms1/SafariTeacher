@@ -1,11 +1,14 @@
 package com.adms.safariteacher.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +27,7 @@ import com.adms.safariteacher.Fragment.SessionFragment;
 import com.adms.safariteacher.Fragment.StudentAttendanceFragment;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.Util;
+import com.facebook.internal.Utility;
 
 public class DashBoardActivity extends AppCompatActivity {
     private NavigationView navigationView;
@@ -186,14 +190,31 @@ public class DashBoardActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_Add_Session;
                         break;
-//                    case R.id.logout:
-////                        navItemIndex = 2;
-//                        Util.setPref(mContex, "coachID", "");
-//                        Util.setPref(mContex, "coachTypeID", "");
-//                        Intent iLogin = new Intent(mContex, LoginActivity.class);
-//                        startActivity(iLogin);
-//                        finish();
-//                        break;
+                    case R.id.logout:
+                       new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
+                        .setCancelable(false)
+                        .setTitle("Logout")
+                        .setIcon(mContex.getResources().getDrawable(R.drawable.teacher_safari))
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Util.setPref(mContex, "coachID", "");
+                                Util.setPref(mContex, "SessionID", "");
+                                Util.setPref(mContex,"FamilyID","");
+                                Intent intentLogin = new Intent(DashBoardActivity.this, LoginActivity.class);
+                                startActivity(intentLogin);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+
+                            }
+                        })
+                        .setIcon(R.drawable.teacher_safari)
+                        .show();
+                        break;
 //                    case R.id.student_attendance:
 //                        navItemIndex = 2;
 //                        CURRENT_TAG = TAG_Student_Attendance;

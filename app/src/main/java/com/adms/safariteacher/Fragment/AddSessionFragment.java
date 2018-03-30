@@ -122,11 +122,13 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         rootView = addSessionBinding.getRoot();
         mContext = getActivity();
         flag = getArguments().getString("flag");
-        studentAvailable = getArguments().getString("studentAvailable");
-        Log.d("studentAvailable",studentAvailable);
-        SeslectedsessionID = getArguments().getString("sessionIDStr");
+
+
+        SeslectedsessionID = getArguments().getString("sessionID");
         if (flag.equalsIgnoreCase("edit")) {
             ((DashBoardActivity) getActivity()).setActionBar(1, "edit");
+            studentAvailable = getArguments().getString("studentAvailable");
+            Log.d("studentAvailable",studentAvailable);
         } else {
             ((DashBoardActivity) getActivity()).setActionBar(1, "add");
         }
@@ -1144,8 +1146,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             } else {
                 minuteFinal = String.valueOf(minute);
             }
-
-
+            
             switch (Tag) {
                 case "0":
                     sun_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);

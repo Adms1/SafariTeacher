@@ -313,20 +313,20 @@ public class OldFamilyListFragment extends Fragment {
                         return;
                     }
                     if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("True")) {
-                        orderIDStr = sessionconfirmationInfoModel.getContactID();
-                        if (!orderIDStr.equalsIgnoreCase("")) {
-                            Fragment fragment = new PaymentFragment();
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            Bundle args = new Bundle();
-                            args.putString("orderID", orderIDStr);
-                            fragment.setArguments(args);
-                            fragmentTransaction.replace(R.id.frame, fragment);
-                            fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.commit();
-                        }else{
-                            Util.ping(mContext,"orderID Not found.");
-                        }
+//                        orderIDStr = sessionconfirmationInfoModel.getContactID();
+//                        if (!orderIDStr.equalsIgnoreCase("")) {
+//                            Fragment fragment = new PaymentFragment();
+//                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                            Bundle args = new Bundle();
+//                            args.putString("orderID", orderIDStr);
+//                            fragment.setArguments(args);
+//                            fragmentTransaction.replace(R.id.frame, fragment);
+//                            fragmentTransaction.addToBackStack(null);
+//                            fragmentTransaction.commit();
+//                        }else{
+//                            Util.ping(mContext,"orderID Not found.");
+//                        }
                     }
                 }
 

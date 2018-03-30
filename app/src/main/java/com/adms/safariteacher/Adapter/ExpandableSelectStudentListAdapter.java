@@ -16,7 +16,9 @@ import com.adms.safariteacher.Interface.onChlidClick;
 import com.adms.safariteacher.Interface.onViewClick;
 import com.adms.safariteacher.Model.TeacherInfo.ChildDetailModel;
 import com.adms.safariteacher.Model.TeacherInfo.FamilyDetailModel;
+import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
+import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.AddStudentHeaderBinding;
 import com.adms.safariteacher.databinding.ListGroupFamilyListBinding;
 import com.adms.safariteacher.databinding.ListItemSelectStudentBinding;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admsandroid on 3/26/2018.
@@ -42,6 +45,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
     String FamilyID;
     private ArrayList<String> familyIdCheck;
     private ArrayList<String> sesionDeatil;
+    ArrayList<String> value;
 
     public ExpandableSelectStudentListAdapter(Context mContext, List<String> listDataHeader, HashMap<String, List<ChildDetailModel>> listDataChild, onChlidClick onChlidClick, onViewClick session) {
         this.mContext = mContext;
@@ -103,19 +107,40 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
 
                 }
             });
+            itembinding.phoneNoTxt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    boolean result = Util.checkPermission(mContext);
+                    if (result) {
+
+                    }
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.fromParts("tel", itembinding.phoneNoTxt.getText().toString(), null));
+                    mContext.startActivity(intent);
+
+                }
+            });
 
         } else {//if (childPosition == 0)
 //            final ChildDetailModel childDetail = getChild(groupPosition, childPosition);
             headerBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                     R.layout.add_student_header, parent, false);
-            Log.d("size", "" + _listDataChild.size());
-//            if (getChild(groupPosition,childPosition)>) {
-//                headerBinding.tableRowHeader.setVisibility(View.GONE);
-//                headerBinding.tableRowNodata.setVisibility(View.VISIBLE);
-//            } else {
-//                headerBinding.tableRowHeader.setVisibility(View.VISIBLE);
-                headerBinding.tableRowNodata.setVisibility(View.GONE);
+
+//            for (Map.Entry<String, List<ChildDetailModel>> entry : _listDataChild.entrySet()) {
+//                System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+//                if(entry.getValue()!=null){
+//                    System.out.println("Hello");
+//                }else{
+//                    System.out.println("hi");
+//                }
 //            }
+            value = new ArrayList<>();
+            for (String key : _listDataChild.keySet()) {
+                System.out.println("------------------------------------------------");
+                System.out.println("Iterating or looping map using java5 foreach loop");
+                System.out.println("key: " + key + " value: " + _listDataChild.get(key));
+                value.add(String.valueOf(_listDataChild.get(key)));
+            }
             convertView = headerBinding.getRoot();
         }
 
@@ -208,8 +233,12 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
         groupbinding.noTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean result = Util.checkPermission(mContext);
+                if (result) {
+
+                }
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.fromParts("tel",spiltValue[2],null));
+                intent.setData(Uri.fromParts("tel", spiltValue[2], null));
                 mContext.startActivity(intent);
             }
         });

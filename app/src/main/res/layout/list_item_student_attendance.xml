@@ -24,6 +24,7 @@
             android:textSize="@dimen/_10sdp" />
 
         <RadioGroup
+            android:id="@+id/attendance_status_rg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

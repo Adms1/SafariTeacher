@@ -144,7 +144,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                             if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() > 6) {
                                 if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                     if (!gendarIdStr.equalsIgnoreCase("")) {
-                                        if (!dateofbirthStr.equalsIgnoreCase("")) {
+                                        if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
                                             if (type.equalsIgnoreCase("Family")) {
                                                 callFamilyApi();
                                             } else {
@@ -442,8 +442,8 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                             fragmentTransaction.replace(R.id.frame, fragment);
                             fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
-                        }else{
-                            Util.ping(mContext,"orderID Not found.");
+                        } else {
+                            Util.ping(mContext, "orderID Not found.");
                         }
                     }
                 }

@@ -198,6 +198,7 @@
             android:layout_weight="1"
             android:background="@drawable/session_view_btn"
             android:gravity="center"
+            android:alpha="1"
             android:text="Edit Session"
             android:textAllCaps="false"
             android:textColor="@color/white"
@@ -214,10 +215,11 @@
             android:layout_weight="1"
             android:background="@drawable/session_view_btn"
             android:gravity="center"
+            android:alpha="1"
             android:text="Take Attendance"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/_10sdp" />
+            android:textSize="@dimen/_10sdp"/>
 
         <Button
             android:id="@+id/add_student_btn"
@@ -230,11 +232,11 @@
             android:layout_weight="1"
             android:background="@drawable/session_view_btn"
             android:gravity="center"
+            android:alpha="1"
             android:text="Add Student"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/_10sdp"
-            android:visibility="visible" />
+            android:textSize="@dimen/_10sdp"/>
     </LinearLayout>
 
     <Button

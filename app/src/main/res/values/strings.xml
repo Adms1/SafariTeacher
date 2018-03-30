@@ -59,8 +59,8 @@
     <string name="openDrawer">open_drawer</string>
     <string name="closeDrawer">close_drawer</string>
     <string name="session_price">Session Price</string>
-    <string name="s_subject">Subject</string>
-    <string name="batch_time">Class Time</string>
+    <string name="s_subject">Lession</string>
+    <string name="batch_time">Time</string>
     <string name="total_student">Student</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>

@@ -6,7 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/unselected"
+        android:background="@color/search_class"
         android:orientation="vertical"
         android:weightSum="2"
         tools:context="com.adms.classsafari.Activites.AddSessionScreen">
@@ -41,6 +41,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/first_row_linear"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_2sdp"
@@ -54,7 +55,7 @@
                             android:text="@string/session_board"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/_12sdp"
-                            android:textStyle="normal"/>
+                            android:textStyle="normal" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -68,12 +69,12 @@
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_3sdp"
                             android:paddingLeft="@dimen/_1sdp"
-                            android:text="C.B.S.C."
+                            android:text=""
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/_12sdp" />
 
                         <TextView
-                            android:layout_width="@dimen/_90sdp"
+                            android:layout_width="@dimen/_55sdp"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_5sdp"
                             android:text="Standard"
@@ -88,10 +89,10 @@
 
                         <TextView
                             android:id="@+id/standard_txt"
-                            android:layout_width="@dimen/_90sdp"
+                            android:layout_width="@dimen/_115sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_3sdp"
-                            android:text="XII"
+                            android:text=""
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/_12sdp" />
 
@@ -125,15 +126,15 @@
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_3sdp"
                             android:paddingLeft="@dimen/_1sdp"
-                            android:text="@string/subject"
+                            android:text=""
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/_12sdp" />
 
                         <TextView
-                            android:layout_width="@dimen/_90sdp"
+                            android:layout_width="@dimen/_55sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_5sdp"
-                            android:text="Session Name"
+                            android:text="Session"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/_12sdp" />
 
@@ -145,10 +146,10 @@
 
                         <TextView
                             android:id="@+id/session_name_txt"
-                            android:layout_width="@dimen/_90sdp"
+                            android:layout_width="@dimen/_115sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_3sdp"
-                            android:text="ABC"
+                            android:text=""
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/_12sdp" />
 
@@ -183,12 +184,13 @@
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_3sdp"
                             android:paddingLeft="@dimen/_1sdp"
-                            android:text="15/03/2018"
+                            android:text=""
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/_12sdp" />
 
                         <TextView
-                            android:layout_width="@dimen/_90sdp"
+                            android:id="@+id/time_txt_view"
+                            android:layout_width="@dimen/_55sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_5sdp"
                             android:gravity="center_vertical"
@@ -203,11 +205,12 @@
                             android:text=":" />
 
                         <TextView
-                            android:layout_width="@dimen/_90sdp"
+                            android:id="@+id/time_txt"
+                            android:layout_width="@dimen/_115sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_3sdp"
                             android:paddingLeft="@dimen/_1sdp"
-                            android:text="11:00 AM"
+                            android:text=""
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/_12sdp" />
 
@@ -241,7 +244,7 @@
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_3sdp"
                             android:paddingLeft="@dimen/_1sdp"
-                            android:text="11"
+                            android:text=""
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/_12sdp" />
 
@@ -249,10 +252,12 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/header_linear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <include layout="@layout/student_attendance_header" />
 
@@ -263,7 +268,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_230sdp"
                     android:background="@color/white"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/student_list_rcView"
@@ -271,6 +277,20 @@
                         android:layout_height="match_parent"
                         android:scrollbars="none" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/no_record_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/_3sdp"
+                    android:layout_marginTop="@dimen/_25sdp"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/_1sdp"
+                    android:text="No record found."
+                    android:textColor="@color/search_boder"
+                    android:textSize="@dimen/_14sdp"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -280,8 +300,8 @@
 
                     <Button
                         android:id="@+id/submit_btn"
-                        android:layout_width="@dimen/_110sdp"
-                        android:layout_height="@dimen/_30sdp"
+                        android:layout_width="@dimen/_130sdp"
+                        android:layout_height="@dimen/_33sdp"
                         android:layout_gravity="center"
                         android:layout_marginBottom="@dimen/_5sdp"
                         android:layout_marginTop="@dimen/_5sdp"
@@ -289,7 +309,9 @@
                         android:gravity="center"
                         android:text="@string/submit"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_11sdp" />
+                        android:textSize="@dimen/_11sdp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -319,7 +341,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_85sdp"
                 android:src="@drawable/s_ser"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/session_cal"

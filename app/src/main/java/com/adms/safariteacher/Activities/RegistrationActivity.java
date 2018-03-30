@@ -6,6 +6,9 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,7 +22,10 @@ import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.ActivityRegistrationBinding;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +59,6 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
         Year = calendar.get(Calendar.YEAR);
         Month = calendar.get(Calendar.MONTH);
         Day = calendar.get(Calendar.DAY_OF_MONTH);
-//        registrationBinding.dateOfBirthEdt.setText(Util.getTodaysDate());
     }
 
     public void setListner() {
@@ -78,22 +83,23 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
             @Override
             public void onClick(View view) {
                 getInsertedValue();
+
                 if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
                     if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
                         if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
                             if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() > 6) {
                                 if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                     if (!gendarIdStr.equalsIgnoreCase("")) {
-                                        if (!dateofbirthStr.equalsIgnoreCase("")) {
+                                        if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
                                             callTeacherApi();
                                         } else {
-                                            registrationBinding.dateOfBirthEdt.setError("Enter Proper Birth date.");
+                                            registrationBinding.dateOfBirthEdt.setError("Enter Valid Birth date.");
                                         }
                                     } else {
                                         registrationBinding.femaleChk.setError("Select Gender.");
                                     }
                                 } else {
-                                    registrationBinding.phoneNoEdt.setError("Enter Proper Phone Number.");
+                                    registrationBinding.phoneNoEdt.setError("Enter 10 digit Phone Number.");
                                 }
                             } else {
                                 registrationBinding.passwordEdt.setError("Password length minimum 6.");
@@ -102,10 +108,10 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                             registrationBinding.emailEdt.setError("Enter Proper EmailId.");
                         }
                     } else {
-                        registrationBinding.lastNameEdt.setError("Enter Proper LastName .");
+                        registrationBinding.lastNameEdt.setError("Enter LastName .");
                     }
                 } else {
-                    registrationBinding.firstNameEdt.setError("Enter Proper FirstName.");
+                    registrationBinding.firstNameEdt.setError("Enter FirstName.");
                 }
             }
         });
@@ -294,4 +300,6 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
 
         return map;
     }
+
+
 }

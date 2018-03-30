@@ -149,6 +149,9 @@ public class sessionDataModel {
     @SerializedName("Schedule")
     @Expose
     private String schedule;
+    @SerializedName("ContactEnrollment_ID")
+    @Expose
+    private String contactEnrollmentID;
     @SerializedName("FirstName")
     @Expose
     private String firstName;
@@ -158,6 +161,20 @@ public class sessionDataModel {
     @SerializedName("PhoneNumber")
     @Expose
     private String phoneNumber;
+    @SerializedName("CheckboxStatus")
+    @Expose
+    private String checkboxStatus;
+    @SerializedName("Remarks")
+    @Expose
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -182,6 +199,7 @@ public class sessionDataModel {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
     public String getSessionID() {
         return sessionID;
     }
@@ -341,6 +359,7 @@ public class sessionDataModel {
     public void setSchedule(String schedule) {
         this.schedule = schedule;
     }
+
     public String getSessionDate() {
         return sessionDate;
     }
@@ -549,4 +568,21 @@ public class sessionDataModel {
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
+
+    public String getContactEnrollmentID() {
+        return contactEnrollmentID;
+    }
+
+    public void setContactEnrollmentID(String contactEnrollmentID) {
+        this.contactEnrollmentID = contactEnrollmentID;
+    }
+
+    public String getCheckboxStatus() {
+        return checkboxStatus;
+    }
+
+    public void setCheckboxStatus(String checkboxStatus) {
+        this.checkboxStatus = checkboxStatus;
+    }
+
 }

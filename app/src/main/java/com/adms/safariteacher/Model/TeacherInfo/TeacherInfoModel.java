@@ -23,6 +23,9 @@ public class TeacherInfoModel {
     @SerializedName("ContactID")
     @Expose
     private String contactID;
+    @SerializedName("ClassID")
+    @Expose
+    private String classID;
     @SerializedName("Data")
     @Expose
     private List<FamilyDetailModel> data = new ArrayList<FamilyDetailModel>();
@@ -64,5 +67,13 @@ public class TeacherInfoModel {
 
     public void setData(List<FamilyDetailModel> data) {
         this.data = data;
+    }
+
+    public String getClassID() {
+        return classID;
+    }
+
+    public void setClassID(String classID) {
+        this.classID = classID;
     }
 }
