@@ -1113,6 +1113,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         @Override
         public void onTimeSet(android.widget.TimePicker view, int hourOfDay, int minute) {
             String status = "AM";
+
             if (hourOfDay > 11) {
                 // If the hour is greater than or equal to 12
                 // Then the current AM PM status is PM
@@ -1146,7 +1147,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             } else {
                 minuteFinal = String.valueOf(minute);
             }
-            
+
             switch (Tag) {
                 case "0":
                     sun_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);

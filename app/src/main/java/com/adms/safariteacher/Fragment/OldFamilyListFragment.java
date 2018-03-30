@@ -220,6 +220,7 @@ public class OldFamilyListFragment extends Fragment {
                                 }
                             });
                             oldFamilyListBinding.lvExpfamilylist.setAdapter(expandableSelectStudentListAdapter);
+                            oldFamilyListBinding.lvExpfamilylist.expandGroup(0);
                         }
                     }
                 }
