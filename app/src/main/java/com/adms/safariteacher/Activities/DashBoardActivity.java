@@ -191,6 +191,7 @@ public class DashBoardActivity extends AppCompatActivity {
             default:
                 return new SessionFragment();
         }
+
     }
 
     private void setUpNavigationView() {

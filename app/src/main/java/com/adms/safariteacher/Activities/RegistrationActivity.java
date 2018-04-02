@@ -87,13 +87,13 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                 if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
                     if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
                         if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
-                            if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() > 6) {
+                            if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
                                 if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                     if (!gendarIdStr.equalsIgnoreCase("")) {
                                         if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
                                             callTeacherApi();
                                         } else {
-                                            registrationBinding.dateOfBirthEdt.setError("Enter Valid Birth date.");
+                                            registrationBinding.dateOfBirthEdt.setError("Please Enter Valid Birth date.");
                                         }
                                     } else {
                                         registrationBinding.femaleChk.setError("Select Gender.");
@@ -102,16 +102,16 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                                     registrationBinding.phoneNoEdt.setError("Enter 10 digit Phone Number.");
                                 }
                             } else {
-                                registrationBinding.passwordEdt.setError("Password length minimum 6.");
+                                registrationBinding.passwordEdt.setError("Password must be 6-12 Characters.");
                             }
                         } else {
-                            registrationBinding.emailEdt.setError("Enter Proper EmailId.");
+                            registrationBinding.emailEdt.setError("Please Enter Valid Email Address.");
                         }
                     } else {
-                        registrationBinding.lastNameEdt.setError("Enter LastName .");
+                        registrationBinding.lastNameEdt.setError("Please Enter LastName .");
                     }
                 } else {
-                    registrationBinding.firstNameEdt.setError("Enter FirstName.");
+                    registrationBinding.firstNameEdt.setError("Please Enter FirstName.");
                 }
             }
         });
