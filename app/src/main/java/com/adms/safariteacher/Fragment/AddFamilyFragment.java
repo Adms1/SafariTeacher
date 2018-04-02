@@ -27,6 +27,7 @@ import com.adms.safariteacher.Activities.LoginActivity;
 import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
+import com.adms.safariteacher.Utility.AppConfiguration;
 import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentAddFamilyBinding;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -52,7 +53,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     int mYear, mMonth, mDay;
     String pageTitle, type, firstNameStr, lastNameStr, emailStr, passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr;
     Dialog confimDialog;
-    TextView cancel_txt, confirm_txt;
+    TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt;
 
     public AddFamilyFragment() {
     }
@@ -382,7 +383,12 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         confimDialog.setCancelable(false);
         confimDialog.setContentView(R.layout.confirm_session_dialog);
 
-
+        session_student_txt = (TextView) confimDialog.findViewById(R.id.session_student_txt);
+        session_name_txt = (TextView) confimDialog.findViewById(R.id.session_name_txt);
+        location_txt = (TextView) confimDialog.findViewById(R.id.location_txt);
+        duration_txt = (TextView) confimDialog.findViewById(R.id.duration_txt);
+        time_txt = (TextView) confimDialog.findViewById(R.id.time_txt);
+        session_fee_txt = (TextView) confimDialog.findViewById(R.id.session_fee_txt);
         confirm_txt = (TextView) confimDialog.findViewById(R.id.confirm_txt);
         cancel_txt = (TextView) confimDialog.findViewById(R.id.cancel_txt);
 
@@ -404,6 +410,12 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
             }
         });
 
+        session_fee_txt.setText(AppConfiguration.SessionPrice);
+        session_name_txt.setText(AppConfiguration.SessionName);
+        location_txt.setText(AppConfiguration.SessionLocation);
+        duration_txt.setText("Duration" + " : " + AppConfiguration.SessionDuration + " hr");
+        time_txt.setText("Time" + " : " + AppConfiguration.SessionTime);
+        session_student_txt.setText(firstNameStr + " " + lastNameStr);
 
         confimDialog.show();
 

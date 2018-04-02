@@ -172,4 +172,49 @@ public class FamilyDetailModel {
     public void setFamilyContact(List<ChildDetailModel> familyContact) {
         this.familyContact = familyContact;
     }
+
+    @SerializedName("ClassType_ID")
+    @Expose
+    private String classTypeID;
+    @SerializedName("ClassTypeName")
+    @Expose
+    private String classTypeName;
+    @SerializedName("IsActive")
+    @Expose
+    private String isActive;
+    @SerializedName("CreateDate")
+    @Expose
+    private String createDate;
+
+    public String getClassTypeID() {
+        return classTypeID;
+    }
+
+    public void setClassTypeID(String classTypeID) {
+        this.classTypeID = classTypeID;
+    }
+
+    public String getClassTypeName() {
+        return classTypeName;
+    }
+
+    public void setClassTypeName(String classTypeName) {
+        this.classTypeName = classTypeName;
+    }
+
+    public String getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(String isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
 }

@@ -99,7 +99,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                     switch (RadioButtonid) {
                         case R.id.name_rb:
                             sesionDeatil = new ArrayList<String>();
-                            sesionDeatil.add(childDetail.getContactID());
+                            sesionDeatil.add(childDetail.getFirstName()+"|"+childDetail.getLastName()+"|"+childDetail.getContactID());
                             onViewClick.getViewClick();
                             itembinding.nameRb.setChecked(false);
                             break;
@@ -121,25 +121,34 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                 }
             });
 
-        } else {//if (childPosition == 0)
-//            final ChildDetailModel childDetail = getChild(groupPosition, childPosition);
+        } else {
             headerBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                     R.layout.add_student_header, parent, false);
 
-//            for (Map.Entry<String, List<ChildDetailModel>> entry : _listDataChild.entrySet()) {
-//                System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-//                if(entry.getValue()!=null){
-//                    System.out.println("Hello");
-//                }else{
-//                    System.out.println("hi");
-//                }
-//            }
+            String headerTitle = (String) getGroup(groupPosition);
+            String valueStr;
             value = new ArrayList<>();
             for (String key : _listDataChild.keySet()) {
                 System.out.println("------------------------------------------------");
                 System.out.println("Iterating or looping map using java5 foreach loop");
                 System.out.println("key: " + key + " value: " + _listDataChild.get(key));
-                value.add(String.valueOf(_listDataChild.get(key)));
+                value.add(key);
+
+
+            }
+            for (int i=0;i<value.size();i++) {
+                if (headerTitle.equalsIgnoreCase(value.get(i))) {
+                    valueStr = String.valueOf(_listDataChild.get(value.get(i)));
+                    Log.d("value", valueStr);
+
+                    if (valueStr.equalsIgnoreCase("[]")) {
+                        headerBinding.tableRowNodata.setVisibility(View.VISIBLE);
+                        headerBinding.tableRowHeader.setVisibility(View.GONE);
+                    } else {
+                        headerBinding.tableRowNodata.setVisibility(View.GONE);
+                        headerBinding.tableRowHeader.setVisibility(View.VISIBLE);
+                    }
+                }
             }
             convertView = headerBinding.getRoot();
         }
@@ -215,7 +224,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                 switch (RadioButtonid) {
                     case R.id.familyname_rb:
                         sesionDeatil = new ArrayList<String>();
-                        sesionDeatil.add(spiltValue[4]);
+                        sesionDeatil.add(spiltValue[0]+"|"+spiltValue[1]+"|"+spiltValue[4]);
                         onViewClick.getViewClick();
                         break;
                 }
@@ -262,6 +271,8 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
     public ArrayList<String> getSessionDetail() {
         return sesionDeatil;
     }
+
+
 }
 
 

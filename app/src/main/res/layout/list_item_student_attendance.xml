@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/list_line"
-        android:weightSum="3">
 
+        android:weightSum="3">
+        <!--android:background="@drawable/list_line"-->
         <TextView
             android:id="@+id/name_txt"
             android:layout_width="0dp"

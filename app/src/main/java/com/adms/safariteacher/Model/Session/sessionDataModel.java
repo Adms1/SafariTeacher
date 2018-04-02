@@ -161,20 +161,133 @@ public class sessionDataModel {
     @SerializedName("PhoneNumber")
     @Expose
     private String phoneNumber;
-    @SerializedName("CheckboxStatus")
+    //====================================
+    @SerializedName("Session")
     @Expose
-    private String checkboxStatus;
-    @SerializedName("Remarks")
+    private String session;
+    @SerializedName("WeekDay_ID")
     @Expose
-    private String remarks;
+    private String weekDayID;
+    @SerializedName("SessionStartDate")
+    @Expose
+    private String sessionStartDate;
+    @SerializedName("SessionEndDate")
+    @Expose
+    private String sessionEndDate;
+    @SerializedName("ClassTypeID")
+    @Expose
+    private String classTypeID;
+    @SerializedName("ClassType")
+    @Expose
+    private String classType;
+    @SerializedName("AttendanceData")
+    @Expose
+    private List<sessionDataModel> attendanceData = new ArrayList<sessionDataModel>();
 
-    public String getRemarks() {
-        return remarks;
+    public String getSession() {
+        return session;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setSession(String session) {
+        this.session = session;
     }
+
+    public String getWeekDayID() {
+        return weekDayID;
+    }
+
+    public void setWeekDayID(String weekDayID) {
+        this.weekDayID = weekDayID;
+    }
+
+    public String getSessionStartDate() {
+        return sessionStartDate;
+    }
+
+    public void setSessionStartDate(String sessionStartDate) {
+        this.sessionStartDate = sessionStartDate;
+    }
+
+    public String getSessionEndDate() {
+        return sessionEndDate;
+    }
+
+    public void setSessionEndDate(String sessionEndDate) {
+        this.sessionEndDate = sessionEndDate;
+    }
+
+    public String getClassTypeID() {
+        return classTypeID;
+    }
+
+    public void setClassTypeID(String classTypeID) {
+        this.classTypeID = classTypeID;
+    }
+
+    public String getClassType() {
+        return classType;
+    }
+
+    public void setClassType(String classType) {
+        this.classType = classType;
+    }
+
+    public List<sessionDataModel> getAttendanceData() {
+        return attendanceData;
+    }
+
+    public void setAttendanceData(List<sessionDataModel> attendanceData) {
+        this.attendanceData = attendanceData;
+    }
+
+    //==============attendance==========================
+    @SerializedName("Contact_ID")
+    @Expose
+    private String contactID;
+
+    @SerializedName("Attendance_ID")
+    @Expose
+    private String attendanceID;
+    @SerializedName("Reason")
+    @Expose
+    private String reason;
+    @SerializedName("Status")
+    @Expose
+    private String status;
+
+    public String getContactID() {
+        return contactID;
+    }
+
+    public void setContactID(String contactID) {
+        this.contactID = contactID;
+    }
+
+    public String getAttendanceID() {
+        return attendanceID;
+    }
+
+    public void setAttendanceID(String attendanceID) {
+        this.attendanceID = attendanceID;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    //====================
 
     public String getFirstName() {
         return firstName;
@@ -576,13 +689,4 @@ public class sessionDataModel {
     public void setContactEnrollmentID(String contactEnrollmentID) {
         this.contactEnrollmentID = contactEnrollmentID;
     }
-
-    public String getCheckboxStatus() {
-        return checkboxStatus;
-    }
-
-    public void setCheckboxStatus(String checkboxStatus) {
-        this.checkboxStatus = checkboxStatus;
-    }
-
 }

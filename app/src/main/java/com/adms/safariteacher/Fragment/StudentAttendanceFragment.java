@@ -3,24 +3,20 @@ package com.adms.safariteacher.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
-import com.adms.safariteacher.Activities.DashBoardActivity;
-import com.adms.safariteacher.Adapter.SessionViewStudentListAdapter;
 import com.adms.safariteacher.Adapter.StudentAttendanceAdapter;
-import com.adms.safariteacher.Model.PassSelectedValueModel;
 import com.adms.safariteacher.Model.Session.SessionDetailModel;
 import com.adms.safariteacher.Model.Session.sessionDataModel;
 import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
@@ -31,6 +27,7 @@ import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentStudentAttendanceBinding;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,7 +58,10 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
     ArrayList<String> arrayList;
     String sessionIDStr, attendanceIDStr, ContactEnrollmentIDStr, noteStr, classTypeIDStr, totalstudetnStr, priceStr;//, SesionDetailIDStr, sessionDateStr, sessionTimeStr;
     SessionDetailModel dataResponse;
+    TeacherInfoModel classListInfo;
     List<sessionDataModel> studentList;
+    HashMap<Integer, String> spinnerClassMap;
+
 
     public StudentAttendanceFragment() {
     }
@@ -103,7 +103,9 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
         } else {
             studentAttendanceBinding.firstRowLinear.setVisibility(View.VISIBLE);
         }
+        callClassDetailApi();
         callSessionDetailApi();
+        callClassAttendanceDetailApi();
 
     }
 
@@ -136,10 +138,27 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
         studentAttendanceBinding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+//                InsertAttendanceDetail();
                 callGetSessionStudentAttendanceApi();
             }
         });
+        studentAttendanceBinding.classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String name = studentAttendanceBinding.classSpinner.getSelectedItem().toString();
+                String getid = spinnerClassMap.get(studentAttendanceBinding.classSpinner.getSelectedItemPosition());
+
+                Log.d("value", name + " " + getid);
+                classTypeIDStr = getid.toString();
+                Log.d("classTypeIDStr", classTypeIDStr);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
     }
 
     public static boolean isPackageInstalled(String packagename, Context context) {
@@ -211,22 +230,28 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                     if (sessionStudentInfo.getSuccess().equalsIgnoreCase("True")) {
                         Util.dismissDialog();
                         dataResponse = sessionStudentInfo;
+
                         if (sessionStudentInfo.getData() != null) {
                             studentAttendanceBinding.listLinear.setVisibility(View.VISIBLE);
                             studentAttendanceBinding.headerLinear.setVisibility(View.VISIBLE);
                             studentAttendanceBinding.submitBtn.setVisibility(View.VISIBLE);
                             studentAttendanceBinding.noRecordTxt.setVisibility(View.GONE);
-                            studentList = sessionStudentInfo.getData();
+
+
+                            studentList = dataResponse.getData();
+
                             for (int i = 0; i < studentList.size(); i++) {
-                                studentList.get(i).setCheckboxStatus("1");
+                                studentList.get(i).setAttendanceID("0");
+                                studentList.get(i).setStatus("0");
+                                studentList.get(i).setReason("");
                             }
                             totalstudetnStr = String.valueOf(sessionStudentInfo.getData().size());
                             Log.d("totalStudent", totalstudetnStr);
                             studentAttendanceBinding.totalStudentTxt.setText(totalstudetnStr);
                             studentAttendanceAdapter = new StudentAttendanceAdapter(mContext, studentList);
-                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                            studentAttendanceBinding.studentListRcView.setLayoutManager(mLayoutManager);
-                            studentAttendanceBinding.studentListRcView.setItemAnimator(new DefaultItemAnimator());
+//                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+//                            studentAttendanceBinding.studentListRcView.setLayoutManager(mLayoutManager);
+//                            studentAttendanceBinding.studentListRcView.setItemAnimator(new DefaultItemAnimator());
                             studentAttendanceBinding.studentListRcView.setAdapter(studentAttendanceAdapter);
                         } else {
                             studentAttendanceBinding.listLinear.setVisibility(View.GONE);
@@ -252,7 +277,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
 
     private Map<String, String> getsessionStudentDetail() {
         Map<String, String> map = new HashMap<>();
-        map.put("SesionDetailID", Util.getPref(mContext, "sessionDetailID"));
+        map.put("SessionDetailID", Util.getPref(mContext, "sessionDetailID"));
         return map;
     }
 
@@ -282,6 +307,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                     }
                     if (attendanceInfo.getSuccess().equalsIgnoreCase("True")) {
                         Util.dismissDialog();
+                        Util.ping(mContext, "Attendance Successfully.");
                     }
                 }
 
@@ -301,9 +327,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
     private Map<String, String> getsessionStudentAttendanceDetail() {
         InsertAttendanceDetail();
         Map<String, String> map = new HashMap<>();
-        map.put("AttendanceID", attendanceIDStr);
         map.put("ContactEnrollmentID", ContactEnrollmentIDStr);
-        map.put("notes", noteStr);
         map.put("ClassTypeID", classTypeIDStr);
         return map;
     }
@@ -335,7 +359,6 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                         if (sessionInfo.getData().size() > 0) {
                             dataResponse = sessionInfo;
                             fillSessionData();
-                            callGetSessionStudentDetailApi();
                         }
                     }
                 }
@@ -368,55 +391,246 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
             studentAttendanceBinding.sessionNameTxt.setText(dataResponse.getData().get(i).getSessionName());
             studentAttendanceBinding.dateTxt.setText(AppConfiguration.DateStr);
             studentAttendanceBinding.timeTxt.setText(AppConfiguration.TimeStr);
-            priceStr = dataResponse.getData().get(i).getSessionAmount();
 
         }
     }
 
     public void InsertAttendanceDetail() {
-        final ArrayList<String> Attendacestatus = new ArrayList<>();
-        final ArrayList<String> ContactEnrollmentid = new ArrayList<>();
-        final ArrayList<String> Remarks = new ArrayList<>();
+//        final ArrayList<String> Attendacestatus = new ArrayList<>();
+//        final ArrayList<String> ContactEnrollmentid = new ArrayList<>();
+//        final ArrayList<String> Remarks = new ArrayList<>();
+//
+//        for (int i = 0; i < dataResponse.getData().size(); i++) {
+//            ContactEnrollmentid.add(String.valueOf(dataResponse.getData().get(i).getContactEnrollmentID()));
+//            Attendacestatus.add(dataResponse.getData().get(i).getCheckboxStatus());
+//            Remarks.add(dataResponse.getData().get(i).getRemarks());
+//
+//        }
+//        Log.d("Attendanceid", "" + ContactEnrollmentid);
+//        Log.d("Attendacestatus", "" + Attendacestatus);
+//
+//
+//        ContactEnrollmentIDStr = "";
+//        for (String s : ContactEnrollmentid) {
+//            ContactEnrollmentIDStr = ContactEnrollmentIDStr + "," + s;
+//        }
+//
+//        ContactEnrollmentIDStr = ContactEnrollmentIDStr.substring(1, ContactEnrollmentIDStr.length());
+//        Log.d("ContactEnrollmentIDStr", ContactEnrollmentIDStr);
+//
+//        attendanceIDStr = "";
+//        for (String s : Attendacestatus) {
+//            attendanceIDStr = attendanceIDStr + "," + s;
+//        }
+//
+//        attendanceIDStr = attendanceIDStr.substring(1, attendanceIDStr.length());
+//        Log.d("attendanceIDStr", attendanceIDStr);
+//
+//        noteStr = "";
+//        for (String s : Remarks) {
+//            noteStr = noteStr + "," + s;
+//        }
+//
+//        noteStr = noteStr.substring(1, noteStr.length());
+//        Log.d("Remarks", noteStr);
+        String responseString = "";
+        ArrayList<String> newArray = new ArrayList<>();
+        for (int i = 0; i < studentAttendanceAdapter.getCount(); i++) {
+            sessionDataModel sessionInfoObj = studentAttendanceAdapter.getItem(i);
+            int stuId = Integer.parseInt(sessionInfoObj.getContactEnrollmentID());
+            boolean isEnable = false;
+            String studentString = "";
+            String status = sessionInfoObj.getStatus();
+            if (status.equalsIgnoreCase("1")) {
+                if (sessionInfoObj.getReason().equalsIgnoreCase("null")) {
+                    sessionInfoObj.setReason("");
+                }
+                if (!isEnable) {
 
-        for (int i = 0; i < dataResponse.getData().size(); i++) {
-            ContactEnrollmentid.add(String.valueOf(dataResponse.getData().get(i).getContactEnrollmentID()));
-            Attendacestatus.add(dataResponse.getData().get(i).getCheckboxStatus());
-            Remarks.add(dataResponse.getData().get(i).getRemarks());
-
+                    studentString = String.valueOf(stuId) + "@" + sessionInfoObj.getAttendanceID() + "@" + sessionInfoObj.getReason();
+                    isEnable = true;
+                } else {
+                    studentString = studentString + "|" + String.valueOf(stuId) + "," + sessionInfoObj.getAttendanceID() + "@" + sessionInfoObj.getReason();
+                }
+            }
+            newArray.add(studentString);
         }
-        Log.d("Attendanceid", "" + ContactEnrollmentid);
-        Log.d("Attendacestatus", "" + Attendacestatus);
 
-
-        ContactEnrollmentIDStr = "";
-        for (String s : ContactEnrollmentid) {
-            ContactEnrollmentIDStr = ContactEnrollmentIDStr + "," + s;
+        for (String s : newArray) {
+            if (!s.equals("")) {
+                responseString = responseString + "|" + s;
+            }
         }
+        responseString = responseString.substring(1, responseString.length());
+        Log.d("responseString ", responseString);
 
-        ContactEnrollmentIDStr = ContactEnrollmentIDStr.substring(1, ContactEnrollmentIDStr.length());
-        Log.d("ContactEnrollmentIDStr", ContactEnrollmentIDStr);
+        ContactEnrollmentIDStr = responseString;
+        Log.d("ContactEnrollmentIDStr ", ContactEnrollmentIDStr);
+    }
 
-        attendanceIDStr = "";
-        for (String s : Attendacestatus) {
-            attendanceIDStr = attendanceIDStr + "," + s;
-        }
+    //Use for ClassTypeDetail
+    public void callClassDetailApi() {
+        if (Util.isNetworkConnected(mContext)) {
 
-        attendanceIDStr = attendanceIDStr.substring(1, attendanceIDStr.length());
-        Log.d("attendanceIDStr", attendanceIDStr);
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_ClassTypeList(getClassDeatil(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel classInfo, Response response) {
+                    Util.dismissDialog();
+                    if (classInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (classInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (classInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.dismissDialog();
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (classInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (classInfo.getData().size() > 0) {
+                            classListInfo = classInfo;
+                            fillClassTypeSpinner();
+                        }
+                    }
+                }
 
-        noteStr = "";
-        for (String s : Remarks) {
-            noteStr = noteStr + "," + s;
-        }
-
-        noteStr = noteStr.substring(1, noteStr.length());
-        Log.d("Remarks", noteStr);
-
-        if (priceStr.equalsIgnoreCase("0.0000")) {
-            classTypeIDStr = "3";
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
         } else {
-            classTypeIDStr = "1";
+            Util.ping(mContext, getString(R.string.internet_connection_error));
         }
     }
-}
 
+    private Map<String, String> getClassDeatil() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillClassTypeSpinner() {
+        ArrayList<Integer> classTypeId = new ArrayList<Integer>();
+        for (int i = 0; i < classListInfo.getData().size(); i++) {
+            classTypeId.add(Integer.valueOf(classListInfo.getData().get(i).getClassTypeID()));
+        }
+        ArrayList<String> className = new ArrayList<String>();
+        for (int j = 0; j < classListInfo.getData().size(); j++) {
+            className.add(classListInfo.getData().get(j).getClassTypeName());
+        }
+
+        String[] spinnerclassIdArray = new String[classTypeId.size()];
+
+        spinnerClassMap = new HashMap<Integer, String>();
+        for (int i = 0; i < classTypeId.size(); i++) {
+            spinnerClassMap.put(i, String.valueOf(classTypeId.get(i)));
+            spinnerclassIdArray[i] = className.get(i).trim();
+        }
+        try {
+            Field popup = Spinner.class.getDeclaredField("mPopup");
+            popup.setAccessible(true);
+
+            // Get private mPopup member variable and try cast to ListPopupWindow
+            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(studentAttendanceBinding.classSpinner);
+
+            popupWindow.setHeight(spinnerclassIdArray.length > 4 ? 500 : spinnerclassIdArray.length * 100);
+        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+            // silently fail...
+        }
+
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnerclassIdArray);
+        studentAttendanceBinding.classSpinner.setAdapter(adapterTerm);
+
+    }
+
+    //Use for ClassAttendanceDetail
+    public void callClassAttendanceDetailApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_ClassAttendance(getClassAttendanceDeatil(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel classattendanceInfo, Response response) {
+                    Util.dismissDialog();
+                    if (classattendanceInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (classattendanceInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (classattendanceInfo.getSuccess().equalsIgnoreCase("False")) {
+                        Util.dismissDialog();
+                        if (classattendanceInfo.getData().size() == 0) {
+                            studentAttendanceBinding.submitBtn.setText("SUBMIT");
+                            callGetSessionStudentDetailApi();
+                            Log.d("false", "hello");
+                        }
+
+                        return;
+                    }
+                    if (classattendanceInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (classattendanceInfo.getData().size() > 0) {
+                            studentAttendanceBinding.submitBtn.setText("UPDATE");
+                            dataResponse = classattendanceInfo;
+                            if (classattendanceInfo.getData().get(0).getAttendanceData() != null) {
+                                studentAttendanceBinding.listLinear.setVisibility(View.VISIBLE);
+                                studentAttendanceBinding.headerLinear.setVisibility(View.VISIBLE);
+                                studentAttendanceBinding.submitBtn.setVisibility(View.VISIBLE);
+                                studentAttendanceBinding.noRecordTxt.setVisibility(View.GONE);
+
+                                for (int i = 0; i < classattendanceInfo.getData().size(); i++) {
+                                    studentList = classattendanceInfo.getData().get(i).getAttendanceData();
+
+                                }
+                                for (int i = 0; i < studentList.size(); i++) {
+                                    studentList.get(i).setStatus("1");
+                                }
+                                totalstudetnStr = String.valueOf(classattendanceInfo.getData().get(0).getAttendanceData().size());
+                                Log.d("totalStudent", totalstudetnStr);
+                                studentAttendanceBinding.totalStudentTxt.setText(totalstudetnStr);
+                                studentAttendanceAdapter = new StudentAttendanceAdapter(mContext, studentList);
+//                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+//                            studentAttendanceBinding.studentListRcView.setLayoutManager(mLayoutManager);
+//                            studentAttendanceBinding.studentListRcView.setItemAnimator(new DefaultItemAnimator());
+                                studentAttendanceBinding.studentListRcView.setAdapter(studentAttendanceAdapter);
+                            } else {
+                                studentAttendanceBinding.listLinear.setVisibility(View.GONE);
+                                studentAttendanceBinding.headerLinear.setVisibility(View.GONE);
+                                studentAttendanceBinding.submitBtn.setVisibility(View.GONE);
+                                studentAttendanceBinding.noRecordTxt.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getClassAttendanceDeatil() {
+        Map<String, String> map = new HashMap<>();
+        map.put("SessionDetailID", Util.getPref(mContext, "sessionDetailID"));
+        return map;
+    }
+
+}

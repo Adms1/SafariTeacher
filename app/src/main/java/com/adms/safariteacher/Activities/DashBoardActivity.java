@@ -155,7 +155,7 @@ public class DashBoardActivity extends AppCompatActivity {
         switch (navItemIndex) {
             case 0:
                 // home
-                SessionFragment sessionFragment =new SessionFragment();
+                SessionFragment sessionFragment = new SessionFragment();
                 return sessionFragment;
             case 1:
                 AddSessionFragment addSessionFragment = new AddSessionFragment();
@@ -164,10 +164,32 @@ public class DashBoardActivity extends AppCompatActivity {
                 addSessionFragment.setArguments(args);
                 return addSessionFragment;
 //            case 2:
-//                StudentAttendanceFragment studentAttendanceFragment = new StudentAttendanceFragment();
-//                return studentAttendanceFragment;
+//                new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
+//                        .setCancelable(false)
+//                        .setTitle("Logout")
+//                        .setIcon(mContex.getResources().getDrawable(R.drawable.logo))
+//                        .setMessage("Are you sure you want to logout?")
+//                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Util.setPref(mContex, "coachID", "");
+//                                Util.setPref(mContex, "SessionID", "");
+//                                Util.setPref(mContex, "FamilyID", "");
+//                                Intent intentLogin = new Intent(DashBoardActivity.this, LoginActivity.class);
+//                                startActivity(intentLogin);
+//                                finish();
+//                            }
+//                        })
+//                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // do nothing
+//
+//                            }
+//                        })
+//                        .setIcon(R.drawable.logo)
+//                        .show();
+
             default:
-                return  new SessionFragment();
+                return new SessionFragment();
         }
     }
 
@@ -191,29 +213,32 @@ public class DashBoardActivity extends AppCompatActivity {
                         CURRENT_TAG = TAG_Add_Session;
                         break;
                     case R.id.logout:
-                       new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
-                        .setCancelable(false)
-                        .setTitle("Logout")
-                        .setIcon(mContex.getResources().getDrawable(R.drawable.teacher_safari))
-                        .setMessage("Are you sure you want to logout?")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Util.setPref(mContex, "coachID", "");
-                                Util.setPref(mContex, "SessionID", "");
-                                Util.setPref(mContex,"FamilyID","");
-                                Intent intentLogin = new Intent(DashBoardActivity.this, LoginActivity.class);
-                                startActivity(intentLogin);
-                                finish();
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
+                        navItemIndex = 2;
+                        new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
+                                .setCancelable(false)
+                                .setTitle("Logout")
+                                .setIcon(mContex.getResources().getDrawable(R.drawable.safari))
+                                .setMessage("Are you sure you want to logout?")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Util.setPref(mContex, "coachID", "");
+                                        Util.setPref(mContex, "SessionID", "");
+                                        Util.setPref(mContex, "FamilyID", "");
+                                        Util.setPref(mContex, "coachTypeID", "");
+                                        Util.setPref(mContex, "sessionDetailID", "");
+                                        Intent intentLogin = new Intent(DashBoardActivity.this, LoginActivity.class);
+                                        startActivity(intentLogin);
+                                        finish();
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
 
-                            }
-                        })
-                        .setIcon(R.drawable.teacher_safari)
-                        .show();
+                                    }
+                                })
+                                .setIcon(R.drawable.safari)
+                                .show();
                         break;
 //                    case R.id.student_attendance:
 //                        navItemIndex = 2;

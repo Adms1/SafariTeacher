@@ -2,16 +2,12 @@ package com.adms.safariteacher.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,7 +19,6 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
-import com.adms.safariteacher.Adapter.Expandable;
 import com.adms.safariteacher.Adapter.ExpandableSelectStudentListAdapter;
 import com.adms.safariteacher.Interface.onChlidClick;
 import com.adms.safariteacher.Interface.onViewClick;
@@ -32,6 +27,7 @@ import com.adms.safariteacher.Model.TeacherInfo.FamilyDetailModel;
 import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
+import com.adms.safariteacher.Utility.AppConfiguration;
 import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentOldFamilyListBinding;
 
@@ -57,9 +53,9 @@ public class OldFamilyListFragment extends Fragment {
     HashMap<String, List<ChildDetailModel>> listDataChild;
     private int lastExpandedPosition = -1;
     ExpandableSelectStudentListAdapter expandableSelectStudentListAdapter;
-    //    Expandable expandable;
+
     Dialog confimDialog;
-    TextView cancel_txt, confirm_txt;
+    TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt;
     String familyIdStr = "", contatIDstr, orderIDStr, sessionIDStr;
     ArrayList<String> selectedId;
 
@@ -75,7 +71,7 @@ public class OldFamilyListFragment extends Fragment {
         mContext = getActivity();
         ((DashBoardActivity) getActivity()).setActionBar(13, "false");
         sessionIDStr = Util.getPref(mContext, "SessionID");
-        Log.d("sessionID",sessionIDStr);
+        Log.d("sessionID", sessionIDStr);
         initViews();
         setListners();
         callFamilyListApi();
@@ -143,9 +139,20 @@ public class OldFamilyListFragment extends Fragment {
         confimDialog.setCancelable(false);
         confimDialog.setContentView(R.layout.confirm_session_dialog);
 
-
+        session_student_txt = (TextView) confimDialog.findViewById(R.id.session_student_txt);
+        session_name_txt = (TextView) confimDialog.findViewById(R.id.session_name_txt);
+        location_txt = (TextView) confimDialog.findViewById(R.id.location_txt);
+        duration_txt = (TextView) confimDialog.findViewById(R.id.duration_txt);
+        time_txt = (TextView) confimDialog.findViewById(R.id.time_txt);
+        session_fee_txt = (TextView) confimDialog.findViewById(R.id.session_fee_txt);
         confirm_txt = (TextView) confimDialog.findViewById(R.id.confirm_txt);
         cancel_txt = (TextView) confimDialog.findViewById(R.id.cancel_txt);
+
+        session_fee_txt.setText(AppConfiguration.SessionPrice);
+        session_name_txt.setText(AppConfiguration.SessionName);
+        location_txt.setText(AppConfiguration.SessionLocation);
+        duration_txt.setText("Duration" + " : " + AppConfiguration.SessionDuration + " hr");
+        time_txt.setText("Time"+" : "+ AppConfiguration.SessionTime);
 
         getsessionID();
         cancel_txt.setOnClickListener(new View.OnClickListener() {
@@ -286,8 +293,10 @@ public class OldFamilyListFragment extends Fragment {
         selectedId = expandableSelectStudentListAdapter.getSessionDetail();
         Log.d("selectedId", "" + selectedId);
         for (int i = 0; i < selectedId.size(); i++) {
-            contatIDstr = selectedId.get(i);
-
+//            contatIDstr = selectedId.get(i);
+            String[] spilt = selectedId.get(i).split("\\|");
+            contatIDstr = spilt[2];
+            session_student_txt.setText(spilt[0] + " " + spilt[1]);
             Log.d("selectedIdStr", contatIDstr);
         }
     }
