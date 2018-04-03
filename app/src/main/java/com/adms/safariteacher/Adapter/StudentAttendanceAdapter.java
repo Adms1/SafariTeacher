@@ -117,11 +117,9 @@ public class StudentAttendanceAdapter extends BaseAdapter {
             });
 
             switch (Integer.parseInt(session.getAttendanceID())) {
-//                case 0:
-//                    viewHolder.present_chk.setChecked(false);
-//                    viewHolder.absent_chk.setChecked(false);
-//                    viewHolder.leave_chk.setChecked(false);
-//                    break;
+                case 0:
+                    session.setStatus("0");
+                    break;
                 case 1:
                     viewHolder.present_chk.setChecked(true);
                     break;

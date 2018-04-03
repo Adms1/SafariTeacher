@@ -62,7 +62,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
     TeacherInfoModel classListInfo;
     List<sessionDataModel> studentList;
     HashMap<Integer, String> spinnerClassMap;
-
+    String classType="";
 
     public StudentAttendanceFragment() {
     }
@@ -526,7 +526,18 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
 
         ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnerclassIdArray);
         studentAttendanceBinding.classSpinner.setAdapter(adapterTerm);
-
+        if (!classType.equalsIgnoreCase("")) {
+            for (int m = 0; m < spinnerclassIdArray.length; m++) {
+                if (classType.equalsIgnoreCase((spinnerclassIdArray[m]))) {
+                    Log.d("spinnerValue", spinnerclassIdArray[m]);
+                    int index = m;
+                    Log.d("indexOf", String.valueOf(index));
+                    studentAttendanceBinding.classSpinner.setSelection(m);
+                }
+            }
+        }else{
+            studentAttendanceBinding.classSpinner.setSelection(0);
+        }
     }
 
     //Use for ClassAttendanceDetail
@@ -561,6 +572,8 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                         if (classattendanceInfo.getData().size() > 0) {
                             studentAttendanceBinding.submitBtn.setText("UPDATE");
                             dataResponse = classattendanceInfo;
+
+                            classType = dataResponse.getData().get(0).getClassType();
                             if (classattendanceInfo.getData().get(0).getAttendanceData() != null) {
                                 studentAttendanceBinding.listLinear.setVisibility(View.VISIBLE);
                                 studentAttendanceBinding.headerLinear.setVisibility(View.VISIBLE);
@@ -588,6 +601,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                         }
                     }
                 }
+
                 @Override
                 public void failure(RetrofitError error) {
                     Util.dismissDialog();

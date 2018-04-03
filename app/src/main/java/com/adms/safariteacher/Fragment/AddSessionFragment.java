@@ -163,6 +163,9 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             }
             addSessionBinding.submitBtn.setText("Update");
             callEditSessionApi();
+        } else if (flag.equalsIgnoreCase("view")) {
+            addSessionBinding.sessionTimeLinear.setVisibility(View.GONE);
+            addSessionBinding.submitBtn.setVisibility(View.GONE);
         } else {
             addSessionBinding.submitBtn.setText("Submit");
             callBoardApi();

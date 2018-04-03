@@ -71,6 +71,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     String Address;
     int SessionHour = 0;
     int SessionMinit = 0;
+     String flag;
 
     public SessionFragment() {
     }
@@ -276,7 +277,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Bundle args = new Bundle();
-                args.putString("flag", "edit");
+                args.putString("flag", flag);
                 args.putString("sessionID", sessionIDStr);
                 args.putString("studentAvailable", String.valueOf(arraySize));
                 fragment.setArguments(args);
@@ -489,6 +490,15 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         } else {
                             add_student_btn.setEnabled(false);
                             add_student_btn.setAlpha(0.5f);
+                        }
+
+
+                        if (arraySize == 0) {
+                            edit_session_btn.setText("Edit Session");
+                            flag = "edit";
+                        } else {
+                            edit_session_btn.setText("View Session");
+                            flag = "view";
                         }
                     }
                 }
