@@ -70,6 +70,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     ArrayList<String> StudentList;
     String Address;
     int SessionHour = 0;
+    int SessionMinit = 0;
 
     public SessionFragment() {
     }
@@ -150,14 +151,14 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         sessionCapacity = Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionCapacity());
                         priceStr = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionPrice();
                         AppConfiguration.SessionLocation = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressLine1()
-                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
-                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
-                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
-                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode() + ".";
+                                + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
+                                + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
+                                + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
+                                + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode();
                         String[] spiltTime = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime().split("\\-");
                         calculateHours(spiltTime[0], spiltTime[1]);
                         AppConfiguration.SessionName = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName();
-                        AppConfiguration.SessionDuration = String.valueOf(SessionHour);
+                        AppConfiguration.SessionDuration = "( " + SessionHour + "hr" + ", " + SessionMinit + "min )";
                         AppConfiguration.SessionTime = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime();
                         AppConfiguration.SessionPrice = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionPrice();
                         Util.setPref(mContext, "sessionDetailID", sessionDetailIDStr);
@@ -169,7 +170,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
             SessionDialog();
         } else {
-            Util.ping(mContext, "No Event Available...");
+//            Util.ping(mContext, "No Event Available...");
         }
 
     }
@@ -290,10 +291,13 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
             @Override
             public void onClick(View view) {
                 AppConfiguration.DateStr = date_txt.getText().toString();
-                AppConfiguration.TimeStr = start_time_txt.getText().toString();
+                AppConfiguration.TimeStr = start_time_txt.getText().toString() + "-" + end_time_txt.getText().toString();
                 Fragment fragment = new StudentAttendanceFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                Bundle args = new Bundle();
+                args.putString("session", "2");
+                fragment.setArguments(args);
                 fragmentTransaction.replace(R.id.frame, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -398,17 +402,17 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 }
                 calculateHours(spiltTime[0], spiltTime[1]);
                 Address = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressLine1()
-                        + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
-                        + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
-                        + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
-                        + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode() + ".";
-                int resID = getResources().getIdentifier("myimg", String.valueOf(R.drawable.ad), getActivity().getPackageName());
+                        + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
+                        + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
+                        + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
+                        + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode() + ".";
+                int resID = getResources().getIdentifier("myimg", String.valueOf(R.drawable.email), getActivity().getPackageName());
                 DrawableCalendarEvent event = new DrawableCalendarEvent(Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID()),
                         colorList.get(j), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
                         finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
                         finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime()
-                                + " " + "( " + SessionHour + "hr )" + System.getProperty("line.separator")
-                                + Address, startDate, endDate, 0, String.valueOf(SessionHour), resID);
+                                + " " + "( " + SessionHour + " hr" + ", " + SessionMinit + " min )" + System.getProperty("line.separator")
+                                + Address, startDate, endDate, 0, String.valueOf(SessionHour), R.drawable.email);
                 eventList.add(event);
             }
         }
@@ -420,6 +424,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         }
         return fragment;
     }
+
     //Use for Get SessionStudent Detail
     public void callGetSessionStudentDetailApi() {
         if (Util.isNetworkConnected(mContext)) {
@@ -452,15 +457,15 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         Log.d("capacity", "" + sessionCapacity + "arraySize :" + arraySize + "studentAvailability :" + studentAvailability);
                         if (arrayList.size() > 0) {
                             for (int i = 0; i < arrayList.size(); i++) {
-                                StudentList.add(arrayList.get(i).getFirstName() + "|" + arrayList.get(i).getPhoneNumber());
+                                StudentList.add(arrayList.get(i).getFirstName() + "|" + arrayList.get(i).getPhoneNumber() + "|" + arrayList.get(i).getLastName());
                             }
                             for (int i = 0; i < sessionCapacity - arrayList.size(); i++) {
-                                StudentList.add("-----" + "|" + "-----");
+                                StudentList.add("-----" + "|" + "-----" + "|" + "-----");
                             }
 
                         } else {
                             for (int i = 0; i < sessionCapacity; i++) {
-                                StudentList.add("-----" + "|" + "-----");
+                                StudentList.add("-----" + "|" + "-----" + "|" + "-----");
                             }
                         }
                         Log.d("arrayList", "" + StudentList);
@@ -510,7 +515,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     public void calculateHours(String time1, String time2) {
         Date date1, date2;
         int days, hours, min;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        String hourstr, minstr;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
         try {
             date1 = simpleDateFormat.parse(time1);
             date2 = simpleDateFormat.parse(time2);
@@ -519,12 +525,16 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
             days = (int) (difference / (1000 * 60 * 60 * 24));
             hours = (int) ((difference - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
             min = (int) (difference - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
-            SessionHour = (hours < 0 ? -hours : hours);
-            Log.i("======= Hours", " :: " + hours);
+            hours = (hours < 0 ? -hours : hours);
+            SessionHour = hours;
+            SessionMinit = min;
+            Log.i("======= Hours", " :: " + hours + ":" + min);
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+
     }
 }
 

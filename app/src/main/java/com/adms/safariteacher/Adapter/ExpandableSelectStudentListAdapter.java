@@ -26,6 +26,7 @@ import com.adms.safariteacher.databinding.ListItemSelectStudentBinding;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +91,26 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                 e.printStackTrace();
             }
             String formatedate = output.format(d);
-            itembinding.ageTxt.setText(formatedate);
+            String[] spilt = formatedate.split("\\/");
+            int dd, mm, yy;
+            dd = Integer.parseInt(spilt[0]);
+            mm = Integer.parseInt(spilt[1]);
+            yy = Integer.parseInt(spilt[2]);
+
+            Calendar dob = Calendar.getInstance();
+            Calendar today = Calendar.getInstance();
+            dob.set(yy, mm, dd);
+
+            int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
+
+            Integer ageInt = new Integer(age);
+            String ageS = ageInt.toString();
+            Log.d("age", ageS);
+            itembinding.ageTxt.setText(ageS);
             itembinding.phoneNoTxt.setText(childDetail.getContactPhoneNumber());
             itembinding.nameRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
@@ -99,7 +119,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                     switch (RadioButtonid) {
                         case R.id.name_rb:
                             sesionDeatil = new ArrayList<String>();
-                            sesionDeatil.add(childDetail.getFirstName()+"|"+childDetail.getLastName()+"|"+childDetail.getContactID());
+                            sesionDeatil.add(childDetail.getFirstName() + "|" + childDetail.getLastName() + "|" + childDetail.getContactID() + "|" + "STUDENT NAME");
                             onViewClick.getViewClick();
                             itembinding.nameRb.setChecked(false);
                             break;
@@ -136,7 +156,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
 
 
             }
-            for (int i=0;i<value.size();i++) {
+            for (int i = 0; i < value.size(); i++) {
                 if (headerTitle.equalsIgnoreCase(value.get(i))) {
                     valueStr = String.valueOf(_listDataChild.get(value.get(i)));
                     Log.d("value", valueStr);
@@ -224,8 +244,9 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                 switch (RadioButtonid) {
                     case R.id.familyname_rb:
                         sesionDeatil = new ArrayList<String>();
-                        sesionDeatil.add(spiltValue[0]+"|"+spiltValue[1]+"|"+spiltValue[4]);
+                        sesionDeatil.add(spiltValue[0] + "|" + spiltValue[1] + "|" + spiltValue[4] + "|" + "FAMILY NAME");
                         onViewClick.getViewClick();
+                        groupbinding.familynameRb.setChecked(false);
                         break;
                 }
             }
@@ -272,7 +293,23 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
         return sesionDeatil;
     }
 
+    private String getAge(int year, int month, int day) {
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
 
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        String ageS = ageInt.toString();
+        Log.d("age", ageS);
+        return ageS;
+    }
 }
 
 

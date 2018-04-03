@@ -37,7 +37,6 @@
                 android:layout_height="@dimen/_30sdp"
                 android:layout_gravity="center"
                 android:button="@drawable/present_radio_type"
-                android:checked="true"
                 android:gravity="center"
                 android:tag="1"
                 android:textAlignment="center"

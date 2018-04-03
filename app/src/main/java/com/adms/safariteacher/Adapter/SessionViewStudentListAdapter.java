@@ -59,7 +59,7 @@ public class SessionViewStudentListAdapter extends RecyclerView.Adapter<SessionV
         holder.no_txt.setText(str);
         Log.d("arrayData", arrayList.get(position));
         final String[] spilt = arrayList.get(position).split("\\|");
-        holder.name_txt.setText(spilt[0]);
+        holder.name_txt.setText(spilt[0] + " " + spilt[2]);
         holder.phoneno_txt.setText(spilt[1]);
 
         holder.phoneno_txt.setOnClickListener(new View.OnClickListener() {

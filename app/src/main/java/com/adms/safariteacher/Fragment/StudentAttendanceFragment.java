@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Adapter.StudentAttendanceAdapter;
 import com.adms.safariteacher.Model.Session.SessionDetailModel;
 import com.adms.safariteacher.Model.Session.sessionDataModel;
@@ -73,7 +74,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
 
         rootView = studentAttendanceBinding.getRoot();
         mContext = getActivity();
-
+        ((DashBoardActivity) getActivity()).setActionBar(2, "true");
         initViews();
         setListners();
 
@@ -81,23 +82,6 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
     }
 
     public void initViews() {
-//        MonthInt = Util.getTodaysDate();
-//        Log.d("Date", MonthInt);
-//        spiltmonth = MonthInt.split("\\/");
-//        getMonthFun(Integer.parseInt(spiltmonth[1]));
-//
-//        TimeInt = Util.getCurrentTime();
-//        Log.d("Time", TimeInt);
-//        spilttime = TimeInt.split("\\:");
-//
-//        calendar = Calendar.getInstance();
-//        Year = calendar.get(Calendar.YEAR);
-//        Month = calendar.get(Calendar.MONTH);
-//        Day = calendar.get(Calendar.DAY_OF_MONTH);
-//
-//        finaldateStr = spiltmonth[0] + ", " + monthDisplayStr + " " + spiltmonth[2];
-//        studentAttendanceBinding.dateTxt.setText(Util.getTodaysDate());
-
         if (!Util.getPref(mContext, "coachTypeID").equalsIgnoreCase("1")) {
             studentAttendanceBinding.firstRowLinear.setVisibility(View.GONE);
         } else {
@@ -110,18 +94,6 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
     }
 
     public void setListners() {
-//        studentAttendanceBinding.dateTxt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(StudentAttendanceFragment.this, Year, Month, Day);
-//                datePickerDialog.setThemeDark(false);
-//                datePickerDialog.setOkText("Done");
-//                datePickerDialog.showYearPickerFirst(false);
-//                datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
-//                datePickerDialog.setTitle("Select Date From DatePickerDialog");
-//                datePickerDialog.show(getActivity().getFragmentManager(), "Datepickerdialog");
-//            }
-//        });
         studentAttendanceBinding.sessionCal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -249,9 +221,6 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                             Log.d("totalStudent", totalstudetnStr);
                             studentAttendanceBinding.totalStudentTxt.setText(totalstudetnStr);
                             studentAttendanceAdapter = new StudentAttendanceAdapter(mContext, studentList);
-//                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-//                            studentAttendanceBinding.studentListRcView.setLayoutManager(mLayoutManager);
-//                            studentAttendanceBinding.studentListRcView.setItemAnimator(new DefaultItemAnimator());
                             studentAttendanceBinding.studentListRcView.setAdapter(studentAttendanceAdapter);
                         } else {
                             studentAttendanceBinding.listLinear.setVisibility(View.GONE);
@@ -307,7 +276,15 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                     }
                     if (attendanceInfo.getSuccess().equalsIgnoreCase("True")) {
                         Util.dismissDialog();
-                        Util.ping(mContext, "Attendance Successfully.");
+                        Util.ping(mContext, "Attendance Added Successfully.");
+                        studentAttendanceBinding.submitBtn.setText("Update");
+                        //callGetSessionStudentAttendanceApi();
+                        Fragment fragment = new SessionFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
                     }
                 }
 
@@ -386,7 +363,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
     public void fillSessionData() {
         for (int i = 0; i < dataResponse.getData().size(); i++) {
             studentAttendanceBinding.boardTxt.setText(dataResponse.getData().get(i).getBoard());
-            studentAttendanceBinding.standardTxt.setText(dataResponse.getData().get(i).getStandard());
+            studentAttendanceBinding.standardTxt.setText(dataResponse.getData().get(i).getStandard() + "-" + dataResponse.getData().get(i).getStream());
             studentAttendanceBinding.subjectTxt.setText(dataResponse.getData().get(i).getLessionTypeName());
             studentAttendanceBinding.sessionNameTxt.setText(dataResponse.getData().get(i).getSessionName());
             studentAttendanceBinding.dateTxt.setText(AppConfiguration.DateStr);
@@ -434,6 +411,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
 //        noteStr = noteStr.substring(1, noteStr.length());
 //        Log.d("Remarks", noteStr);
         String responseString = "";
+
         ArrayList<String> newArray = new ArrayList<>();
         for (int i = 0; i < studentAttendanceAdapter.getCount(); i++) {
             sessionDataModel sessionInfoObj = studentAttendanceAdapter.getItem(i);
@@ -600,9 +578,6 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                                 Log.d("totalStudent", totalstudetnStr);
                                 studentAttendanceBinding.totalStudentTxt.setText(totalstudetnStr);
                                 studentAttendanceAdapter = new StudentAttendanceAdapter(mContext, studentList);
-//                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-//                            studentAttendanceBinding.studentListRcView.setLayoutManager(mLayoutManager);
-//                            studentAttendanceBinding.studentListRcView.setItemAnimator(new DefaultItemAnimator());
                                 studentAttendanceBinding.studentListRcView.setAdapter(studentAttendanceAdapter);
                             } else {
                                 studentAttendanceBinding.listLinear.setVisibility(View.GONE);
@@ -613,7 +588,6 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                         }
                     }
                 }
-
                 @Override
                 public void failure(RetrofitError error) {
                     Util.dismissDialog();

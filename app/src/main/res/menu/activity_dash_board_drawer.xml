@@ -16,7 +16,7 @@
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Log Out"/>
+            android:title="Logout"/>
 
         <!--<item-->
             <!--android:id="@+id/student_attendance"-->

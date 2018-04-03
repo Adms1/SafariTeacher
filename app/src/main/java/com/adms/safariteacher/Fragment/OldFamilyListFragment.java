@@ -55,7 +55,7 @@ public class OldFamilyListFragment extends Fragment {
     ExpandableSelectStudentListAdapter expandableSelectStudentListAdapter;
 
     Dialog confimDialog;
-    TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt;
+    TextView cancel_txt, confirm_txt, session_student_txt, session_student_txt_view, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt;
     String familyIdStr = "", contatIDstr, orderIDStr, sessionIDStr;
     ArrayList<String> selectedId;
 
@@ -139,6 +139,7 @@ public class OldFamilyListFragment extends Fragment {
         confimDialog.setCancelable(false);
         confimDialog.setContentView(R.layout.confirm_session_dialog);
 
+        session_student_txt_view = (TextView) confimDialog.findViewById(R.id.session_student_txt_view);
         session_student_txt = (TextView) confimDialog.findViewById(R.id.session_student_txt);
         session_name_txt = (TextView) confimDialog.findViewById(R.id.session_name_txt);
         location_txt = (TextView) confimDialog.findViewById(R.id.location_txt);
@@ -148,13 +149,15 @@ public class OldFamilyListFragment extends Fragment {
         confirm_txt = (TextView) confimDialog.findViewById(R.id.confirm_txt);
         cancel_txt = (TextView) confimDialog.findViewById(R.id.cancel_txt);
 
-        session_fee_txt.setText(AppConfiguration.SessionPrice);
+        getsessionID();
+
+        session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
         session_name_txt.setText(AppConfiguration.SessionName);
         location_txt.setText(AppConfiguration.SessionLocation);
         duration_txt.setText("Duration" + " : " + AppConfiguration.SessionDuration + " hr");
-        time_txt.setText("Time"+" : "+ AppConfiguration.SessionTime);
+        time_txt.setText("Time" + " : " + AppConfiguration.SessionTime);
 
-        getsessionID();
+
         cancel_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -297,6 +300,7 @@ public class OldFamilyListFragment extends Fragment {
             String[] spilt = selectedId.get(i).split("\\|");
             contatIDstr = spilt[2];
             session_student_txt.setText(spilt[0] + " " + spilt[1]);
+            session_student_txt_view.setText(spilt[3]);
             Log.d("selectedIdStr", contatIDstr);
         }
     }
@@ -323,6 +327,16 @@ public class OldFamilyListFragment extends Fragment {
                         return;
                     }
                     if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                            Util.ping(mContext, "Confirmation Successfully.");
+                        Fragment fragment = new SessionFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        Bundle args = new Bundle();
+                        args.putString("orderID", orderIDStr);
+                        fragment.setArguments(args);
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
 //                        orderIDStr = sessionconfirmationInfoModel.getContactID();
 //                        if (!orderIDStr.equalsIgnoreCase("")) {
 //                            Fragment fragment = new PaymentFragment();

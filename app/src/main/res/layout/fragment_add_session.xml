@@ -189,7 +189,7 @@
                         style="@style/addSessionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
-                        android:hint="Subject"
+                        android:hint="Lession"
                         android:maxLines="1" />
                 </LinearLayout>
 
@@ -432,6 +432,7 @@
                             android:layout_height="@dimen/_25sdp"
                             android:layout_weight="1"
                             android:hint="@string/zipcode"
+                            android:maxLength="6"
                             android:inputType="number"
                             android:maxLines="1" />
                     </LinearLayout>
@@ -512,6 +513,7 @@
                         android:layout_height="@dimen/_25sdp"
                         android:hint="@string/session_price"
                         android:imeOptions="actionNext"
+                        android:text="0"
                         android:inputType="number"
                         android:maxLines="1"
                         android:visibility="gone" />

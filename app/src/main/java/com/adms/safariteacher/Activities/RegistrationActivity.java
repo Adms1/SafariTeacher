@@ -93,7 +93,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                                         if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
                                             callTeacherApi();
                                         } else {
-                                            registrationBinding.dateOfBirthEdt.setError("Please Enter Valid Birth date.");
+                                            registrationBinding.dateOfBirthEdt.setError("Please Select Your Birth Date.");
                                         }
                                     } else {
                                         registrationBinding.femaleChk.setError("Select Gender.");
@@ -108,7 +108,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                             registrationBinding.emailEdt.setError("Please Enter Valid Email Address.");
                         }
                     } else {
-                        registrationBinding.lastNameEdt.setError("Please Enter LastName .");
+                        registrationBinding.lastNameEdt.setError("Please Enter LastName.");
                     }
                 } else {
                     registrationBinding.firstNameEdt.setError("Please Enter FirstName.");
@@ -123,7 +123,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                 datePickerDialog.setOkText("Done");
                 datePickerDialog.showYearPickerFirst(false);
                 datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
-                datePickerDialog.setTitle("Select Date From DatePickerDialog");
+//                datePickerDialog.setTitle("Select Date From DatePickerDialog");
                 datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
             }
         });

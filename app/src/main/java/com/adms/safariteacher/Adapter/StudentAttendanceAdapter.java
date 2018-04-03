@@ -110,17 +110,18 @@ public class StudentAttendanceAdapter extends BaseAdapter {
                             session.setAttendanceID("3");
                             session.setStatus("1");
                             break;
+                        default:
                     }
 
                 }
             });
 
             switch (Integer.parseInt(session.getAttendanceID())) {
-                case 0:
-                    viewHolder.present_chk.setChecked(false);
-                    viewHolder.absent_chk.setChecked(false);
-                    viewHolder.leave_chk.setClickable(false);
-                    break;
+//                case 0:
+//                    viewHolder.present_chk.setChecked(false);
+//                    viewHolder.absent_chk.setChecked(false);
+//                    viewHolder.leave_chk.setChecked(false);
+//                    break;
                 case 1:
                     viewHolder.present_chk.setChecked(true);
                     break;
@@ -128,7 +129,7 @@ public class StudentAttendanceAdapter extends BaseAdapter {
                     viewHolder.absent_chk.setChecked(true);
                     break;
                 case 3:
-                    viewHolder.leave_chk.setClickable(true);
+                    viewHolder.leave_chk.setChecked(true);
                     break;
                 default:
             }

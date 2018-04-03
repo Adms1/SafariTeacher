@@ -53,7 +53,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     int mYear, mMonth, mDay;
     String pageTitle, type, firstNameStr, lastNameStr, emailStr, passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr;
     Dialog confimDialog;
-    TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt;
+    TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt, session_student_txt_view;
 
     public AddFamilyFragment() {
     }
@@ -141,36 +141,24 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 getInsertedValue();
                 if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
                     if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
-                        if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
-                            if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() > 6) {
-                                if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
-                                    if (!gendarIdStr.equalsIgnoreCase("")) {
-                                        if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
-                                            if (type.equalsIgnoreCase("Family")) {
-                                                callFamilyApi();
-                                            } else {
-                                                callNewChildApi();
-                                            }
-                                        } else {
-                                            addFamilyBinding.dateOfBirthEdt.setError("Enter Proper Birth date.");
-                                        }
-                                    } else {
-                                        addFamilyBinding.femaleChk.setError("Select Gender.");
-                                    }
+                        if (!gendarIdStr.equalsIgnoreCase("")) {
+                            if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
+                                if (type.equalsIgnoreCase("Family")) {
+                                    callFamilyApi();
                                 } else {
-                                    addFamilyBinding.phoneNoEdt.setError("Enter Proper Phone Number.");
+                                    callNewChildApi();
                                 }
                             } else {
-                                addFamilyBinding.passwordEdt.setError("Password length minimum 6.");
+                                addFamilyBinding.dateOfBirthEdt.setError("Please Select Your Birth Date.");
                             }
                         } else {
-                            addFamilyBinding.emailEdt.setError("Enter Proper EmailId.");
+                            addFamilyBinding.femaleChk.setError("Select Gender.");
                         }
                     } else {
-                        addFamilyBinding.lastNameEdt.setError("Enter Proper LastName .");
+                        addFamilyBinding.phoneNoEdt.setError("Enter 10 digit Phone Number.");
                     }
                 } else {
-                    addFamilyBinding.firstNameEdt.setError("Enter Proper FirstName.");
+                    addFamilyBinding.passwordEdt.setError("Password must be 6-12 Characters.");
                 }
             }
         });
@@ -382,7 +370,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         confimDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         confimDialog.setCancelable(false);
         confimDialog.setContentView(R.layout.confirm_session_dialog);
-
+        session_student_txt_view = (TextView) confimDialog.findViewById(R.id.session_student_txt_view);
         session_student_txt = (TextView) confimDialog.findViewById(R.id.session_student_txt);
         session_name_txt = (TextView) confimDialog.findViewById(R.id.session_name_txt);
         location_txt = (TextView) confimDialog.findViewById(R.id.location_txt);
@@ -409,13 +397,18 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 confimDialog.dismiss();
             }
         });
-
+        if (type.equalsIgnoreCase("Child")) {
+            session_student_txt_view.setText("STUDENT NAME");
+        } else {
+            session_student_txt_view.setText("FAMILY NAME");
+        }
         session_fee_txt.setText(AppConfiguration.SessionPrice);
         session_name_txt.setText(AppConfiguration.SessionName);
         location_txt.setText(AppConfiguration.SessionLocation);
         duration_txt.setText("Duration" + " : " + AppConfiguration.SessionDuration + " hr");
         time_txt.setText("Time" + " : " + AppConfiguration.SessionTime);
         session_student_txt.setText(firstNameStr + " " + lastNameStr);
+        session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
 
         confimDialog.show();
 
@@ -443,20 +436,31 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                         return;
                     }
                     if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("True")) {
-                        orderIDStr = sessionconfirmationInfoModel.getContactID();
-                        if (!orderIDStr.equalsIgnoreCase("")) {
-                            Fragment fragment = new PaymentFragment();
+                        if (type.equalsIgnoreCase("Child")) {
+                            Util.ping(mContext, "Child Confirmation Successfully.");
+                        } else {
+                            Util.ping(mContext, "Family Confirmation Successfully.");
+                        }
+                        Fragment fragment = new OldFamilyListFragment();
                             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            Bundle args = new Bundle();
-                            args.putString("orderID", orderIDStr);
-                            fragment.setArguments(args);
                             fragmentTransaction.replace(R.id.frame, fragment);
                             fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
-                        } else {
-                            Util.ping(mContext, "orderID Not found.");
-                        }
+//                        orderIDStr = sessionconfirmationInfoModel.getContactID();
+//                        if (!orderIDStr.equalsIgnoreCase("")) {
+//                            Fragment fragment = new PaymentFragment();
+//                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                            Bundle args = new Bundle();
+//                            args.putString("orderID", orderIDStr);
+//                            fragment.setArguments(args);
+//                            fragmentTransaction.replace(R.id.frame, fragment);
+//                            fragmentTransaction.addToBackStack(null);
+//                            fragmentTransaction.commit();
+//                        } else {
+//                            Util.ping(mContext, "orderID Not found.");
+//                        }
                     }
                 }
 

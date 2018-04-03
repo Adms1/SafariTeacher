@@ -214,7 +214,6 @@ public class DashBoardActivity extends AppCompatActivity {
                         CURRENT_TAG = TAG_Add_Session;
                         break;
                     case R.id.logout:
-                        navItemIndex = 2;
                         new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
                                 .setCancelable(false)
                                 .setTitle("Logout")
@@ -323,6 +322,8 @@ public class DashBoardActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Payment");
         } else if (session == 13 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Family List");
+        } else if (session == 2 && flag.equalsIgnoreCase("true")) {
+            getSupportActionBar().setTitle("Student Attendance");
         } else {
             getSupportActionBar().setTitle(activityTitles[session]);
         }
