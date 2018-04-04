@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -40,7 +42,7 @@ public class DashBoardActivity extends AppCompatActivity {
 
     private static final String TAG_Session = "Session";
     private static final String TAG_Add_Session = "Add Session";
-    //    private static final String TAG_Add_Family = "Family List";
+    private static final String TAG_Logout = "Logout";
     private static final String TAG_Student_Attendance = "Student Attendance";
 
     public static String CURRENT_TAG = TAG_Session;
@@ -116,25 +118,26 @@ public class DashBoardActivity extends AppCompatActivity {
         // when switching between navigation menus
         // So using runnable, the fragment is loaded with cross fade effect
         // This effect can be seen in GMail app
-        Runnable mPendingRunnable = new Runnable() {
-            @Override
-            public void run() {
-                // update the main content by replacing fragments
-                Fragment fragment = getHomeFragment();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
-                fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
-                fragmentTransaction.addToBackStack(SessionFragment.class.getName());
-                fragmentTransaction.commit();
-            }
-        };
+//        Runnable mPendingRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                // update the main content by replacing fragments
+//                Fragment fragment = getHomeFragment();
+//                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+//                        android.R.anim.fade_out);
+//                fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
+//                fragmentTransaction.addToBackStack(SessionFragment.class.getName());
+//                fragmentTransaction.commit();
+//            }
+//        };
+//
+//        // If mPendingRunnable is not null, then add to the message queue
+//        if (mPendingRunnable != null) {
+//            mHandler.post(mPendingRunnable);
+//        }
 
-        // If mPendingRunnable is not null, then add to the message queue
-        if (mPendingRunnable != null) {
-            mHandler.post(mPendingRunnable);
-        }
-
+        displayView(navItemIndex);
 
         //Closing drawer on item click
         drawer.closeDrawers();
@@ -151,23 +154,23 @@ public class DashBoardActivity extends AppCompatActivity {
         navigationView.getMenu().getItem(navItemIndex).setChecked(true);
     }
 
-    private Fragment getHomeFragment() {
-        switch (navItemIndex) {
-            case 0:
-                // home
-                SessionFragment sessionFragment = new SessionFragment();
-                return sessionFragment;
-            case 1:
-                AddSessionFragment addSessionFragment = new AddSessionFragment();
-                Bundle args = new Bundle();
-                args.putString("flag", "Add");
-                addSessionFragment.setArguments(args);
-                return addSessionFragment;
+//    private Fragment getHomeFragment() {
+//        switch (navItemIndex) {
+//            case 0:
+//                // home
+//                SessionFragment sessionFragment = new SessionFragment();
+//                return sessionFragment;
+//            case 1:
+//                AddSessionFragment addSessionFragment = new AddSessionFragment();
+//                Bundle args = new Bundle();
+//                args.putString("flag", "Add");
+//                addSessionFragment.setArguments(args);
+//                return addSessionFragment;
 //            case 2:
 //                new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
 //                        .setCancelable(false)
 //                        .setTitle("Logout")
-//                        .setIcon(mContex.getResources().getDrawable(R.drawable.logo))
+//                        .setIcon(mContex.getResources().getDrawable(R.drawable.safari))
 //                        .setMessage("Are you sure you want to logout?")
 //                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 //                            public void onClick(DialogInterface dialog, int which) {
@@ -185,14 +188,112 @@ public class DashBoardActivity extends AppCompatActivity {
 //
 //                            }
 //                        })
-//                        .setIcon(R.drawable.logo)
+//                        .setIcon(R.drawable.safari)
 //                        .show();
+//
+////                return
+////            case 2:
+////                new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
+////                        .setCancelable(false)
+////                        .setTitle("Logout")
+////                        .setIcon(mContex.getResources().getDrawable(R.drawable.logo))
+////                        .setMessage("Are you sure you want to logout?")
+////                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+////                            public void onClick(DialogInterface dialog, int which) {
+////                                Util.setPref(mContex, "coachID", "");
+////                                Util.setPref(mContex, "SessionID", "");
+////                                Util.setPref(mContex, "FamilyID", "");
+////                                Intent intentLogin = new Intent(DashBoardActivity.this, LoginActivity.class);
+////                                startActivity(intentLogin);
+////                                finish();
+////                            }
+////                        })
+////                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+////                            public void onClick(DialogInterface dialog, int which) {
+////                                // do nothing
+////
+////                            }
+////                        })
+////                        .setIcon(R.drawable.logo)
+////                        .show();
+//
+//            default:
+//                return new SessionFragment();
+//        }
+//
+//    }
 
-            default:
-                return new SessionFragment();
+    Fragment fragment = null;
+    int myid;
+    boolean first_time_trans = true;
+
+    public void displayView(int position) {
+        switch (position) {
+            case 0:
+                fragment = new SessionFragment();
+                myid = fragment.getId();
+                break;
+            case 1:
+                fragment = new AddSessionFragment();
+                Bundle args = new Bundle();
+                args.putString("flag", "Add");
+                fragment.setArguments(args);
+                myid = fragment.getId();
+                break;
+            case 2:
+                new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
+                        .setCancelable(false)
+                        .setTitle("Logout")
+                        .setIcon(mContex.getResources().getDrawable(R.drawable.safari))
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Util.setPref(mContex, "coachID", "");
+                                Util.setPref(mContex, "SessionID", "");
+                                Util.setPref(mContex, "FamilyID", "");
+                                Util.setPref(mContex,"sessionDetailID","");
+                                Intent intentLogin = new Intent(DashBoardActivity.this, LoginActivity.class);
+                                startActivity(intentLogin);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+
+                            }
+                        })
+                        .setIcon(R.drawable.safari)
+                        .show();
+                break;
         }
+        if (fragment != null) {
 
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            if (fragment instanceof SessionFragment) {
+                if (first_time_trans) {
+                    first_time_trans = false;
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(0, 0)
+                            .replace(R.id.frame, fragment).commit();
+
+                } else {
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(0, 0)
+                            .replace(R.id.frame, fragment).commit();
+                }
+            } else {
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(0, 0)
+                        .replace(R.id.frame, fragment).commit();
+            }
+        } else {
+            // error in creating fragment
+            Log.e("Dashboard", "Error in creating fragment");
+        }
     }
+
 
     private void setUpNavigationView() {
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
@@ -214,51 +315,22 @@ public class DashBoardActivity extends AppCompatActivity {
                         CURRENT_TAG = TAG_Add_Session;
                         break;
                     case R.id.logout:
-                        new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
-                                .setCancelable(false)
-                                .setTitle("Logout")
-                                .setIcon(mContex.getResources().getDrawable(R.drawable.safari))
-                                .setMessage("Are you sure you want to logout?")
-                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Util.setPref(mContex, "coachID", "");
-                                        Util.setPref(mContex, "SessionID", "");
-                                        Util.setPref(mContex, "FamilyID", "");
-                                        Util.setPref(mContex, "coachTypeID", "");
-                                        Util.setPref(mContex, "sessionDetailID", "");
-                                        Intent intentLogin = new Intent(DashBoardActivity.this, LoginActivity.class);
-                                        startActivity(intentLogin);
-                                        finish();
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // do nothing
-
-                                    }
-                                })
-                                .setIcon(R.drawable.safari)
-                                .show();
+                        navItemIndex = 2;
+                        CURRENT_TAG = TAG_Logout;
                         break;
-//                    case R.id.student_attendance:
-//                        navItemIndex = 2;
-//                        CURRENT_TAG = TAG_Student_Attendance;
-//                        break;
                     default:
                         navItemIndex = 0;
-//                        CURRENT_TAG = TAG_Session;
                 }
 
-                //Checking if the item is in checked state or not, if not make it in checked state
-                if (menuItem.isChecked()) {
-                    menuItem.setChecked(false);
-                } else {
+                    //Checking if the item is in checked state or not, if not make it in checked state
+                    if (menuItem.isChecked()) {
+                        menuItem.setChecked(false);
+                    } else {
+                        menuItem.setChecked(true);
+                    }
                     menuItem.setChecked(true);
-                }
-                menuItem.setChecked(true);
 
-                loadHomeFragment();
-
+                    loadHomeFragment();
                 return true;
             }
         });
@@ -304,6 +376,10 @@ public class DashBoardActivity extends AppCompatActivity {
                 loadHomeFragment();
                 return;
             }
+            else{
+                loadHomeFragment();
+                Util.ping(mContex,"Press again to exist.");
+            }
         }
 
         super.onBackPressed();
@@ -314,6 +390,8 @@ public class DashBoardActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Edit Session");
         } else if (session == 1 && flag.equalsIgnoreCase("add")) {
             getSupportActionBar().setTitle("Add Session");
+        } else if (session == 1 && flag.equalsIgnoreCase("view")) {
+            getSupportActionBar().setTitle("View Session");
         } else if (session == 10 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Add Family");
         } else if (session == 11 && flag.equalsIgnoreCase("false")) {

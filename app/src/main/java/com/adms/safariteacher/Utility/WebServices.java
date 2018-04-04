@@ -95,4 +95,8 @@ public interface WebServices {
     @FormUrlEncoded
     @POST("/Get_ClassAttendance")
     public void get_ClassAttendance(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Get_ContactEnrollmentByCoachID")
+    public void get_ContactEnrollmentByCoachID(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
 }

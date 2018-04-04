@@ -405,8 +405,8 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         session_fee_txt.setText(AppConfiguration.SessionPrice);
         session_name_txt.setText(AppConfiguration.SessionName);
         location_txt.setText(AppConfiguration.SessionLocation);
-        duration_txt.setText("Duration" + " : " + AppConfiguration.SessionDuration + " hr");
-        time_txt.setText("Time" + " : " + AppConfiguration.SessionTime);
+        duration_txt.setText(AppConfiguration.SessionDuration);
+        time_txt.setText(AppConfiguration.SessionTime);
         session_student_txt.setText(firstNameStr + " " + lastNameStr);
         session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
 

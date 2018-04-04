@@ -77,13 +77,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 getInsertedValue();
                 if (!usernameStr.equalsIgnoreCase("") && Util.isValidEmaillId(usernameStr)) {
-                    if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() > 6 && passwordStr.length() <= 12) {
+//                    if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() > 6 && passwordStr.length() <= 12) {
                         callTeacherLoginApi();
-                    } else {
-                        loginScreenBinding.passwordEdt.setError("Password must be 6-12 Characters.");
-                    }
+//                    } else {
+//                        loginScreenBinding.passwordEdt.setError("Password must be 6-12 Characters.");
+//                    }
                 } else {
-                    loginScreenBinding.emailEdt.setError("Please Enter Valid Email Address.");
+                  Util.ping(mContext,"Invalid Email Address or Password.");
                 }
             }
         });

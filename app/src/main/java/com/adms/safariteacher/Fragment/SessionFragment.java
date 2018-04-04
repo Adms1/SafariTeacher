@@ -71,8 +71,10 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     String Address;
     int SessionHour = 0;
     int SessionMinit = 0;
-     String flag;
-
+    String flag;
+    Calendar calendar;
+    String dateStr;
+    int k;
     public SessionFragment() {
     }
 
@@ -80,26 +82,45 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        calendarBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_calendar, container, false);
+        if (rootView == null) {
+            calendarBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_calendar, container, false);
 
-        rootView = calendarBinding.getRoot();
-        mContext = getActivity();
+            rootView = calendarBinding.getRoot();
+            mContext = getActivity();
+            ((DashBoardActivity) getActivity()).setActionBar(0, "true");
+            colorList.add(getResources().getColor(R.color.yellow_dark));
+            colorList.add(getResources().getColor(R.color.green_dark));
+            colorList.add(getResources().getColor(R.color.blue_dark));
+//            colorList.add(getResources().getColor(R.color.green_dark));
+//            colorList.add(getResources().getColor(R.color.yellow_dark));
+//            colorList.add(getResources().getColor(R.color.blue_dark));
+//            colorList.add(getResources().getColor(R.color.green_dark));
+//            colorList.add(getResources().getColor(R.color.yellow_dark));
+//            colorList.add(getResources().getColor(R.color.blue_dark));
+//            colorList.add(getResources().getColor(R.color.green_dark));
+//            colorList.add(getResources().getColor(R.color.yellow_dark));
+//            colorList.add(getResources().getColor(R.color.blue_dark));
+//            colorList.add(getResources().getColor(R.color.green_dark));
+//            colorList.add(getResources().getColor(R.color.yellow_dark));
+//            colorList.add(getResources().getColor(R.color.blue_dark));
+//            colorList.add(getResources().getColor(R.color.green_dark));
+//            colorList.add(getResources().getColor(R.color.yellow_dark));
+//            colorList.add(getResources().getColor(R.color.blue_dark));
+//            colorList.add(getResources().getColor(R.color.green_dark));
+//            colorList.add(getResources().getColor(R.color.yellow_dark));
+//            colorList.add(getResources().getColor(R.color.blue_dark));
+//            colorList.add(getResources().getColor(R.color.green_dark));
+//            colorList.add(getResources().getColor(R.color.yellow_dark));
+//            colorList.add(getResources().getColor(R.color.blue_dark));
+            callGetSessionDetailApi();
 
-        ((DashBoardActivity) getActivity()).setActionBar(0, "true");
-        colorList.add(getResources().getColor(R.color.green_dark));
-        colorList.add(getResources().getColor(R.color.yellow_dark));
-        colorList.add(getResources().getColor(R.color.blue_dark));
-        callGetSessionDetailApi();
+        } else {
+
+        }
 
 
         setListner();
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-//        callGetSessionDetailApi();
     }
 
     public void init() {
@@ -129,6 +150,75 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 fragmentTransaction.commit();
             }
         });
+        calendarBinding.forwadTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calendar = Calendar.getInstance();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy");
+                String d = calendarBinding.monthYearTxt.getText().toString();
+                Date date = null;
+                try {
+                    date = new Date(sdf.parse(d).getTime());
+                    date.setMonth(date.getMonth() + 1);
+                    dateStr = String.valueOf(date);
+                    Log.d("dateStr", dateStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
+                String outputPattern = "MMMM yyyy";
+
+                SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+                SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+                Date date1 = null;
+                String str = null;
+                try {
+                    date1 = inputFormat.parse(dateStr);
+                    str = outputFormat.format(date1);
+
+                    Log.i("mini", "Month:" + str);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                calendarBinding.monthYearTxt.setText(str);
+            }
+        });
+
+        calendarBinding.backTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy");
+                String d = calendarBinding.monthYearTxt.getText().toString();
+                Date date = null;
+                try {
+                    date = new Date(sdf.parse(d).getTime());
+                    date.setMonth(date.getMonth() - 1);
+                    dateStr = String.valueOf(date);
+                    Log.d("dateStr", dateStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
+                String outputPattern = "MMMM yyyy";
+
+                SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+                SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+                Date date1 = null;
+                String str = null;
+                try {
+                    date1 = inputFormat.parse(dateStr);
+                    str = outputFormat.format(date1);
+
+                    Log.i("mini", "Month:" + str);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                calendarBinding.monthYearTxt.setText(str);
+            }
+        });
     }
 
     @Override
@@ -152,9 +242,9 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         sessionCapacity = Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionCapacity());
                         priceStr = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionPrice();
                         AppConfiguration.SessionLocation = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressLine1()
-                                + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
-                                + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
-                                + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
+                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
+                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
+                                + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
                                 + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode();
                         String[] spiltTime = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime().split("\\-");
                         calculateHours(spiltTime[0], spiltTime[1]);
@@ -379,8 +469,11 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
     public void mockList(List<CalendarEvent> eventList) {
         long startDate = 0, endDate = 0;
+        ArrayList<Integer> SelectColor = new ArrayList();
 
         for (int i = 0; i < finalsessionfullDetailModel.getData().size(); i++) {
+
+
             for (int j = 0; j < finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().size(); j++) {
 
                 String[] spiltTime = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime().split("\\-");
@@ -402,19 +495,26 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                     e.printStackTrace();
                 }
                 calculateHours(spiltTime[0], spiltTime[1]);
+                if (k == 2) {
+                    k = 0;
+                } else {
+                    k++;
+                }
+
                 Address = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressLine1()
-                        + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
-                        + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
-                        + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
+                        + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
+                        + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
+                        + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
                         + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode() + ".";
                 int resID = getResources().getIdentifier("myimg", String.valueOf(R.drawable.email), getActivity().getPackageName());
                 DrawableCalendarEvent event = new DrawableCalendarEvent(Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID()),
-                        colorList.get(j), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
+                        colorList.get(k), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
                         finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
                         finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime()
                                 + " " + "( " + SessionHour + " hr" + ", " + SessionMinit + " min )" + System.getProperty("line.separator")
                                 + Address, startDate, endDate, 0, String.valueOf(SessionHour), R.drawable.email);
                 eventList.add(event);
+
             }
         }
     }
@@ -537,7 +637,12 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
             min = (int) (difference - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
             hours = (hours < 0 ? -hours : hours);
             SessionHour = hours;
+//            if(min>0){
             SessionMinit = min;
+//            }else{
+//                SessionMinit=null;
+//            }
+
             Log.i("======= Hours", " :: " + hours + ":" + min);
 
         } catch (ParseException e) {

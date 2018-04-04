@@ -154,8 +154,8 @@ public class OldFamilyListFragment extends Fragment {
         session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
         session_name_txt.setText(AppConfiguration.SessionName);
         location_txt.setText(AppConfiguration.SessionLocation);
-        duration_txt.setText("Duration" + " : " + AppConfiguration.SessionDuration + " hr");
-        time_txt.setText("Time" + " : " + AppConfiguration.SessionTime);
+        duration_txt.setText(AppConfiguration.SessionDuration);
+        time_txt.setText(AppConfiguration.SessionTime);
 
 
         cancel_txt.setOnClickListener(new View.OnClickListener() {

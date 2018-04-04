@@ -130,6 +130,10 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             ((DashBoardActivity) getActivity()).setActionBar(1, "edit");
             studentAvailable = getArguments().getString("studentAvailable");
             Log.d("studentAvailable", studentAvailable);
+        } else if (flag.equalsIgnoreCase("view")) {
+            ((DashBoardActivity) getActivity()).setActionBar(1, "view");
+            studentAvailable = getArguments().getString("studentAvailable");
+            Log.d("studentAvailable", studentAvailable);
         } else {
             ((DashBoardActivity) getActivity()).setActionBar(1, "add");
         }
@@ -164,8 +168,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             addSessionBinding.submitBtn.setText("Update");
             callEditSessionApi();
         } else if (flag.equalsIgnoreCase("view")) {
-            addSessionBinding.sessionTimeLinear.setVisibility(View.GONE);
-            addSessionBinding.submitBtn.setVisibility(View.GONE);
+            disableControl();
+            callEditSessionApi();
         } else {
             addSessionBinding.submitBtn.setText("Submit");
             callBoardApi();
@@ -1728,11 +1732,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             Log.d("scheduleStr ", scheduleStr);
 
 
-            if (!studentAvailable.equalsIgnoreCase("0")) {
+//            if (!studentAvailable.equalsIgnoreCase("0")) {
+////                addSessionBinding.addSessionBtn.performClick();
+//            } else {
 //                addSessionBinding.addSessionBtn.performClick();
-            } else {
-                addSessionBinding.addSessionBtn.performClick();
-            }
+//            }
             addSessionBinding.addressEdt.setText(dataResponse.getData().get(i).getAddressLine1());
             addSessionBinding.areaEdt.setText(dataResponse.getData().get(i).getRegionName());
             addSessionBinding.cityEdt.setText(dataResponse.getData().get(i).getAddressCity());
@@ -1773,7 +1777,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     }
                     if (updatesessionDetailModel.getSuccess().equalsIgnoreCase("True")) {
                         Util.dismissDialog();
-                        Util.ping(mContext, "Update Session Sucessfully.");
+                        Util.ping(mContext, "Session Update Successfully.");
                         Fragment fragment = new SessionFragment();
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -2041,5 +2045,27 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             }
         }
 
+    }
+
+    public void disableControl() {
+        addSessionBinding.sessionTimeLinear.setVisibility(View.GONE);
+        addSessionBinding.submitBtn.setVisibility(View.GONE);
+        addSessionBinding.recurringRb.setEnabled(false);
+        addSessionBinding.singleRb.setEnabled(false);
+        addSessionBinding.sessionNameEdt.setEnabled(false);
+        addSessionBinding.boardNameEdt.setEnabled(false);
+        addSessionBinding.standardEdt.setEnabled(false);
+        addSessionBinding.streamEdt.setEnabled(false);
+        addSessionBinding.subjectEdt.setEnabled(false);
+        addSessionBinding.addressEdt.setEnabled(false);
+        addSessionBinding.areaEdt.setEnabled(false);
+        addSessionBinding.cityEdt.setEnabled(false);
+        addSessionBinding.stateEdt.setEnabled(false);
+        addSessionBinding.zipcodeEdt.setEnabled(false);
+        addSessionBinding.descriptionEdt.setEnabled(false);
+        addSessionBinding.freeRb.setEnabled(false);
+        addSessionBinding.paidRb.setEnabled(false);
+        addSessionBinding.sportsEdt.setEnabled(false);
+        addSessionBinding.alertBtn.setEnabled(false);
     }
 }
