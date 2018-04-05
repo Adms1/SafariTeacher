@@ -73,8 +73,13 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
         registrationBinding.emailEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                emailStr = registrationBinding.emailEdt.getText().toString();
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    callCheckEmailIdApi();
+                    if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
+                        callCheckEmailIdApi();
+                    } else {
+                        registrationBinding.emailEdt.setError("Please Enter Valid Email Address.");
+                    }
                 }
                 return false;
             }
@@ -86,7 +91,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
 
                 if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
                     if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
-                        if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
+                        if (!emailStr.equalsIgnoreCase("")) {
                             if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
                                 if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                     if (!gendarIdStr.equalsIgnoreCase("")) {
@@ -105,7 +110,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                                 registrationBinding.passwordEdt.setError("Password must be 6-12 Characters.");
                             }
                         } else {
-                            registrationBinding.emailEdt.setError("Please Enter Valid Email Address.");
+                            registrationBinding.emailEdt.setError("Please Enter Email Address.");
                         }
                     } else {
                         registrationBinding.lastNameEdt.setError("Please Enter LastName.");
@@ -271,7 +276,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                         return;
                     }
                     if (teacherInfoModel.getSuccess().equalsIgnoreCase("false")) {
-                        Util.ping(mContext, getString(R.string.false_msg));
+//                        Util.ping(mContext, getString(R.string.false_msg));
                         return;
                     }
                     if (teacherInfoModel.getSuccess().equalsIgnoreCase("True")) {

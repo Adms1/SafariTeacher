@@ -377,7 +377,7 @@ public class DashBoardActivity extends AppCompatActivity {
                 return;
             }
             else{
-                loadHomeFragment();
+//                loadHomeFragment();
                 Util.ping(mContex,"Press again to exist.");
             }
         }

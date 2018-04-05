@@ -24,13 +24,14 @@
                 android:gravity="center|center_vertical"
                 android:src="@drawable/back"
                 android:textSize="@dimen/_14sdp"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/month_year_txt"
                 android:layout_width="@dimen/_105sdp"
                 android:layout_height="@dimen/_32sdp"
                 android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/_105sdp"
                 android:gravity="center|center_vertical"
                 android:text="Month"
                 android:textColor="@color/blue"
@@ -43,7 +44,7 @@
                 android:layout_gravity="center"
                 android:gravity="center|center_vertical"
                 android:src="@drawable/forwad"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </LinearLayout>
 
         <com.github.tibolte.agendacalendarview.AgendaCalendarView

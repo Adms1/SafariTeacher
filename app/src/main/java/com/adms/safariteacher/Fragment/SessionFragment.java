@@ -70,7 +70,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     ArrayList<String> StudentList;
     String Address;
     int SessionHour = 0;
-    int SessionMinit = 0;
+    Integer SessionMinit = 0;
     String flag;
     Calendar calendar;
     String dateStr;
@@ -91,27 +91,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
             colorList.add(getResources().getColor(R.color.yellow_dark));
             colorList.add(getResources().getColor(R.color.green_dark));
             colorList.add(getResources().getColor(R.color.blue_dark));
-//            colorList.add(getResources().getColor(R.color.green_dark));
-//            colorList.add(getResources().getColor(R.color.yellow_dark));
-//            colorList.add(getResources().getColor(R.color.blue_dark));
-//            colorList.add(getResources().getColor(R.color.green_dark));
-//            colorList.add(getResources().getColor(R.color.yellow_dark));
-//            colorList.add(getResources().getColor(R.color.blue_dark));
-//            colorList.add(getResources().getColor(R.color.green_dark));
-//            colorList.add(getResources().getColor(R.color.yellow_dark));
-//            colorList.add(getResources().getColor(R.color.blue_dark));
-//            colorList.add(getResources().getColor(R.color.green_dark));
-//            colorList.add(getResources().getColor(R.color.yellow_dark));
-//            colorList.add(getResources().getColor(R.color.blue_dark));
-//            colorList.add(getResources().getColor(R.color.green_dark));
-//            colorList.add(getResources().getColor(R.color.yellow_dark));
-//            colorList.add(getResources().getColor(R.color.blue_dark));
-//            colorList.add(getResources().getColor(R.color.green_dark));
-//            colorList.add(getResources().getColor(R.color.yellow_dark));
-//            colorList.add(getResources().getColor(R.color.blue_dark));
-//            colorList.add(getResources().getColor(R.color.green_dark));
-//            colorList.add(getResources().getColor(R.color.yellow_dark));
-//            colorList.add(getResources().getColor(R.color.blue_dark));
+
             callGetSessionDetailApi();
 
         } else {
@@ -505,7 +485,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getRegionName()
                         + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
                         + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
-                        + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode() + ".";
+                        + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode();
                 int resID = getResources().getIdentifier("myimg", String.valueOf(R.drawable.email), getActivity().getPackageName());
                 DrawableCalendarEvent event = new DrawableCalendarEvent(Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID()),
                         colorList.get(k), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),

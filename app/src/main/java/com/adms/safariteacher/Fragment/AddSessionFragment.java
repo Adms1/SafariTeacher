@@ -392,30 +392,72 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     case "sun":
                         sun_start_time_txt.setText(spiltDash[0]);
                         sun_end_time_txt.setText(spiltDash[1]);
+                        sun_start_add_session_btn.setText("x");
+                        sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                        sun_end_add_session_btn.setText("x");
+                        sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                         break;
                     case "mon":
                         mon_start_time_txt.setText(spiltDash[0]);
                         mon_end_time_txt.setText(spiltDash[1]);
+                        mon_start_add_session_btn.setText("x");
+                        mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                        mon_end_add_session_btn.setText("x");
+                        mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                         break;
                     case "tue":
                         tue_start_time_txt.setText(spiltDash[0]);
                         tue_end_time_txt.setText(spiltDash[1]);
+                        tue_start_add_session_btn.setText("x");
+                        tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                        tue_end_add_session_btn.setText("x");
+                        tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                         break;
                     case "wed":
                         wed_start_time_txt.setText(spiltDash[0]);
                         wed_end_time_txt.setText(spiltDash[1]);
+                        wed_start_add_session_btn.setText("x");
+                        wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                        wed_end_add_session_btn.setText("x");
+                        wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                         break;
                     case "thu":
                         thu_start_time_txt.setText(spiltDash[0]);
                         thu_end_time_txt.setText(spiltDash[1]);
+                        thu_start_add_session_btn.setText("x");
+                        thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                        thu_end_add_session_btn.setText("x");
+                        thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                         break;
                     case "fri":
                         fri_start_time_txt.setText(spiltDash[0]);
                         fri_end_time_txt.setText(spiltDash[1]);
+                        fri_start_add_session_btn.setText("x");
+                        fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                        fri_end_add_session_btn.setText("x");
+                        fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                         break;
                     case "sat":
                         sat_start_time_txt.setText(spiltDash[0]);
                         sat_end_time_txt.setText(spiltDash[1]);
+                        sat_start_add_session_btn.setText("x");
+                        sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                        sat_end_add_session_btn.setText("x");
+                        sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                        sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
                         break;
                     default:
 

@@ -51,7 +51,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     Calendar calendar;
     private DatePickerDialog datePickerDialog;
     int mYear, mMonth, mDay;
-    String pageTitle, type, firstNameStr, lastNameStr, emailStr, passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr;
+    String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr;
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt, session_student_txt_view;
 
@@ -110,15 +110,19 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 fragmentTransaction.commit();
             }
         });
-//        addFamilyBinding.emailEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-//                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-//                    callCheckEmailIdApi();
-//                }
-//                return false;
-//            }
-//        });
+        addFamilyBinding.emailEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
+                    } else {
+                        addFamilyBinding.emailEdt.setError("Please Enter Valid Email Address.");
+                    }
+
+                }
+                return false;
+            }
+        });
         addFamilyBinding.genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
@@ -141,24 +145,36 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 getInsertedValue();
                 if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
                     if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
-                        if (!gendarIdStr.equalsIgnoreCase("")) {
-                            if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
-                                if (type.equalsIgnoreCase("Family")) {
-                                    callFamilyApi();
+                        if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
+                            if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
+                                if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
+                                    if (!gendarIdStr.equalsIgnoreCase("")) {
+                                        if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
+                                            if (type.equalsIgnoreCase("Family")) {
+                                                callFamilyApi();
+                                            } else {
+                                                callNewChildApi();
+                                            }
+                                        } else {
+                                            addFamilyBinding.dateOfBirthEdt.setError("Please Select Your Birth Date.");
+                                        }
+                                    } else {
+                                        addFamilyBinding.femaleChk.setError("Select Gender.");
+                                    }
                                 } else {
-                                    callNewChildApi();
+                                    addFamilyBinding.phoneNoEdt.setError("Enter 10 digit Phone Number.");
                                 }
                             } else {
-                                addFamilyBinding.dateOfBirthEdt.setError("Please Select Your Birth Date.");
+                                addFamilyBinding.passwordEdt.setError("Password must be 6-12 Characters.");
                             }
                         } else {
-                            addFamilyBinding.femaleChk.setError("Select Gender.");
+                            addFamilyBinding.emailEdt.setError("Enter Valid Email Addres.");
                         }
                     } else {
-                        addFamilyBinding.phoneNoEdt.setError("Enter 10 digit Phone Number.");
+                        addFamilyBinding.lastNameEdt.setError("Enter 10 digit Phone Number.");
                     }
                 } else {
-                    addFamilyBinding.passwordEdt.setError("Password must be 6-12 Characters.");
+                    addFamilyBinding.firstNameEdt.setError("Password must be 6-12 Characters.");
                 }
             }
         });
@@ -442,11 +458,11 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                             Util.ping(mContext, "Family Confirmation Successfully.");
                         }
                         Fragment fragment = new OldFamilyListFragment();
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.frame, fragment);
-                            fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.commit();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
 //                        orderIDStr = sessionconfirmationInfoModel.getContactID();
 //                        if (!orderIDStr.equalsIgnoreCase("")) {
 //                            Fragment fragment = new PaymentFragment();
