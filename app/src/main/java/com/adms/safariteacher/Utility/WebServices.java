@@ -98,5 +98,14 @@ public interface WebServices {
 
     @FormUrlEncoded
     @POST("/Get_ContactEnrollmentByCoachID")
-    public void get_ContactEnrollmentByCoachID(@FieldMap Map<String, String> map, Callback<SessionDetailModel> callback);
+    public void get_ContactEnrollmentByCoachID(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
+
+    @FormUrlEncoded
+    @POST("/GeneratePaymentRequest")
+    public void get_GeneratePaymentRequest(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
+
+    @FormUrlEncoded
+    @POST("/Add_Payment")
+    public void get_Add_Payment(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
+
 }

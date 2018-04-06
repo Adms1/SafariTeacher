@@ -36,7 +36,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
 
     ActivityRegistrationBinding registrationBinding;
     Context mContext;
-    String selectedValue = "Parents", flag, finalDate;
+    String finalDate;
     int Year, Month, Day;
     Calendar calendar;
     private DatePickerDialog datePickerDialog;
@@ -84,14 +84,26 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                 return false;
             }
         });
+        registrationBinding.passwordEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                passwordStr = registrationBinding.passwordEdt.getText().toString();
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
+                    } else {
+                        registrationBinding.passwordEdt.setError("Password must be 6-12 Characters.");
+                    }
+                }
+                return false;
+            }
+        });
         registrationBinding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getInsertedValue();
-
                 if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
                     if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
-                        if (!emailStr.equalsIgnoreCase("")) {
+                        if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
                             if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
                                 if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                     if (!gendarIdStr.equalsIgnoreCase("")) {

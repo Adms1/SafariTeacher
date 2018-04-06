@@ -81,8 +81,6 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         Year = calendar.get(Calendar.YEAR);
         Month = calendar.get(Calendar.MONTH);
         Day = calendar.get(Calendar.DAY_OF_MONTH);
-
-
     }
 
     public void setListners() {
@@ -94,7 +92,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 datePickerDialog.setOkText("Done");
                 datePickerDialog.showYearPickerFirst(false);
                 datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
-                datePickerDialog.setTitle("Select Date From DatePickerDialog");
+//                datePickerDialog.setTitle("Select Date From DatePickerDialog");
                 datePickerDialog.show(getActivity().getFragmentManager(), "Datepickerdialog");
             }
         });
@@ -113,12 +111,27 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         addFamilyBinding.emailEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                emailStr = addFamilyBinding.emailEdt.getText().toString();
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
                     } else {
                         addFamilyBinding.emailEdt.setError("Please Enter Valid Email Address.");
                     }
 
+                }
+                return false;
+            }
+        });
+        addFamilyBinding.passwordEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                passwordStr = addFamilyBinding.passwordEdt.getText().toString();
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
+
+                    } else {
+                        addFamilyBinding.passwordEdt.setError("Password must be 6-12 Characters.");
+                    }
                 }
                 return false;
             }
@@ -168,13 +181,13 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                                 addFamilyBinding.passwordEdt.setError("Password must be 6-12 Characters.");
                             }
                         } else {
-                            addFamilyBinding.emailEdt.setError("Enter Valid Email Addres.");
+                            addFamilyBinding.emailEdt.setError("Please Enter Valid Email Addres.");
                         }
                     } else {
-                        addFamilyBinding.lastNameEdt.setError("Enter 10 digit Phone Number.");
+                        addFamilyBinding.lastNameEdt.setError("Please Enter LastName.");
                     }
                 } else {
-                    addFamilyBinding.firstNameEdt.setError("Password must be 6-12 Characters.");
+                    addFamilyBinding.firstNameEdt.setError("Please Enter First Name");
                 }
             }
         });
@@ -227,6 +240,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
 
                         Util.setPref(mContext, "FamilyID", familyInfoModel.getContactID());
                         contatIDstr = familyInfoModel.getContactID();
+                        Util.ping(mContext, "Family Added Sucessfully.");
                         ConformationDialog();
                     }
                 }
@@ -342,6 +356,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                     }
                     if (childInfoModel.getSuccess().equalsIgnoreCase("True")) {
                         contatIDstr = childInfoModel.getContactID();
+                        Util.ping(mContext, "Child Added Sucessfully.");
                         ConformationDialog();
                     }
                 }
@@ -405,10 +420,10 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         confirm_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("")) {
-                    callSessionConfirmationApi();
+                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("") && !AppConfiguration.SessionPrice.equalsIgnoreCase("0.00")) {
+                    callpaymentRequestApi();
                 } else {
-                    Util.ping(mContext, "Please fill all Detail");
+                   callSessionConfirmationApi();
                 }
                 confimDialog.dismiss();
             }
@@ -418,7 +433,6 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         } else {
             session_student_txt_view.setText("FAMILY NAME");
         }
-        session_fee_txt.setText(AppConfiguration.SessionPrice);
         session_name_txt.setText(AppConfiguration.SessionName);
         location_txt.setText(AppConfiguration.SessionLocation);
         duration_txt.setText(AppConfiguration.SessionDuration);
@@ -426,9 +440,75 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         session_student_txt.setText(firstNameStr + " " + lastNameStr);
         session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
 
+        AppConfiguration.UserName = session_student_txt.getText().toString();
         confimDialog.show();
 
     }
+
+
+    //Use for paymentRequest
+    public void callpaymentRequestApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_GeneratePaymentRequest(getpaymentRequestdetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel paymentRequestModel, Response response) {
+                    Util.dismissDialog();
+                    if (paymentRequestModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (paymentRequestModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (paymentRequestModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (paymentRequestModel.getSuccess().equalsIgnoreCase("True")) {
+                        orderIDStr = paymentRequestModel.getOrderID();
+                        Fragment fragment = new PaymentFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        Bundle args = new Bundle();
+                        args.putString("orderID", orderIDStr);
+                        args.putString("amount", AppConfiguration.SessionPrice);
+                        args.putString("mode", "TEST");
+                        args.putString("username", session_student_txt.getText().toString());
+                        args.putString("sessionID", sessionIDStr);
+                        args.putString("contactID", contatIDstr);
+                        args.putString("type", type);
+                        fragment.setArguments(args);
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getpaymentRequestdetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("ContactID", contatIDstr);
+        map.put("SessionID", sessionIDStr);
+        map.put("Amount", AppConfiguration.SessionPrice);
+        return map;
+    }
+
 
     //Use for Family and Child Session Confirmation
     public void callSessionConfirmationApi() {
@@ -463,20 +543,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                         fragmentTransaction.replace(R.id.frame, fragment);
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
-//                        orderIDStr = sessionconfirmationInfoModel.getContactID();
-//                        if (!orderIDStr.equalsIgnoreCase("")) {
-//                            Fragment fragment = new PaymentFragment();
-//                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                            Bundle args = new Bundle();
-//                            args.putString("orderID", orderIDStr);
-//                            fragment.setArguments(args);
-//                            fragmentTransaction.replace(R.id.frame, fragment);
-//                            fragmentTransaction.addToBackStack(null);
-//                            fragmentTransaction.commit();
-//                        } else {
-//                            Util.ping(mContext, "orderID Not found.");
-//                        }
+
                     }
                 }
 
@@ -499,6 +566,5 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         map.put("ContactID", contatIDstr);
         return map;
     }
-
 }
 

@@ -85,7 +85,7 @@
                     android:paddingLeft="@dimen/_5sdp"
                     android:text="ADMS"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/_11sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
             </LinearLayout>
 

@@ -234,7 +234,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
             groupbinding.arrowImg.setImageResource(R.drawable.arrow_1_42_down);
         }
         groupbinding.familynameRb.setText(spiltValue[0] + " " + spiltValue[1]);
-        groupbinding.noTxt.setText(spiltValue[2]);
+        groupbinding.noTxt.setText("( "+spiltValue[2]+" )");
         FamilyID = spiltValue[3];
 
         groupbinding.familynameRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

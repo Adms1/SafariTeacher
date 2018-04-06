@@ -30,6 +30,7 @@ import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Activities.DrawableCalendarEvent;
 import com.adms.safariteacher.Adapter.SessionViewStudentListAdapter;
 import com.adms.safariteacher.Model.Session.SessionDetailModel;
+import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
 import com.adms.safariteacher.Utility.Util;
@@ -66,6 +67,7 @@ public class PaymentFragment extends Fragment {
     private Context mContext;
     private Bundle extras = null;
     private static final String TAG = "TNPRequestDebugTag";
+    String sessionIDStr, contatIDstr, type;
 
     public PaymentFragment() {
     }
@@ -78,6 +80,9 @@ public class PaymentFragment extends Fragment {
         rootView = paymentBinding.getRoot();
         mContext = getActivity();
         ((DashBoardActivity) getActivity()).setActionBar(12, "false");
+        sessionIDStr = getArguments().getString("sessionID");
+        contatIDstr = getArguments().getString("contactID");
+        type=getArguments().getString("type");
         init();
 
         return rootView;
@@ -102,7 +107,7 @@ public class PaymentFragment extends Fragment {
         String amount = "";
         String currency = "INR";
         String description = "";
-        String name = "ADMS";//AppConfiguration.CustomerDetail.get("CustomerName")
+        String name = getArguments().getString("username");//AppConfiguration.CustomerDetail.get("CustomerName")
         String email = "saralpayonline@gmail.com";//saralpayonline@gmail.com
         String phone = "7575809733";//7575809733
         String address_line_1 = "-";
@@ -127,6 +132,10 @@ public class PaymentFragment extends Fragment {
         order_id = "A0008180309052207";
         description = "description";
 
+
+        order_id = getArguments().getString("orderID");
+//        amount = getArguments().getString("amount");
+        mode = getArguments().getString("mode");
         //comment from megha
         // Getting these values from Main activity
 //        extras = getIntent().getExtras();
@@ -308,48 +317,21 @@ public class PaymentFragment extends Fragment {
             try {
                 JSONObject resposeData = new JSONObject(jsonResponse);
                 Log.d(TAG, "ResponseJson: " + resposeData.toString());
-// comment by megha
-//                Intent intent = new Intent(getApplicationContext(), LoginScreen.class);
-//                intent.putExtra("transactionId", resposeData.getString("transaction_id"));
-//                intent.putExtra("responseCode", resposeData.getString("response_code"));
-//                intent.putExtra("amount", resposeData.getString("amount"));
-//                intent.putExtra("description", resposeData.getString("description"));
-//                intent.putExtra("order_id", resposeData.getString("order_id"));
-//                ==============
-//                if(extras.containsKey("CardDetails")) {
-//                    intent.putExtra("Trans_Type", "1");
-//                }else {
-//                    intent.putExtra("Trans_Type", "2");
-//                }
-//                startActivity(intent);
-//                finish();
-                Fragment fragment = new OldFamilyListFragment();
+
+                callSessionConfirmationApi();
+                Fragment fragment = new PaymentSucessFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Bundle args = new Bundle();
-                args.putString("session", "13");
-                args.putString("transactionId",  resposeData.getString("transaction_id"));
-                args.putString("responseCode",  resposeData.getString("response_code"));
+                args.putString("transactionId", resposeData.getString("transaction_id"));
+                args.putString("responseCode", resposeData.getString("response_code"));
                 args.putString("amount", resposeData.getString("amount"));
-                args.putString("description",resposeData.getString("description"));
+                args.putString("description", resposeData.getString("description"));
                 args.putString("order_id", resposeData.getString("order_id"));
                 fragment.setArguments(args);
                 fragmentTransaction.replace(R.id.frame, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-                /*if (responseCode.equals("0")) {
-                    Intent intent = new Intent(getApplicationContext(), PaymentSuccessScreen.class);
-                    intent.putExtra("transactionId", transactionId);
-                    intent.putExtra("responseCode", responseCode);
-                    intent.putExtra("responseMessage", responseMessage);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getApplicationContext(), TraknpayResponseActivity.class);
-                    intent.putExtra("transactionId", transactionId);
-                    intent.putExtra("responseCode", responseCode);
-                    intent.putExtra("responseMessage", responseMessage);
-                    startActivity(intent);
-                }*/
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -357,6 +339,55 @@ public class PaymentFragment extends Fragment {
         }
     }
 
-    public void setListner() {
+    //Use for Family and Child Session Confirmation
+    public void callSessionConfirmationApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Session_ContactEnrollment(getSessionConfirmationdetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel sessionconfirmationInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (sessionconfirmationInfoModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                        if (type.equalsIgnoreCase("Child")) {
+                            Util.ping(mContext, "Child Confirmation Successfully.");
+                        } else {
+                            Util.ping(mContext, "Family Confirmation Successfully.");
+                        }
+
+
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getSessionConfirmationdetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("SessionID", sessionIDStr);
+        map.put("ContactID", contatIDstr);
+        return map;
     }
 }

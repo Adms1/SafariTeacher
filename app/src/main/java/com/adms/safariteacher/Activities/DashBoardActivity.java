@@ -400,6 +400,8 @@ public class DashBoardActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Payment");
         } else if (session == 13 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Family List");
+        }else if (session == 14 && flag.equalsIgnoreCase("false")) {
+            getSupportActionBar().setTitle("Payment Sucess");
         } else if (session == 2 && flag.equalsIgnoreCase("true")) {
             getSupportActionBar().setTitle("Student Attendance");
         } else {

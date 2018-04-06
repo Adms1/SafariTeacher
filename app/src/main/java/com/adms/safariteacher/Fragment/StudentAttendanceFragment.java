@@ -281,7 +281,11 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                     }
                     if (attendanceInfo.getSuccess().equalsIgnoreCase("True")) {
                         Util.dismissDialog();
-                        Util.ping(mContext, "Attendance Added Successfully.");
+                        if (classType.equalsIgnoreCase("")){
+                            Util.ping(mContext, "Attendance Added Successfully.");
+                        }else {
+                            Util.ping(mContext, "Attendance Updated Successfully.");
+                        }
                         studentAttendanceBinding.submitBtn.setText("Update");
                         //callGetSessionStudentAttendanceApi();
                         Fragment fragment = new SessionFragment();

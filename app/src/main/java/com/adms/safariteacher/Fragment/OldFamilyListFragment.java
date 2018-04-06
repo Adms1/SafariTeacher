@@ -182,12 +182,85 @@ public class OldFamilyListFragment extends Fragment {
 
     }
 
+//    //Use for Get FamilyList
+//    public void callFamilyListApi() {
+//        if (Util.isNetworkConnected(mContext)) {
+//
+//            Util.showDialog(mContext);
+//            ApiHandler.getApiService().get_FamiliyByFamilyID(getFamilyListDetail(), new retrofit.Callback<TeacherInfoModel>() {
+//                @Override
+//                public void success(TeacherInfoModel familyInfoModel, Response response) {
+//                    Util.dismissDialog();
+//                    if (familyInfoModel == null) {
+//                        Util.ping(mContext, getString(R.string.something_wrong));
+//                        return;
+//                    }
+//                    if (familyInfoModel.getSuccess() == null) {
+//                        Util.ping(mContext, getString(R.string.something_wrong));
+//                        return;
+//                    }
+//                    if (familyInfoModel.getSuccess().equalsIgnoreCase("false")) {
+//                        Util.ping(mContext, getString(R.string.false_msg));
+//                        return;
+//                    }
+//                    if (familyInfoModel.getSuccess().equalsIgnoreCase("True")) {
+//                        finalFamilyDetail = familyInfoModel.getData();
+//                        if (familyInfoModel.getData() != null) {
+//                            fillExpLV();
+//                            expandableSelectStudentListAdapter = new ExpandableSelectStudentListAdapter(getActivity(), listDataHeader, listDataChild, new onChlidClick() {
+//                                @Override
+//                                public void getChilClick() {
+//                                    getFamilyID();
+//                                    Fragment fragment = new AddFamilyFragment();
+//                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                                    Bundle args = new Bundle();
+//                                    args.putString("session", "11");
+//                                    args.putString("type", "Child");
+//                                    args.putString("familyID", familyIdStr);
+//                                    fragment.setArguments(args);
+//                                    fragmentTransaction.replace(R.id.frame, fragment);
+//                                    fragmentTransaction.addToBackStack(null);
+//                                    fragmentTransaction.commit();
+//                                }
+//                            }, new onViewClick() {
+//                                @Override
+//                                public void getViewClick() {
+//                                    ConformationDialog();
+//                                }
+//                            });
+//                            oldFamilyListBinding.lvExpfamilylist.setAdapter(expandableSelectStudentListAdapter);
+//                            oldFamilyListBinding.lvExpfamilylist.expandGroup(0);
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void failure(RetrofitError error) {
+//                    Util.dismissDialog();
+//                    error.printStackTrace();
+//                    error.getMessage();
+//                    Util.ping(mContext, getString(R.string.something_wrong));
+//                }
+//            });
+//        } else {
+//            Util.ping(mContext, getString(R.string.internet_connection_error));
+//        }
+//    }
+//
+//    private Map<String, String> getFamilyListDetail() {
+//        Map<String, String> map = new HashMap<>();
+//        map.put("FamilyID", "0");
+//        return map;
+//    }
+
+
     //Use for Get FamilyList
     public void callFamilyListApi() {
         if (Util.isNetworkConnected(mContext)) {
 
             Util.showDialog(mContext);
-            ApiHandler.getApiService().get_FamiliyByFamilyID(getFamilyListDetail(), new retrofit.Callback<TeacherInfoModel>() {
+            ApiHandler.getApiService().get_ContactEnrollmentByCoachID(getFamilyListDetail(), new retrofit.Callback<TeacherInfoModel>() {
                 @Override
                 public void success(TeacherInfoModel familyInfoModel, Response response) {
                     Util.dismissDialog();
@@ -200,37 +273,45 @@ public class OldFamilyListFragment extends Fragment {
                         return;
                     }
                     if (familyInfoModel.getSuccess().equalsIgnoreCase("false")) {
-                        Util.ping(mContext, getString(R.string.false_msg));
+                        oldFamilyListBinding.listLinear.setVisibility(View.GONE);
+                        oldFamilyListBinding.noRecordTxt.setVisibility(View.VISIBLE);
                         return;
                     }
                     if (familyInfoModel.getSuccess().equalsIgnoreCase("True")) {
                         finalFamilyDetail = familyInfoModel.getData();
                         if (familyInfoModel.getData() != null) {
-                            fillExpLV();
-                            expandableSelectStudentListAdapter = new ExpandableSelectStudentListAdapter(getActivity(), listDataHeader, listDataChild, new onChlidClick() {
-                                @Override
-                                public void getChilClick() {
-                                    getFamilyID();
-                                    Fragment fragment = new AddFamilyFragment();
-                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                    Bundle args = new Bundle();
-                                    args.putString("session", "11");
-                                    args.putString("type", "Child");
-                                    args.putString("familyID", familyIdStr);
-                                    fragment.setArguments(args);
-                                    fragmentTransaction.replace(R.id.frame, fragment);
-                                    fragmentTransaction.addToBackStack(null);
-                                    fragmentTransaction.commit();
-                                }
-                            }, new onViewClick() {
-                                @Override
-                                public void getViewClick() {
-                                    ConformationDialog();
-                                }
-                            });
-                            oldFamilyListBinding.lvExpfamilylist.setAdapter(expandableSelectStudentListAdapter);
-                            oldFamilyListBinding.lvExpfamilylist.expandGroup(0);
+                            if (familyInfoModel.getData().size() > 0) {
+                                oldFamilyListBinding.listLinear.setVisibility(View.VISIBLE);
+                                oldFamilyListBinding.noRecordTxt.setVisibility(View.GONE);
+                                fillExpLV();
+                                expandableSelectStudentListAdapter = new ExpandableSelectStudentListAdapter(getActivity(), listDataHeader, listDataChild, new onChlidClick() {
+                                    @Override
+                                    public void getChilClick() {
+                                        getFamilyID();
+                                        Fragment fragment = new AddFamilyFragment();
+                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        Bundle args = new Bundle();
+                                        args.putString("session", "11");
+                                        args.putString("type", "Child");
+                                        args.putString("familyID", familyIdStr);
+                                        fragment.setArguments(args);
+                                        fragmentTransaction.replace(R.id.frame, fragment);
+                                        fragmentTransaction.addToBackStack(null);
+                                        fragmentTransaction.commit();
+                                    }
+                                }, new onViewClick() {
+                                    @Override
+                                    public void getViewClick() {
+                                        ConformationDialog();
+                                    }
+                                });
+                                oldFamilyListBinding.lvExpfamilylist.setAdapter(expandableSelectStudentListAdapter);
+                                oldFamilyListBinding.lvExpfamilylist.expandGroup(0);
+                            } else {
+                              oldFamilyListBinding.listLinear.setVisibility(View.GONE);
+                              oldFamilyListBinding.noRecordTxt.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }
@@ -250,7 +331,7 @@ public class OldFamilyListFragment extends Fragment {
 
     private Map<String, String> getFamilyListDetail() {
         Map<String, String> map = new HashMap<>();
-        map.put("FamilyID", "0");
+        map.put("CoachID", Util.getPref(mContext, "coachID"));
         return map;
     }
 
@@ -327,30 +408,19 @@ public class OldFamilyListFragment extends Fragment {
                         return;
                     }
                     if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("True")) {
-                            Util.ping(mContext, "Confirmation Successfully.");
-                        Fragment fragment = new SessionFragment();
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        Bundle args = new Bundle();
-                        args.putString("orderID", orderIDStr);
-                        fragment.setArguments(args);
-                        fragmentTransaction.replace(R.id.frame, fragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
-//                        orderIDStr = sessionconfirmationInfoModel.getContactID();
-//                        if (!orderIDStr.equalsIgnoreCase("")) {
-//                            Fragment fragment = new PaymentFragment();
-//                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                            Bundle args = new Bundle();
-//                            args.putString("orderID", orderIDStr);
-//                            fragment.setArguments(args);
-//                            fragmentTransaction.replace(R.id.frame, fragment);
-//                            fragmentTransaction.addToBackStack(null);
-//                            fragmentTransaction.commit();
-//                        }else{
-//                            Util.ping(mContext,"orderID Not found.");
-//                        }
+                        Util.ping(mContext, "Confirmation Successfully.");
+
+
+//                        Fragment fragment = new SessionFragment();
+//                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                        Bundle args = new Bundle();
+//                        args.putString("orderID", orderIDStr);
+//                        fragment.setArguments(args);
+//                        fragmentTransaction.replace(R.id.frame, fragment);
+//                        fragmentTransaction.addToBackStack(null);
+//                        fragmentTransaction.commit();
+
                     }
                 }
 
@@ -371,6 +441,65 @@ public class OldFamilyListFragment extends Fragment {
         Map<String, String> map = new HashMap<>();
         map.put("SessionID", sessionIDStr);
         map.put("ContactID", contatIDstr);
+        return map;
+    }
+
+
+    //Use for paymentRequest
+    public void callpaymentRequestApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Session_ContactEnrollment(getSessionConfirmationdetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel sessionconfirmationInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (sessionconfirmationInfoModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                        Util.ping(mContext, "Confirmation Successfully.");
+
+
+//                        Fragment fragment = new SessionFragment();
+//                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                        Bundle args = new Bundle();
+//                        args.putString("orderID", orderIDStr);
+//                        fragment.setArguments(args);
+//                        fragmentTransaction.replace(R.id.frame, fragment);
+//                        fragmentTransaction.addToBackStack(null);
+//                        fragmentTransaction.commit();
+
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getpaymentRequestdetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("ContactEnrollmentID", sessionIDStr);
+        map.put("Amount", contatIDstr);
         return map;
     }
 

@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public class Util {
     public static Dialog dialog;
     public static final String MyPREFERENCES = "MyPrefs";
     public static SharedPreferences sharedpreferences;
+
     public static boolean checkNetwork(Context context) {
         boolean wifiAvailable = false;
         boolean mobileAvailable = false;
@@ -163,6 +165,7 @@ public class Util {
                 + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
                 + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$").matcher(email).matches();
     }
+
     public static void setPref(Context context, String key, String value) {
         sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -205,10 +208,11 @@ public class Util {
             e.printStackTrace();
         }
 
-        return age>=5;
+        return age >= 5;
     }
 
     public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 123;
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static boolean checkPermission(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;

@@ -76,12 +76,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getInsertedValue();
-                if (!usernameStr.equalsIgnoreCase("") && Util.isValidEmaillId(usernameStr)) {
-//                    if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() > 6 && passwordStr.length() <= 12) {
+                if (!usernameStr.equalsIgnoreCase("") && Util.isValidEmaillId(usernameStr)&&!passwordStr.equalsIgnoreCase("")&& passwordStr.length() >= 6 && passwordStr.length() <= 12) {
                         callTeacherLoginApi();
-//                    } else {
-//                        loginScreenBinding.passwordEdt.setError("Password must be 6-12 Characters.");
-//                    }
                 } else {
                   Util.ping(mContext,"Invalid Email Address or Password.");
                 }
@@ -92,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (loggedin) {
                     LoginManager.getInstance().logOut();
-
                     loggedin = false;
                 } else {
                     mAccessTokenTracker.startTracking();
@@ -235,7 +230,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private Map<String, String> getTeacherLoginDetail() {
-
         Map<String, String> map = new HashMap<>();
         map.put("EmailAddress", usernameStr);
         map.put("Password", passwordStr);

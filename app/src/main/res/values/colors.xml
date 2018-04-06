@@ -29,5 +29,5 @@
     <color name="red_light">#f7e7e7</color>
     <color name="green_dark">#93cdc8</color>
     <color name="green_light">#e1faf8</color>
-
+    <color name="success_green">#3a8705</color>
 </resources>

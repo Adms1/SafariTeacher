@@ -100,4 +100,10 @@
     <string name="false_msg">Record not found</string>
     <string name="true_msg">Send Successfully</string>
     <string name="validation_msg">Enter Proper Value</string>
+
+    <!--Payment String-->
+    <string name="strSuccess">Success  </string>
+    <string name="strYourTranSucc">Your Transaction was successful</string>
+    <string name="strValue">Value</string>
+    <string name="strEntMobNum">Enter mobile number   </string>
 </resources>

@@ -99,7 +99,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     //Use for selectedSessionTimeValue
     String coachIdStr, lessionTypeNameStr = "", sessionNameStr = "", boardStr = "", standardStr = "", streamStr = "", startDateStr = "", endDateStr = "",
             address1Str = "", address2Str = "", regionStr = "", cityStr = "", stateStr = "", zipcodeStr = "", descriptionStr = "", sessionamtStr = "0",
-            sessioncapacityStr = "", alerttimeStr = "", scheduleStr = "", sessiontypeStr = "1";
+            sessioncapacityStr = "", alerttimeStr = "", scheduleStr = "", sessiontypeStr = "1", sessionTypeValueStr = "Recurring";
 
     String sunstartTimeStr, sunendTimeStr, finalsunTimeStr, monstartTimeStr, monendTimeStr, finalmonTimeStr,
             tuestartTimeStr, tueendTimeStr, finaltueTimeStr, wedstartTimeStr, wedendTimeStr, finalwedTimeStr,
@@ -221,9 +221,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 switch (radioButtonId) {
                     case R.id.recurring_rb:
                         sessiontypeStr = "1";
+                        sessionTypeValueStr = addSessionBinding.recurringRb.getText().toString();
                         break;
                     case R.id.single_rb:
                         sessiontypeStr = "2";
+                        sessionTypeValueStr = addSessionBinding.singleRb.getText().toString();
                         break;
 
                 }
@@ -565,11 +567,25 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     scheduleStr = scheduleStr.substring(1, scheduleStr.length());
                     Log.d("responseString ", scheduleStr);
                 }
-                if (!scheduleStr.equalsIgnoreCase("")) {
-                    popularDialog.dismiss();
+                if (sessiontypeStr.equalsIgnoreCase("1")) {
+                    if (!scheduleStr.equalsIgnoreCase("")) {
+                        popularDialog.dismiss();
+                    } else {
+                        Util.ping(mContext, "Please Select Time.");
+                    }
                 } else {
-                    Util.ping(mContext, "Please Select Time.");
+                    if (startDateStr.equalsIgnoreCase(endDateStr)) {
+                        if (!scheduleStr.equalsIgnoreCase("")) {
+                            popularDialog.dismiss();
+                        } else {
+                            Util.ping(mContext, "Please Select Time.");
+                        }
+                    } else {
+                        Util.ping(mContext, "Please select startDate and endDat should be same.");
+                    }
+
                 }
+
 
             }
         });
@@ -583,8 +599,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 datePickerDialog.showYearPickerFirst(false);
                 datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
                 datePickerDialog.setMinDate(Calendar.getInstance());
-                datePickerDialog.setTitle("Select Date From DatePickerDialog");
-
+//                datePickerDialog.setTitle("Select Date From DatePickerDialog");
                 datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
             }
         });
@@ -599,7 +614,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 datePickerDialog.setOkText("Done");
                 datePickerDialog.showYearPickerFirst(false);
                 datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
-                datePickerDialog.setTitle("Select Date From DatePickerDialog");
+//                datePickerDialog.setTitle("Select Date From DatePickerDialog");
                 datePickerDialog.setMinDate(Calendar.getInstance());
                 datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
 
@@ -996,6 +1011,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
 
+//        if(cal2.after(cal1)) {
         while (!cal1.after(cal2)) {
             days.add(new SimpleDateFormat("EE").format(cal1.getTime()));
             cal1.add(Calendar.DATE, 1);
@@ -1140,6 +1156,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         }
         startDateStr = start_date_txt.getText().toString();
         endDateStr = end_date_txt.getText().toString();
+
+
         List<String> days = getDates(start_date_txt.getText().toString(), end_date_txt.getText().toString());
         System.out.println(days);
 
@@ -1195,7 +1213,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             } else {
                 minuteFinal = String.valueOf(minute);
             }
-
             switch (Tag) {
                 case "0":
                     sun_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
@@ -1870,17 +1887,10 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     }
 
 
-//    public static AddSessionFragment newInstance() {
-//
-//        if (fragment == null) {
-//            fragment = new AddSessionFragment();
-//        }
-//        return fragment;
-//    }
-
     public void editSessionValidation() {
 //        sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
         getSelectedSessionTimeValue();
+
         if (!CoachTypeStr.equalsIgnoreCase("1")) {
             if (flag.equalsIgnoreCase("edit")) {
                 if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
@@ -1892,7 +1902,15 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                         if (!zipcodeStr.equalsIgnoreCase("")) {
                                             if (!sessioncapacityStr.equalsIgnoreCase("")) {
                                                 if (!sessionamtStr.equalsIgnoreCase("")) {
-                                                    callUpdateSessionApi();
+                                                    if (sessiontypeStr.equalsIgnoreCase("1")) {
+                                                        callUpdateSessionApi();
+                                                    } else {
+                                                        if (startDateStr.equalsIgnoreCase(endDateStr)) {
+                                                            callUpdateSessionApi();
+                                                        } else {
+                                                            Util.ping(mContext, "Please select session startDate and endDat should be same.");
+                                                        }
+                                                    }
                                                 } else {
                                                     addSessionBinding.sessionPriceEdt.setError("Please enter session amount.");
                                                 }
@@ -1933,7 +1951,15 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                     if (!zipcodeStr.equalsIgnoreCase("")) {
                                                         if (!sessioncapacityStr.equalsIgnoreCase("")) {
                                                             if (!sessionamtStr.equalsIgnoreCase("")) {
-                                                                callCreateSessionApi();
+                                                                if (sessiontypeStr.equalsIgnoreCase("1")) {
+                                                                    callCreateSessionApi();
+                                                                } else {
+                                                                    if (startDateStr.equalsIgnoreCase(endDateStr)) {
+                                                                        callCreateSessionApi();
+                                                                    } else {
+                                                                        Util.ping(mContext, "Please select session startDate and endDat should be same.");
+                                                                    }
+                                                                }
                                                             } else {
                                                                 addSessionBinding.sessionPriceEdt.setError("Please enter session amount.");
                                                             }
@@ -1985,7 +2011,15 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                     if (!zipcodeStr.equalsIgnoreCase("")) {
                                                         if (!sessioncapacityStr.equalsIgnoreCase("")) {
                                                             if (!sessionamtStr.equalsIgnoreCase("")) {
-                                                                callUpdateSessionApi();
+                                                                if (sessiontypeStr.equalsIgnoreCase("1")) {
+                                                                    callUpdateSessionApi();
+                                                                } else {
+                                                                    if (startDateStr.equalsIgnoreCase(endDateStr)) {
+                                                                        callUpdateSessionApi();
+                                                                    } else {
+                                                                        Util.ping(mContext, "Please select session startDate and endDat should be same.");
+                                                                    }
+                                                                }
                                                             } else {
                                                                 addSessionBinding.sessionPriceEdt.setError("Please enter session amount.");
                                                             }
@@ -2038,7 +2072,15 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                                 if (!zipcodeStr.equalsIgnoreCase("")) {
                                                                     if (!sessioncapacityStr.equalsIgnoreCase("")) {
                                                                         if (!sessionamtStr.equalsIgnoreCase("")) {
-                                                                            callCreateSessionApi();
+                                                                            if (sessiontypeStr.equalsIgnoreCase("1")) {
+                                                                                callCreateSessionApi();
+                                                                            } else {
+                                                                                if (startDateStr.equalsIgnoreCase(endDateStr)) {
+                                                                                    callCreateSessionApi();
+                                                                                } else {
+                                                                                    Util.ping(mContext, "Please select session startDate and endDat should be same.");
+                                                                                }
+                                                                            }
                                                                         } else {
                                                                             addSessionBinding.sessionPriceEdt.setError("Please enter session amount.");
                                                                         }
