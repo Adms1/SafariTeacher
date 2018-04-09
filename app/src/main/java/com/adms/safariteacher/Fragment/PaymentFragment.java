@@ -3,6 +3,7 @@ package com.adms.safariteacher.Fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -78,11 +79,13 @@ public class PaymentFragment extends Fragment {
         paymentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_payment, container, false);
 
         rootView = paymentBinding.getRoot();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         mContext = getActivity();
         ((DashBoardActivity) getActivity()).setActionBar(12, "false");
         sessionIDStr = getArguments().getString("sessionID");
         contatIDstr = getArguments().getString("contactID");
-        type=getArguments().getString("type");
+        type = getArguments().getString("type");
         init();
 
         return rootView;
@@ -134,7 +137,7 @@ public class PaymentFragment extends Fragment {
 
 
         order_id = getArguments().getString("orderID");
-//        amount = getArguments().getString("amount");
+        amount = getArguments().getString("amount");
         mode = getArguments().getString("mode");
         //comment from megha
         // Getting these values from Main activity
@@ -317,8 +320,9 @@ public class PaymentFragment extends Fragment {
             try {
                 JSONObject resposeData = new JSONObject(jsonResponse);
                 Log.d(TAG, "ResponseJson: " + resposeData.toString());
-
-                callSessionConfirmationApi();
+                if (resposeData.getString("response_code").equalsIgnoreCase("0")) {
+                    callSessionConfirmationApi();
+                }
                 Fragment fragment = new PaymentSucessFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

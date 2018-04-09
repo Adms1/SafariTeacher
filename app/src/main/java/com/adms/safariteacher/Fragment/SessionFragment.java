@@ -2,6 +2,7 @@ package com.adms.safariteacher.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -86,6 +87,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
             calendarBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_calendar, container, false);
 
             rootView = calendarBinding.getRoot();
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            setRetainInstance(true);
             mContext = getActivity();
             ((DashBoardActivity) getActivity()).setActionBar(0, "true");
             colorList.add(getResources().getColor(R.color.yellow_dark));
@@ -486,7 +489,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
                         + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
                         + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode();
-                int resID = getResources().getIdentifier("myimg", String.valueOf(R.drawable.email), getActivity().getPackageName());
                 DrawableCalendarEvent event = new DrawableCalendarEvent(Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID()),
                         colorList.get(k), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
                         finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
@@ -631,5 +633,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
 
     }
+
+
+
 }
 

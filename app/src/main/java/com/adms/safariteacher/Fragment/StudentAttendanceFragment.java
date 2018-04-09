@@ -1,6 +1,7 @@
 package com.adms.safariteacher.Fragment;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -73,8 +74,9 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
         studentAttendanceBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_student_attendance, container, false);
 
         rootView = studentAttendanceBinding.getRoot();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = getActivity();
-        ((DashBoardActivity) getActivity()).setActionBar(2, "true");
+        ((DashBoardActivity) getActivity()).setActionBar(3, "true");
         initViews();
         setListners();
 

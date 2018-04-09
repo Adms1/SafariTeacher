@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.adms.safariteacher.Fragment.AddFamilyFragment;
 import com.adms.safariteacher.Fragment.AddSessionFragment;
 import com.adms.safariteacher.Fragment.OldFamilyListFragment;
+import com.adms.safariteacher.Fragment.PaymentReportFragment;
 import com.adms.safariteacher.Fragment.SessionFragment;
 import com.adms.safariteacher.Fragment.StudentAttendanceFragment;
 import com.adms.safariteacher.R;
@@ -42,6 +43,7 @@ public class DashBoardActivity extends AppCompatActivity {
 
     private static final String TAG_Session = "Session";
     private static final String TAG_Add_Session = "Add Session";
+    private static final String TAG_Payment_Report = "Payment Report";
     private static final String TAG_Logout = "Logout";
     private static final String TAG_Student_Attendance = "Student Attendance";
 
@@ -78,6 +80,8 @@ public class DashBoardActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SessionFragment()).addToBackStack(null).commit();
+            getSupportActionBar().setTitle(activityTitles[navItemIndex]);
+        }else{
             getSupportActionBar().setTitle(activityTitles[navItemIndex]);
         }
 
@@ -136,11 +140,10 @@ public class DashBoardActivity extends AppCompatActivity {
 //        if (mPendingRunnable != null) {
 //            mHandler.post(mPendingRunnable);
 //        }
-
+//Closing drawer on item click
+        drawer.closeDrawers();
         displayView(navItemIndex);
 
-        //Closing drawer on item click
-        drawer.closeDrawers();
 
         // refresh toolbar menu
         invalidateOptionsMenu();
@@ -241,6 +244,10 @@ public class DashBoardActivity extends AppCompatActivity {
                 myid = fragment.getId();
                 break;
             case 2:
+                fragment = new PaymentReportFragment();
+                myid = fragment.getId();
+                break;
+            case 3:
                 new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
                         .setCancelable(false)
                         .setTitle("Logout")
@@ -251,7 +258,7 @@ public class DashBoardActivity extends AppCompatActivity {
                                 Util.setPref(mContex, "coachID", "");
                                 Util.setPref(mContex, "SessionID", "");
                                 Util.setPref(mContex, "FamilyID", "");
-                                Util.setPref(mContex,"sessionDetailID","");
+                                Util.setPref(mContex, "sessionDetailID", "");
                                 Intent intentLogin = new Intent(DashBoardActivity.this, LoginActivity.class);
                                 startActivity(intentLogin);
                                 finish();
@@ -314,23 +321,27 @@ public class DashBoardActivity extends AppCompatActivity {
                         navItemIndex = 1;
                         CURRENT_TAG = TAG_Add_Session;
                         break;
-                    case R.id.logout:
+                    case R.id.payment_report:
                         navItemIndex = 2;
+                        CURRENT_TAG = TAG_Payment_Report;
+                        break;
+                    case R.id.logout:
+                        navItemIndex = 3;
                         CURRENT_TAG = TAG_Logout;
                         break;
                     default:
                         navItemIndex = 0;
                 }
 
-                    //Checking if the item is in checked state or not, if not make it in checked state
-                    if (menuItem.isChecked()) {
-                        menuItem.setChecked(false);
-                    } else {
-                        menuItem.setChecked(true);
-                    }
+                //Checking if the item is in checked state or not, if not make it in checked state
+                if (menuItem.isChecked()) {
+                    menuItem.setChecked(false);
+                } else {
                     menuItem.setChecked(true);
+                }
+                menuItem.setChecked(true);
 
-                    loadHomeFragment();
+                loadHomeFragment();
                 return true;
             }
         });
@@ -375,10 +386,9 @@ public class DashBoardActivity extends AppCompatActivity {
                 CURRENT_TAG = TAG_Session;
                 loadHomeFragment();
                 return;
-            }
-            else{
+            } else {
 //                loadHomeFragment();
-                Util.ping(mContex,"Press again to exist.");
+                Util.ping(mContex, "Press again to exist.");
             }
         }
 
@@ -400,15 +410,21 @@ public class DashBoardActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Payment");
         } else if (session == 13 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Family List");
-        }else if (session == 14 && flag.equalsIgnoreCase("false")) {
+        } else if (session == 14 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Payment Sucess");
-        } else if (session == 2 && flag.equalsIgnoreCase("true")) {
+        } else if (session == 3 && flag.equalsIgnoreCase("true")) {
             getSupportActionBar().setTitle("Student Attendance");
-        } else {
+        }
+//        else if (session == 15 && flag.equalsIgnoreCase("false")) {
+//            getSupportActionBar().setTitle("Payment Report");
+//        }
+        else {
             getSupportActionBar().setTitle(activityTitles[session]);
         }
     }
-
+//else if (session == 15 && flag.equalsIgnoreCase("false")) {
+//        getSupportActionBar().setTitle("Payment Sucess Report");
+//    }
 
 //    @SuppressWarnings("StatementWithEmptyBody")
 //    @Override

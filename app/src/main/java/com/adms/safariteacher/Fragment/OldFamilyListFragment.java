@@ -2,6 +2,7 @@ package com.adms.safariteacher.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -56,7 +57,7 @@ public class OldFamilyListFragment extends Fragment {
 
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt, session_student_txt, session_student_txt_view, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt;
-    String familyIdStr = "", contatIDstr, orderIDStr, sessionIDStr;
+    String familyIdStr = "", contatIDstr, orderIDStr, sessionIDStr, type;
     ArrayList<String> selectedId;
 
     public OldFamilyListFragment() {
@@ -68,6 +69,7 @@ public class OldFamilyListFragment extends Fragment {
         oldFamilyListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_old_family_list, container, false);
 
         rootView = oldFamilyListBinding.getRoot();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = getActivity();
         ((DashBoardActivity) getActivity()).setActionBar(13, "false");
         sessionIDStr = Util.getPref(mContext, "SessionID");
@@ -156,7 +158,7 @@ public class OldFamilyListFragment extends Fragment {
         location_txt.setText(AppConfiguration.SessionLocation);
         duration_txt.setText(AppConfiguration.SessionDuration);
         time_txt.setText(AppConfiguration.SessionTime);
-
+        AppConfiguration.UserName = session_student_txt.getText().toString();
 
         cancel_txt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,10 +170,10 @@ public class OldFamilyListFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("")) {
-                    callSessionConfirmationApi();
+                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("") && !AppConfiguration.SessionPrice.equalsIgnoreCase("0.00")) {
+                    callpaymentRequestApi();
                 } else {
-                    Util.ping(mContext, "Please fill all Detail");
+                    callSessionConfirmationApi();
                 }
                 confimDialog.dismiss();
             }
@@ -309,8 +311,8 @@ public class OldFamilyListFragment extends Fragment {
                                 oldFamilyListBinding.lvExpfamilylist.setAdapter(expandableSelectStudentListAdapter);
                                 oldFamilyListBinding.lvExpfamilylist.expandGroup(0);
                             } else {
-                              oldFamilyListBinding.listLinear.setVisibility(View.GONE);
-                              oldFamilyListBinding.noRecordTxt.setVisibility(View.VISIBLE);
+                                oldFamilyListBinding.listLinear.setVisibility(View.GONE);
+                                oldFamilyListBinding.noRecordTxt.setVisibility(View.VISIBLE);
                             }
                         }
                     }
@@ -382,6 +384,7 @@ public class OldFamilyListFragment extends Fragment {
             contatIDstr = spilt[2];
             session_student_txt.setText(spilt[0] + " " + spilt[1]);
             session_student_txt_view.setText(spilt[3]);
+            type = spilt[4];
             Log.d("selectedIdStr", contatIDstr);
         }
     }
@@ -444,41 +447,44 @@ public class OldFamilyListFragment extends Fragment {
         return map;
     }
 
-
     //Use for paymentRequest
     public void callpaymentRequestApi() {
         if (Util.isNetworkConnected(mContext)) {
 
             Util.showDialog(mContext);
-            ApiHandler.getApiService().get_Session_ContactEnrollment(getSessionConfirmationdetail(), new retrofit.Callback<TeacherInfoModel>() {
+            ApiHandler.getApiService().get_GeneratePaymentRequest(getpaymentRequestdetail(), new retrofit.Callback<TeacherInfoModel>() {
                 @Override
-                public void success(TeacherInfoModel sessionconfirmationInfoModel, Response response) {
+                public void success(TeacherInfoModel paymentRequestModel, Response response) {
                     Util.dismissDialog();
-                    if (sessionconfirmationInfoModel == null) {
+                    if (paymentRequestModel == null) {
                         Util.ping(mContext, getString(R.string.something_wrong));
                         return;
                     }
-                    if (sessionconfirmationInfoModel.getSuccess() == null) {
+                    if (paymentRequestModel.getSuccess() == null) {
                         Util.ping(mContext, getString(R.string.something_wrong));
                         return;
                     }
-                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                    if (paymentRequestModel.getSuccess().equalsIgnoreCase("false")) {
                         Util.ping(mContext, getString(R.string.false_msg));
                         return;
                     }
-                    if (sessionconfirmationInfoModel.getSuccess().equalsIgnoreCase("True")) {
-                        Util.ping(mContext, "Confirmation Successfully.");
-
-
-//                        Fragment fragment = new SessionFragment();
-//                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                        Bundle args = new Bundle();
-//                        args.putString("orderID", orderIDStr);
-//                        fragment.setArguments(args);
-//                        fragmentTransaction.replace(R.id.frame, fragment);
-//                        fragmentTransaction.addToBackStack(null);
-//                        fragmentTransaction.commit();
+                    if (paymentRequestModel.getSuccess().equalsIgnoreCase("True")) {
+                        orderIDStr = paymentRequestModel.getOrderID();
+                        Fragment fragment = new PaymentFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        Bundle args = new Bundle();
+                        args.putString("orderID", orderIDStr);
+                        args.putString("amount", AppConfiguration.SessionPrice);
+                        args.putString("mode", "TEST");
+                        args.putString("username", session_student_txt.getText().toString());
+                        args.putString("sessionID", sessionIDStr);
+                        args.putString("contactID", contatIDstr);
+                        args.putString("type", type);
+                        fragment.setArguments(args);
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
 
                     }
                 }
@@ -498,10 +504,10 @@ public class OldFamilyListFragment extends Fragment {
 
     private Map<String, String> getpaymentRequestdetail() {
         Map<String, String> map = new HashMap<>();
-        map.put("ContactEnrollmentID", sessionIDStr);
-        map.put("Amount", contatIDstr);
+        map.put("ContactID", contatIDstr);
+        map.put("SessionID", sessionIDStr);
+        map.put("Amount", AppConfiguration.SessionPrice);
         return map;
     }
-
 }
 

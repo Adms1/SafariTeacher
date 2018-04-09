@@ -30,4 +30,8 @@
     <color name="green_dark">#93cdc8</color>
     <color name="green_light">#e1faf8</color>
     <color name="success_green">#3a8705</color>
+    <color name="sucees_bg">#dedede</color>
+    <color name="selected_header">#f7c466</color>
+    <color name="unselected_header">#d1d1d1</color>
+    <color name="light_yello">#f9f2e5</color>
 </resources>

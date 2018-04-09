@@ -76,9 +76,8 @@
     <string-array name="nav_item_activity_titles">
         <item>Session Calendar</item>
         <item>Add Session</item>
-        <!--<item>Family List</item>-->
-        <item>Student Attendance</item>
-
+        <item>Payment Report</item>
+        <item></item>
     </string-array>
 
 
@@ -106,4 +105,8 @@
     <string name="strYourTranSucc">Your Transaction was successful</string>
     <string name="strValue">Value</string>
     <string name="strEntMobNum">Enter mobile number   </string>
+    <string name="strStartDate">Start Date</string>
+    <string name="strEndDate">End Date</string>
+    <string name="strShow">Show</string>
+
 </resources>

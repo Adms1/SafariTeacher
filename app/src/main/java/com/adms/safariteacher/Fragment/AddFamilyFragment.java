@@ -3,6 +3,7 @@ package com.adms.safariteacher.Fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -64,6 +65,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         addFamilyBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_family, container, false);
 
         rootView = addFamilyBinding.getRoot();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = getActivity();
         pageTitle = getArguments().getString("session");
         type = getArguments().getString("type");
@@ -240,7 +242,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
 
                         Util.setPref(mContext, "FamilyID", familyInfoModel.getContactID());
                         contatIDstr = familyInfoModel.getContactID();
-                        Util.ping(mContext, "Family Added Sucessfully.");
+//                        Util.ping(mContext, "Family Added Sucessfully.");
                         ConformationDialog();
                     }
                 }
@@ -356,7 +358,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                     }
                     if (childInfoModel.getSuccess().equalsIgnoreCase("True")) {
                         contatIDstr = childInfoModel.getContactID();
-                        Util.ping(mContext, "Child Added Sucessfully.");
+//                        Util.ping(mContext, "Child Added Sucessfully.");
                         ConformationDialog();
                     }
                 }

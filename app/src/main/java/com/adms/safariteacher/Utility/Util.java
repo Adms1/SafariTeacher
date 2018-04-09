@@ -112,7 +112,15 @@ public class Util {
 
     public static void dismissDialog() {
         if (dialog != null && dialog.isShowing())
-            dialog.dismiss();
+            try {
+                dialog.dismiss();
+            } catch (final IllegalArgumentException e) {
+                // Do nothing.
+            } catch (final Exception e) {
+                // Do nothing.
+            } finally {
+                dialog = null;
+            }
     }
 
 

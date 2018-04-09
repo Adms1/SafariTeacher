@@ -119,7 +119,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                     switch (RadioButtonid) {
                         case R.id.name_rb:
                             sesionDeatil = new ArrayList<String>();
-                            sesionDeatil.add(childDetail.getFirstName() + "|" + childDetail.getLastName() + "|" + childDetail.getContactID() + "|" + "STUDENT NAME");
+                            sesionDeatil.add(childDetail.getFirstName() + "|" + childDetail.getLastName() + "|" + childDetail.getContactID() + "|" + "STUDENT NAME" + "|" + "Child");
                             onViewClick.getViewClick();
                             itembinding.nameRb.setChecked(false);
                             break;
@@ -166,7 +166,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                         headerBinding.tableRowHeader.setVisibility(View.GONE);
                     } else {
                         headerBinding.tableRowNodata.setVisibility(View.GONE);
-                        headerBinding.tableRowHeader.setVisibility(View.VISIBLE);
+                        headerBinding.tableRowHeader.setVisibility(View.GONE);
                     }
                 }
             }
@@ -216,25 +216,27 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                 R.layout.list_group_family_list, parent, false);
         convertView = groupbinding.getRoot();
 
-        if (groupPosition % 4 == 0) {
-            convertView.setBackgroundResource(R.drawable.first_row);
-        } else if (groupPosition % 4 == 1) {
-            convertView.setBackgroundResource(R.drawable.second_row);
-        } else if (groupPosition % 4 == 2) {
-            convertView.setBackgroundResource(R.drawable.third_row);
-        } else {
-            convertView.setBackgroundResource(R.drawable.fourth_row);
-        }
+//        if (groupPosition % 4 == 0) {
+//            convertView.setBackgroundResource(R.drawable.first_row);
+//        } else if (groupPosition % 4 == 1) {
+//            convertView.setBackgroundResource(R.drawable.second_row);
+//        } else if (groupPosition % 4 == 2) {
+//            convertView.setBackgroundResource(R.drawable.third_row);
+//        } else {
+//            convertView.setBackgroundResource(R.drawable.fourth_row);
+//        }
 
         if (isExpanded) {
-            groupbinding.arrowImg.setBackgroundResource(R.drawable.round_yello);
-            groupbinding.arrowImg.setImageResource(R.drawable.arrow_1_42_up);
+            convertView.setBackgroundResource(R.drawable.selected_header);
+//            groupbinding.arrowImg.setBackgroundResource(R.drawable.round_yello);
+            groupbinding.arrowImg.setImageResource(R.drawable.up_add_family);
         } else {
-            groupbinding.arrowImg.setBackgroundResource(R.drawable.round_yello);
-            groupbinding.arrowImg.setImageResource(R.drawable.arrow_1_42_down);
+            convertView.setBackgroundResource(R.drawable.unselected_header);
+//            groupbinding.arrowImg.setBackgroundResource(R.drawable.round_yello);
+            groupbinding.arrowImg.setImageResource(R.drawable.down_add_family);
         }
         groupbinding.familynameRb.setText(spiltValue[0] + " " + spiltValue[1]);
-        groupbinding.noTxt.setText("( "+spiltValue[2]+" )");
+        groupbinding.noTxt.setText(spiltValue[2]);
         FamilyID = spiltValue[3];
 
         groupbinding.familynameRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -244,7 +246,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
                 switch (RadioButtonid) {
                     case R.id.familyname_rb:
                         sesionDeatil = new ArrayList<String>();
-                        sesionDeatil.add(spiltValue[0] + "|" + spiltValue[1] + "|" + spiltValue[4] + "|" + "FAMILY NAME");
+                        sesionDeatil.add(spiltValue[0] + "|" + spiltValue[1] + "|" + spiltValue[4] + "|" + "FAMILY NAME" + "|" + "Family");
                         onViewClick.getViewClick();
                         groupbinding.familynameRb.setChecked(false);
                         break;

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -121,6 +122,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         addSessionBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_session, container, false);
 
         rootView = addSessionBinding.getRoot();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = getActivity();
         flag = getArguments().getString("flag");
 
@@ -470,7 +472,6 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             end_date_txt.setText(Util.getTodaysDate());
         }
 
-
         List<String> days = getDates(start_date_txt.getText().toString(), end_date_txt.getText().toString());
         System.out.println(days);
         cancel_btn.setOnClickListener(new View.OnClickListener() {
@@ -581,7 +582,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                             Util.ping(mContext, "Please Select Time.");
                         }
                     } else {
-                        Util.ping(mContext, "Please select startDate and endDat should be same.");
+                        Util.ping(mContext, "Please select session start date and end date should be same.");
                     }
 
                 }
@@ -977,7 +978,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
-                sun_end_add_session_btn.setText("+");
+                sat_end_add_session_btn.setText("+");
                 sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
                 sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
                 if (!sat_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
@@ -1018,6 +1019,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 
         }
         Log.d("days", "" + days);
+
+
         sun_start_linear.setEnabled(false);
         sun_end_linear.setEnabled(false);
         sun_start_linear.setAlpha(0.2f);
@@ -1149,14 +1152,89 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             m = "0" + m;
         }
         dateFinal = d + "/" + m + "/" + y;
+        if (sessiontypeStr.equalsIgnoreCase("1")) {
         if (isFromDate) {
             start_date_txt.setText(dateFinal);
         } else {
             end_date_txt.setText(dateFinal);
         }
+        } else {
+            start_date_txt.setText(dateFinal);
+            end_date_txt.setText(dateFinal);
+            end_date_txt.setEnabled(false);
+        }
         startDateStr = start_date_txt.getText().toString();
         endDateStr = end_date_txt.getText().toString();
 
+        sun_start_time_txt.setText("Add");
+        sun_start_add_session_btn.setText("+");
+        sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        sun_end_time_txt.setText("Add");
+        sun_end_add_session_btn.setText("+");
+        sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        mon_start_time_txt.setText("Add");
+        mon_start_add_session_btn.setText("+");
+        mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        mon_end_time_txt.setText("Add");
+        mon_end_add_session_btn.setText("+");
+        mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        tue_start_time_txt.setText("Add");
+        tue_start_add_session_btn.setText("+");
+        tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        tue_end_time_txt.setText("Add");
+        tue_end_add_session_btn.setText("+");
+        tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        wed_start_time_txt.setText("Add");
+        wed_start_add_session_btn.setText("+");
+        wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        wed_end_time_txt.setText("Add");
+        wed_end_add_session_btn.setText("+");
+        wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        thu_start_time_txt.setText("Add");
+        thu_start_add_session_btn.setText("+");
+        thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        thu_end_time_txt.setText("Add");
+        thu_end_add_session_btn.setText("+");
+        thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        fri_start_time_txt.setText("Add");
+        fri_start_add_session_btn.setText("+");
+        fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        fri_end_time_txt.setText("Add");
+        fri_end_add_session_btn.setText("+");
+        fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        sat_start_time_txt.setText("Add");
+        sat_start_add_session_btn.setText("+");
+        sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+        sat_end_time_txt.setText("Add");
+        sat_end_add_session_btn.setText("+");
+        sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+        sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
         List<String> days = getDates(start_date_txt.getText().toString(), end_date_txt.getText().toString());
         System.out.println(days);
@@ -1908,7 +1986,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                         if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                             callUpdateSessionApi();
                                                         } else {
-                                                            Util.ping(mContext, "Please select session startDate and endDat should be same.");
+                                                            Util.ping(mContext, "Please select session start date and end date should be same.");
                                                         }
                                                     }
                                                 } else {
@@ -1957,7 +2035,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                                     if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                                         callCreateSessionApi();
                                                                     } else {
-                                                                        Util.ping(mContext, "Please select session startDate and endDat should be same.");
+                                                                        Util.ping(mContext, "Please select session start date and end date should be same.");
                                                                     }
                                                                 }
                                                             } else {
@@ -2017,7 +2095,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                                     if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                                         callUpdateSessionApi();
                                                                     } else {
-                                                                        Util.ping(mContext, "Please select session startDate and endDat should be same.");
+                                                                        Util.ping(mContext, "Please select session start date and end date should be same.");
                                                                     }
                                                                 }
                                                             } else {
@@ -2078,7 +2156,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                                                 if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                                                     callCreateSessionApi();
                                                                                 } else {
-                                                                                    Util.ping(mContext, "Please select session startDate and endDat should be same.");
+                                                                                    Util.ping(mContext, "Please select session start date and end date should be same.");
                                                                                 }
                                                                             }
                                                                         } else {
@@ -2151,5 +2229,10 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         addSessionBinding.paidRb.setEnabled(false);
         addSessionBinding.sportsEdt.setEnabled(false);
         addSessionBinding.alertBtn.setEnabled(false);
+    }
+
+    public void chnageValue() {
+
+
     }
 }

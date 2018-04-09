@@ -108,4 +108,8 @@ public interface WebServices {
     @POST("/Add_Payment")
     public void get_Add_Payment(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
 
+    @FormUrlEncoded
+    @POST("/Get_Payment_ByCoachID")
+    public void get_Payment_ByCoachID(@FieldMap Map<String, String> map, Callback<TeacherInfoModel> callback);
+
 }

@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/rating_bar"
+        android:background="@color/sucees_bg"
         android:orientation="vertical"
         android:weightSum="2">
 
@@ -13,13 +13,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_below="@+id/rlTopBar"
-            android:layout_weight="1.81"
+            android:layout_weight="2"
             android:paddingBottom="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.81"
+                android:layout_weight="2"
                 android:orientation="vertical">
 
                 <TextView
@@ -57,7 +57,7 @@
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
                             android:scaleType="fitXY"
-                            android:src="@drawable/success_icon" />
+                            android:src="@drawable/circle_sucess" />
 
                         <TextView
                             android:id="@+id/txtSucessFail"
@@ -83,7 +83,7 @@
                             android:gravity="center"
                             android:padding="0dp"
                             android:text="@string/strYourTranSucc"
-                            android:textColor="@color/text_color"
+                            android:textColor="@color/success_green"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                     </RelativeLayout>
@@ -130,7 +130,7 @@
                             android:layout_marginBottom="20dp"
                             android:layout_marginTop="20dp"
                             android:background="@color/search_boder"
-                            android:text="Submit"
+                            android:text="Done"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
                             android:textSize="16sp"
@@ -148,7 +148,8 @@
             android:layout_weight="0.2"
             android:background="@color/search_boder"
             android:gravity="bottom|start"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/session_email"

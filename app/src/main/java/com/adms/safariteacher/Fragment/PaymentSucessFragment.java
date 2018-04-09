@@ -2,6 +2,7 @@ package com.adms.safariteacher.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import com.adms.safariteacher.Utility.AppConfiguration;
 import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentCalendarBinding;
 import com.adms.safariteacher.databinding.FragmentPaymentBinding;
+import com.adms.safariteacher.databinding.FragmentPaymentSucessBinding;
 import com.github.tibolte.agendacalendarview.CalendarPickerController;
 import com.github.tibolte.agendacalendarview.models.CalendarEvent;
 import com.github.tibolte.agendacalendarview.models.DayItem;
@@ -60,14 +62,11 @@ import static android.view.View.GONE;
 
 public class PaymentSucessFragment extends Fragment {
 
-    //    FragmentPaymentSucessBinding paymentSucessBinding;
+    FragmentPaymentSucessBinding paymentSucessBinding;
     private View rootView;
     private Context mContext;
 
     String status;
-    private ImageView imvSuccessFail;
-    private TextView txtUserName, txtSucessFail, txtSucessFailDesc, txtTransactionID, txtValue, txtEmail;
-    private Button btnSendReceipt, btnNewCharge;
 
     public PaymentSucessFragment() {
     }
@@ -76,9 +75,9 @@ public class PaymentSucessFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        paymentSucessBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_payment_sucess, container, false);
-        rootView = inflater.inflate(R.layout.fragment_payment_sucess, container, false);
-//        rootView = paymentSucessBinding.getRoot();
+        paymentSucessBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_payment_sucess, container, false);
+        rootView = paymentSucessBinding.getRoot();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = getActivity();
         ((DashBoardActivity) getActivity()).setActionBar(14, "false");
 
@@ -89,43 +88,31 @@ public class PaymentSucessFragment extends Fragment {
     }
 
     public void init() {
-
-        txtUserName = (TextView) rootView.findViewById(R.id.txtUserName);
-        txtSucessFail = (TextView) rootView.findViewById(R.id.txtSucessFail);
-        txtSucessFailDesc = (TextView) rootView.findViewById(R.id.txtSucessFailDesc);
-        txtTransactionID = (TextView) rootView.findViewById(R.id.txtTransactionID);
-        txtValue = (TextView) rootView.findViewById(R.id.txtValue);
-        btnNewCharge = (Button) rootView.findViewById(R.id.btnNewCharge);
-        imvSuccessFail = (ImageView) rootView.findViewById(R.id.imvSuccessFail);
-
-
-        txtUserName.setText(AppConfiguration.UserName);
+        Log.d("userName", AppConfiguration.UserName);
+        paymentSucessBinding.txtUserName.setText(AppConfiguration.UserName);
         if (getArguments().getString("responseCode").equalsIgnoreCase("0")) {
             status = "success";
-            imvSuccessFail.setImageResource(R.drawable.success_icon);
-            txtSucessFail.setText("Success");
-            txtSucessFailDesc.setText("Your transaction was successful");
-            txtTransactionID.setText(getArguments().getString("transactionId"));
-            txtValue.setText(getArguments().getString("amount"));
-            btnNewCharge.setText("Done");
-
-
+            paymentSucessBinding.imvSuccessFail.setImageResource(R.drawable.circle_sucess);
+            paymentSucessBinding.txtSucessFail.setText("Success");
+            paymentSucessBinding.txtSucessFailDesc.setText("Your transaction was successful");
+            paymentSucessBinding.txtTransactionID.setText(getArguments().getString("transactionId"));
+            paymentSucessBinding.txtValue.setText(getArguments().getString("amount"));
+            paymentSucessBinding.btnNewCharge.setText("Done");
         } else {
-            imvSuccessFail.setImageResource(R.drawable.fail_icon);
+            paymentSucessBinding.imvSuccessFail.setImageResource(R.drawable.failer);
             status = "fail";
-            txtSucessFail.setText("Failure");
-            txtSucessFailDesc.setText("Your transaction was not successful\nPlease try again with another card.");
-            txtTransactionID.setVisibility(GONE);
-            txtValue.setVisibility(GONE);
-            btnNewCharge.setText("Try Again");
-
+            paymentSucessBinding.txtSucessFail.setTextColor(getResources().getColor(R.color.remarks));
+            paymentSucessBinding.txtSucessFail.setText("Failure");
+            paymentSucessBinding.txtSucessFailDesc.setTextColor(getResources().getColor(R.color.text_color));
+            paymentSucessBinding.txtSucessFailDesc.setText("Your transaction was not successful\nPlease try again with another card.");
+            paymentSucessBinding.txtTransactionID.setVisibility(GONE);
+            paymentSucessBinding.txtValue.setVisibility(GONE);
+            paymentSucessBinding.btnNewCharge.setText("Try Again");
         }
-
-
     }
 
     public void setListner() {
-        btnNewCharge.setOnClickListener(new View.OnClickListener() {
+        paymentSucessBinding.btnNewCharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new SessionFragment();
@@ -138,11 +125,9 @@ public class PaymentSucessFragment extends Fragment {
         });
     }
 
-
     //Use for Family and Child Session Add PAyment
     public void callSessionPaymentApi() {
         if (Util.isNetworkConnected(mContext)) {
-
 //            Util.showDialog(mContext);
             ApiHandler.getApiService().get_Add_Payment(getSessionPaymentdetail(), new retrofit.Callback<TeacherInfoModel>() {
                 @Override
@@ -188,7 +173,5 @@ public class PaymentSucessFragment extends Fragment {
         map.put("Status", status);
         return map;
     }
-
-
 }
 

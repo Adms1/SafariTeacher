@@ -53,6 +53,75 @@ public class FamilyDetailModel {
     @Expose
     private List<ChildDetailModel> familyContact = new ArrayList<ChildDetailModel>();
 
+    //    ================PAyment Report====================
+    @SerializedName("PaymentAmount")
+    @Expose
+    private String paymentAmount;
+    @SerializedName("PaymentDate")
+    @Expose
+    private String paymentDate;
+    @SerializedName("TrackAndPayPayment_ID")
+    @Expose
+    private String trackAndPayPaymentID;
+    @SerializedName("Order_ID")
+    @Expose
+    private String orderID;
+    @SerializedName("Name")
+    @Expose
+    private String name;
+    @SerializedName("PaymentStatus")
+    @Expose
+    private String paymentStatus;
+
+    public String getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount(String paymentAmount) {
+        this.paymentAmount = paymentAmount;
+    }
+
+    public String getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(String paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public String getTrackAndPayPaymentID() {
+        return trackAndPayPaymentID;
+    }
+
+    public void setTrackAndPayPaymentID(String trackAndPayPaymentID) {
+        this.trackAndPayPaymentID = trackAndPayPaymentID;
+    }
+
+    public String getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(String orderID) {
+        this.orderID = orderID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+//    ===========================
+
     public String getFamilyID() {
         return familyID;
     }

@@ -76,7 +76,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                 emailStr = registrationBinding.emailEdt.getText().toString();
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
-                        callCheckEmailIdApi();
+//                        callCheckEmailIdApi();
                     } else {
                         registrationBinding.emailEdt.setError("Please Enter Valid Email Address.");
                     }
@@ -101,6 +101,8 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
             @Override
             public void onClick(View view) {
                 getInsertedValue();
+
+
                 if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
                     if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
                         if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
@@ -108,7 +110,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                                 if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                     if (!gendarIdStr.equalsIgnoreCase("")) {
                                         if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
-                                            callTeacherApi();
+                                            callCheckEmailIdApi();
                                         } else {
                                             registrationBinding.dateOfBirthEdt.setError("Please Select Your Birth Date.");
                                         }
@@ -289,6 +291,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                     }
                     if (teacherInfoModel.getSuccess().equalsIgnoreCase("false")) {
 //                        Util.ping(mContext, getString(R.string.false_msg));
+                        callTeacherApi();
                         return;
                     }
                     if (teacherInfoModel.getSuccess().equalsIgnoreCase("True")) {
