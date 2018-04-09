@@ -22,14 +22,30 @@
                 android:layout_marginRight="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:orientation="vertical">
-
+                <Spinner
+                    android:id="@+id/class_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/_3sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/dw1"
+                    android:forceHasOverlappingRendering="false"
+                    android:overlapAnchor="false"
+                    android:gravity="left|center_vertical"
+                    android:paddingBottom="1dp"
+                    android:paddingTop="@dimen/_3sdp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_11sdp" />
 
                 <EditText
                     android:id="@+id/first_name_edt"
                     style="@style/AutoComplete"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_30sdp"
-                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:drawableRight="@drawable/user_white"
                     android:hint="@string/first_name" />
 

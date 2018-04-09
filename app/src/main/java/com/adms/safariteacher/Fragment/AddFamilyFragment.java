@@ -20,7 +20,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
@@ -33,8 +36,10 @@ import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.FragmentAddFamilyBinding;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +60,8 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr;
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt, session_student_txt_view;
+    TeacherInfoModel classListInfo;
+    HashMap<Integer, String> spinnerClassMap;
 
     public AddFamilyFragment() {
     }
@@ -83,6 +90,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         Year = calendar.get(Calendar.YEAR);
         Month = calendar.get(Calendar.MONTH);
         Day = calendar.get(Calendar.DAY_OF_MONTH);
+        callClassTypeDetailApi();
     }
 
     public void setListners() {
@@ -153,7 +161,22 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 }
             }
         });
+        addFamilyBinding.classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String name = addFamilyBinding.classSpinner.getSelectedItem().toString();
+                String getid = spinnerClassMap.get(addFamilyBinding.classSpinner.getSelectedItemPosition());
 
+                Log.d("value", name + " " + getid);
+                contactTypeIDStr = getid.toString();
+                Log.d("classTypeIDStr", contactTypeIDStr);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         addFamilyBinding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -328,11 +351,11 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         passwordStr = addFamilyBinding.passwordEdt.getText().toString();
         phonenoStr = addFamilyBinding.phoneNoEdt.getText().toString();
         dateofbirthStr = addFamilyBinding.dateOfBirthEdt.getText().toString();
-        if (type.equalsIgnoreCase("Family")) {
-            contactTypeIDStr = "1";
-        } else {
-            contactTypeIDStr = "3";
-        }
+//        if (type.equalsIgnoreCase("Family")) {
+//            contactTypeIDStr = "1";
+//        } else {
+//            contactTypeIDStr = "3";
+//        }
     }
 
     //Use for Family add NewChild
@@ -425,7 +448,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("") && !AppConfiguration.SessionPrice.equalsIgnoreCase("0.00")) {
                     callpaymentRequestApi();
                 } else {
-                   callSessionConfirmationApi();
+                    callSessionConfirmationApi();
                 }
                 confimDialog.dismiss();
             }
@@ -567,6 +590,88 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         map.put("SessionID", sessionIDStr);
         map.put("ContactID", contatIDstr);
         return map;
+    }
+
+    //Use for ClassTypeDetail
+    public void callClassTypeDetailApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_ContactType(getClassTypeDeatil(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel classInfo, Response response) {
+                    Util.dismissDialog();
+                    if (classInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (classInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (classInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.dismissDialog();
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (classInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (classInfo.getData().size() > 0) {
+                            classListInfo = classInfo;
+                            fillClassTypeSpinner();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getClassTypeDeatil() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillClassTypeSpinner() {
+        ArrayList<Integer> classTypeId = new ArrayList<Integer>();
+        for (int i = 0; i < classListInfo.getData().size(); i++) {
+            classTypeId.add(Integer.valueOf(classListInfo.getData().get(i).getContactTypeID()));
+        }
+        ArrayList<String> className = new ArrayList<String>();
+        for (int j = 0; j < classListInfo.getData().size(); j++) {
+            className.add(classListInfo.getData().get(j).getContactTypeName());
+        }
+
+        String[] spinnerclassIdArray = new String[classTypeId.size()];
+
+        spinnerClassMap = new HashMap<Integer, String>();
+        for (int i = 0; i < classTypeId.size(); i++) {
+            spinnerClassMap.put(i, String.valueOf(classTypeId.get(i)));
+            spinnerclassIdArray[i] = className.get(i).trim();
+        }
+        try {
+            Field popup = Spinner.class.getDeclaredField("mPopup");
+            popup.setAccessible(true);
+
+            // Get private mPopup member variable and try cast to ListPopupWindow
+            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addFamilyBinding.classSpinner);
+
+            popupWindow.setHeight(spinnerclassIdArray.length > 4 ? 500 : spinnerclassIdArray.length * 100);
+        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+            // silently fail...
+        }
+
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnerclassIdArray);
+        addFamilyBinding.classSpinner.setAdapter(adapterTerm);
     }
 }
 

@@ -120,8 +120,34 @@ public class FamilyDetailModel {
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
-//    ===========================
 
+    //    ===========================
+//==============ClassType========================
+    @SerializedName("ContactType_ID")
+    @Expose
+    private String contactTypeID;
+    @SerializedName("ContactTypeOrder")
+    @Expose
+    private String contactTypeOrder;
+
+
+    public String getContactTypeID() {
+        return contactTypeID;
+    }
+
+    public void setContactTypeID(String contactTypeID) {
+        this.contactTypeID = contactTypeID;
+    }
+
+    public String getContactTypeOrder() {
+        return contactTypeOrder;
+    }
+
+    public void setContactTypeOrder(String contactTypeOrder) {
+        this.contactTypeOrder = contactTypeOrder;
+    }
+
+    //    ===========================
     public String getFamilyID() {
         return familyID;
     }
