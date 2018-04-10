@@ -196,7 +196,7 @@ public class Util {
             Calendar dob = Calendar.getInstance();
             dob.setTime(date1);
             if (dob.after(now)) {
-                throw new IllegalArgumentException("Can't be born in the future");
+//                throw new IllegalArgumentException("Can't be born in the future");
             }
             int year1 = now.get(Calendar.YEAR);
             int year2 = dob.get(Calendar.YEAR);

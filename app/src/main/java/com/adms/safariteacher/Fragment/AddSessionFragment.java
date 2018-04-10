@@ -100,7 +100,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     //Use for selectedSessionTimeValue
     String coachIdStr, lessionTypeNameStr = "", sessionNameStr = "", boardStr = "", standardStr = "", streamStr = "", startDateStr = "", endDateStr = "",
             address1Str = "", address2Str = "", regionStr = "", cityStr = "", stateStr = "", zipcodeStr = "", descriptionStr = "", sessionamtStr = "0",
-            sessioncapacityStr = "", alerttimeStr = "", scheduleStr = "", sessiontypeStr = "1", sessionTypeValueStr = "Recurring";
+            sessioncapacityStr = "", alerttimeStr = "", scheduleStr = "", sessiontypeStr = "1", sessionTypeValueStr = "Recurring", doneStartDate, doneEndDate,selectprice;
 
     String sunstartTimeStr, sunendTimeStr, finalsunTimeStr, monstartTimeStr, monendTimeStr, finalmonTimeStr,
             tuestartTimeStr, tueendTimeStr, finaltueTimeStr, wedstartTimeStr, wedendTimeStr, finalwedTimeStr,
@@ -111,6 +111,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 
     ArrayList<String> scheduleArray;
     ArrayList<String> newEnteryArray;
+
     SessionDetailModel dataResponse;
 
     public AddSessionFragment() {
@@ -206,12 +207,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 switch (radioButtonId) {
                     case R.id.free_rb:
                         addSessionBinding.sessionPriceEdt.setVisibility(View.GONE);
-                        addSessionBinding.sessionPriceEdt.setText("0");
-//                        sessionamtStr = "0";
+                        selectprice=addSessionBinding.freeRb.getText().toString();
                         break;
                     case R.id.paid_rb:
                         addSessionBinding.sessionPriceEdt.setVisibility(View.VISIBLE);
-                        sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
+                        selectprice=addSessionBinding.paidRb.getText().toString();
                         break;
                 }
             }
@@ -468,8 +468,95 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 }
             }
         } else {
-            start_date_txt.setText(Util.getTodaysDate());
-            end_date_txt.setText(Util.getTodaysDate());
+            if (!scheduleStr.equalsIgnoreCase("")) {
+                start_date_txt.setText(doneStartDate);
+                end_date_txt.setText(doneStartDate);
+                String[] spiltPipes = scheduleStr.split("\\|");
+                String[] spiltComma;
+                String[] spiltDash;
+                Log.d("spilt", "" + spiltPipes.toString());
+                for (int i = 0; i < spiltPipes.length; i++) {
+                    spiltComma = spiltPipes[i].split("\\,");
+                    spiltDash = spiltComma[1].split("\\-");
+                    switch (spiltComma[0]) {
+                        case "sun":
+                            sun_start_time_txt.setText(spiltDash[0]);
+                            sun_end_time_txt.setText(spiltDash[1]);
+                            sun_start_add_session_btn.setText("x");
+                            sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            sun_end_add_session_btn.setText("x");
+                            sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            break;
+                        case "mon":
+                            mon_start_time_txt.setText(spiltDash[0]);
+                            mon_end_time_txt.setText(spiltDash[1]);
+                            mon_start_add_session_btn.setText("x");
+                            mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            mon_end_add_session_btn.setText("x");
+                            mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            break;
+                        case "tue":
+                            tue_start_time_txt.setText(spiltDash[0]);
+                            tue_end_time_txt.setText(spiltDash[1]);
+                            tue_start_add_session_btn.setText("x");
+                            tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            tue_end_add_session_btn.setText("x");
+                            tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            break;
+                        case "wed":
+                            wed_start_time_txt.setText(spiltDash[0]);
+                            wed_end_time_txt.setText(spiltDash[1]);
+                            wed_start_add_session_btn.setText("x");
+                            wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            wed_end_add_session_btn.setText("x");
+                            wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            break;
+                        case "thu":
+                            thu_start_time_txt.setText(spiltDash[0]);
+                            thu_end_time_txt.setText(spiltDash[1]);
+                            thu_start_add_session_btn.setText("x");
+                            thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            thu_end_add_session_btn.setText("x");
+                            thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            break;
+                        case "fri":
+                            fri_start_time_txt.setText(spiltDash[0]);
+                            fri_end_time_txt.setText(spiltDash[1]);
+                            fri_start_add_session_btn.setText("x");
+                            fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            fri_end_add_session_btn.setText("x");
+                            fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            break;
+                        case "sat":
+                            sat_start_time_txt.setText(spiltDash[0]);
+                            sat_end_time_txt.setText(spiltDash[1]);
+                            sat_start_add_session_btn.setText("x");
+                            sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            sat_end_add_session_btn.setText("x");
+                            sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                            sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                            break;
+                        default:
+
+                    }
+                }
+            } else {
+                start_date_txt.setText(Util.getTodaysDate());
+                end_date_txt.setText(Util.getTodaysDate());
+            }
         }
 
         List<String> days = getDates(start_date_txt.getText().toString(), end_date_txt.getText().toString());
@@ -483,6 +570,8 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         done_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                doneStartDate = start_date_txt.getText().toString();
+                doneEndDate = end_date_txt.getText().toString();
                 scheduleArray = new ArrayList<>();
                 newEnteryArray = new ArrayList<>();
                 scheduleStr = "";
@@ -555,11 +644,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 for (int i = 0; i < scheduleArray.size(); i++) {
                     newEnteryArray.add(scheduleArray.get(i));
                 }
-                Log.d("newEnteryArray", "" + newEnteryArray.size());
+                Log.d("newEnteryArray", "" + newEnteryArray);
 
                 for (String s : newEnteryArray) {
                     if (!s.equals("")) {
                         scheduleStr = scheduleStr + "|" + s;
+
                     }
 
                 }
@@ -1153,11 +1243,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         }
         dateFinal = d + "/" + m + "/" + y;
         if (sessiontypeStr.equalsIgnoreCase("1")) {
-        if (isFromDate) {
-            start_date_txt.setText(dateFinal);
-        } else {
-            end_date_txt.setText(dateFinal);
-        }
+            if (isFromDate) {
+                start_date_txt.setText(dateFinal);
+            } else {
+                end_date_txt.setText(dateFinal);
+            }
         } else {
             start_date_txt.setText(dateFinal);
             end_date_txt.setText(dateFinal);
@@ -1397,7 +1487,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         descriptionStr = addSessionBinding.descriptionEdt.getText().toString();
         sessioncapacityStr = addSessionBinding.sportsEdt.getText().toString();
         alerttimeStr = addSessionBinding.alertBtn.getText().toString();
-        sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
+        if (selectprice.equalsIgnoreCase("Free")){
+            sessionamtStr = "0";
+        }else{
+            sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
+        }
     }
 
     //Use for Create Session
@@ -2008,10 +2102,10 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                 addSessionBinding.areaEdt.setError("Please enter session area.");
                             }
                         } else {
-                            addSessionBinding.addressEdt.setError("Please enter session address.");
+                            addSessionBinding.addressEdt.setError("Please enter session area.");
                         }
                     } else {
-                        addSessionBinding.subjectEdt.setError("Please enter lession name.");
+                        addSessionBinding.subjectEdt.setError("Please enter lesson name.");
                     }
                 } else {
                     addSessionBinding.sessionNameEdt.setError("Please enter session name.");
@@ -2060,13 +2154,13 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                         addSessionBinding.addressEdt.setError("Please enter session address.");
                                     }
                                 } else {
-                                    addSessionBinding.sessionTimeTxt.setError("Please enter session time.");
+                                    Util.ping(mContext,"Please enter session time.");
                                 }
                             } else {
-                                Util.ping(mContext, "Please select session EndDate.");
+                                Util.ping(mContext, "Please add session time.");
                             }
                         } else {
-                            Util.ping(mContext, "Please select session StartDate.");
+                            Util.ping(mContext, "Please add session time.");
                         }
                     } else {
                         addSessionBinding.subjectEdt.setError("Please enter lession name.");
@@ -2160,7 +2254,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                                                 }
                                                                             }
                                                                         } else {
-                                                                            addSessionBinding.sessionPriceEdt.setError("Please enter session amount.");
+                                                                            Util.ping(mContext, "Please enter session amount.");
                                                                         }
                                                                     } else {
                                                                         addSessionBinding.sportsEdt.setError("Please enter session capacity.");
@@ -2184,10 +2278,10 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                 addSessionBinding.sessionTimeTxt.setError("Please enter session time.");
                                             }
                                         } else {
-                                            Util.ping(mContext, "Please select session EndDate.");
+                                            Util.ping(mContext, "Please add session time.");
                                         }
                                     } else {
-                                        Util.ping(mContext, "Please select session StartDate.");
+                                        Util.ping(mContext, "Please add session time.");
                                     }
                                 } else {
                                     addSessionBinding.subjectEdt.setError("Please enter lession name.");
@@ -2229,10 +2323,5 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         addSessionBinding.paidRb.setEnabled(false);
         addSessionBinding.sportsEdt.setEnabled(false);
         addSessionBinding.alertBtn.setEnabled(false);
-    }
-
-    public void chnageValue() {
-
-
     }
 }

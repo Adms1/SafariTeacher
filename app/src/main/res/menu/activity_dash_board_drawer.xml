@@ -6,20 +6,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/session"
-            android:icon="@drawable/s_cal"
-            android:iconTint="@color/search_boder"
+            android:icon="@drawable/orange_cala"
             android:title="Session Calendar" />
         <item
             android:id="@+id/add_session"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/add_sesion"
             android:title="Add Session" />
         <item
             android:id="@+id/payment_report"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/payment_report"
             android:title="Payment Report"/>
         <item
             android:id="@+id/logout"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/logout"
             android:title="Logout" />
 
         <!--<item-->

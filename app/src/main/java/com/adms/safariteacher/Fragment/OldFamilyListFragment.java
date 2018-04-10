@@ -414,15 +414,15 @@ public class OldFamilyListFragment extends Fragment {
                         Util.ping(mContext, "Confirmation Successfully.");
 
 
-//                        Fragment fragment = new SessionFragment();
-//                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                        Bundle args = new Bundle();
-//                        args.putString("orderID", orderIDStr);
-//                        fragment.setArguments(args);
-//                        fragmentTransaction.replace(R.id.frame, fragment);
-//                        fragmentTransaction.addToBackStack(null);
-//                        fragmentTransaction.commit();
+                        Fragment fragment = new SessionFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        Bundle args = new Bundle();
+                        args.putString("orderID", orderIDStr);
+                        fragment.setArguments(args);
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
 
                     }
                 }

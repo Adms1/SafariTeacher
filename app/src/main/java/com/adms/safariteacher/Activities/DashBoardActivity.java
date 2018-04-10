@@ -106,10 +106,12 @@ public class DashBoardActivity extends AppCompatActivity {
     private void loadHomeFragment() {
         // selecting appropriate nav menu item
         selectNavMenu();
+        if(navItemIndex==3) {
 
-        // set toolbar title
-        setToolbarTitle();
-
+        }else{
+            // set toolbar title
+            setToolbarTitle();
+        }
         // if user select the current navigation menu again, don't do anything
         // just close the navigation drawer
 //        if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
@@ -150,7 +152,7 @@ public class DashBoardActivity extends AppCompatActivity {
     }
 
     private void setToolbarTitle() {
-        getSupportActionBar().setTitle(activityTitles[navItemIndex]);
+            getSupportActionBar().setTitle(activityTitles[navItemIndex]);
     }
 
     private void selectNavMenu() {
@@ -405,7 +407,7 @@ public class DashBoardActivity extends AppCompatActivity {
         } else if (session == 10 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Add Family");
         } else if (session == 11 && flag.equalsIgnoreCase("false")) {
-            getSupportActionBar().setTitle("Add Child");
+            getSupportActionBar().setTitle("Add Contact");
         } else if (session == 12 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Payment");
         } else if (session == 13 && flag.equalsIgnoreCase("false")) {

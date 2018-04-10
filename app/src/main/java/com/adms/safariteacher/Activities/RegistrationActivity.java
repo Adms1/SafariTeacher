@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
+import com.adms.safariteacher.Utility.AppConfiguration;
 import com.adms.safariteacher.Utility.Util;
 import com.adms.safariteacher.databinding.ActivityRegistrationBinding;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -109,7 +110,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                             if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
                                 if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                     if (!gendarIdStr.equalsIgnoreCase("")) {
-                                        if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
+                                        if (!dateofbirthStr.equalsIgnoreCase("")) {
                                             callCheckEmailIdApi();
                                         } else {
                                             registrationBinding.dateOfBirthEdt.setError("Please Select Your Birth Date.");
@@ -137,6 +138,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
         registrationBinding.dateOfBirthEdt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                registrationBinding.dateOfBirthEdt.setError(null);
                 datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(RegistrationActivity.this, Year, Month, Day);
                 datePickerDialog.setThemeDark(false);
                 datePickerDialog.setOkText("Done");
@@ -214,6 +216,44 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
         finalDate = d + "/" + m + "/" + y;
 
         registrationBinding.dateOfBirthEdt.setText(finalDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        int age = 0;
+        try {
+            Date date1 = dateFormat.parse(registrationBinding.dateOfBirthEdt.getText().toString());
+            Calendar now = Calendar.getInstance();
+            Calendar dob = Calendar.getInstance();
+            dob.setTime(date1);
+            if (dob.after(now)) {
+//                throw new IllegalArgumentException("Can't be born in the future");
+//                Util.ping(mContext, "Can't be born in the future");
+                registrationBinding.dateOfBirthEdt.setError("Can't be born in the future");
+                registrationBinding.dateOfBirthEdt.setText("");
+            }
+            int year1 = now.get(Calendar.YEAR);
+            int year2 = dob.get(Calendar.YEAR);
+            age = year1 - year2;
+            int month1 = now.get(Calendar.MONTH);
+            int month2 = dob.get(Calendar.MONTH);
+            if (month2 > month1) {
+                age--;
+            } else if (month1 == month2) {
+                int day1 = now.get(Calendar.DAY_OF_MONTH);
+                int day2 = dob.get(Calendar.DAY_OF_MONTH);
+                if (day2 > day1) {
+                    age--;
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if(age >= 5) {
+        } else {
+//            Util.ping(mContext, "Please Enter Valid Birthdate.");
+            registrationBinding.dateOfBirthEdt.setError("Please Enter Valid Birthdate.");
+            registrationBinding.dateOfBirthEdt.setText("");
+
+        }
     }
 
 
@@ -239,8 +279,10 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                         return;
                     }
                     if (teacherInfoModel.getSuccess().equalsIgnoreCase("True")) {
-                        Intent inLogin = new Intent(mContext, LoginActivity.class);
-                        startActivity(inLogin);
+//                        Intent inLogin = new Intent(mContext, LoginActivity.class);
+//                        startActivity(inLogin);
+                        Util.ping(mContext, "Thank you for registration.");
+                        callTeacherLoginApi();
                     }
                 }
 
@@ -321,5 +363,61 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
         return map;
     }
 
+    //Use for Login Teacher
+    public void callTeacherLoginApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().getTeacherLogin(getTeacherLoginDetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel teacherInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (teacherInfoModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (teacherInfoModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (teacherInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, "Invalid Email Address or Password.");
+                        return;
+                    }
+                    if (teacherInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                        String[] splitCoachID = teacherInfoModel.getCoachID().split("\\,");
+                        Util.setPref(mContext, "coachID", splitCoachID[0]);
+                        Util.setPref(mContext, "coachTypeID", splitCoachID[1]);
+                        AppConfiguration.coachId = teacherInfoModel.getCoachID();
+                        if (!Util.getPref(mContext, "coachID").equalsIgnoreCase("")) {
+                            Intent intentDashboard = new Intent(mContext, DashBoardActivity.class);
+                            startActivity(intentDashboard);
+                            finish();
+                        }
+//                        Intent inLogin = new Intent(mContext, DashBoardActivity.class);
+//                        startActivity(inLogin);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getTeacherLoginDetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("EmailAddress", emailStr);
+        map.put("Password", passwordStr);
+
+        return map;
+    }
 
 }

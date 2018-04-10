@@ -101,10 +101,10 @@ public class PaymentSucessFragment extends Fragment {
         } else {
             paymentSucessBinding.imvSuccessFail.setImageResource(R.drawable.failer);
             status = "fail";
-            paymentSucessBinding.txtSucessFail.setTextColor(getResources().getColor(R.color.remarks));
+            paymentSucessBinding.txtSucessFail.setTextColor(getResources().getColor(R.color.absent));
             paymentSucessBinding.txtSucessFail.setText("Failure");
             paymentSucessBinding.txtSucessFailDesc.setTextColor(getResources().getColor(R.color.text_color));
-            paymentSucessBinding.txtSucessFailDesc.setText("Your transaction was not successful\nPlease try again with another card.");
+            paymentSucessBinding.txtSucessFailDesc.setText("Your transaction was not successful\nPlease try again.");
             paymentSucessBinding.txtTransactionID.setVisibility(GONE);
             paymentSucessBinding.txtValue.setVisibility(GONE);
             paymentSucessBinding.btnNewCharge.setText("Try Again");

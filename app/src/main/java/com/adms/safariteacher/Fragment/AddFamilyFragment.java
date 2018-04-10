@@ -41,6 +41,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     Calendar calendar;
     private DatePickerDialog datePickerDialog;
     int mYear, mMonth, mDay;
-    String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr;
+    String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr, classStr = "";
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt, session_student_txt_view;
     TeacherInfoModel classListInfo;
@@ -91,12 +92,18 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         Month = calendar.get(Calendar.MONTH);
         Day = calendar.get(Calendar.DAY_OF_MONTH);
         callClassTypeDetailApi();
+        if (type.equalsIgnoreCase("Family")) {
+            addFamilyBinding.classTypeGroup.setVisibility(View.GONE);
+        }else{
+            addFamilyBinding.classTypeGroup.setVisibility(View.VISIBLE);
+        }
     }
 
     public void setListners() {
         addFamilyBinding.dateOfBirthEdt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                addFamilyBinding.dateOfBirthEdt.setError(null);
                 datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(AddFamilyFragment.this, Year, Month, Day);
                 datePickerDialog.setThemeDark(false);
                 datePickerDialog.setOkText("Done");
@@ -161,58 +168,80 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 }
             }
         });
-        addFamilyBinding.classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        addFamilyBinding.classTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String name = addFamilyBinding.classSpinner.getSelectedItem().toString();
-                String getid = spinnerClassMap.get(addFamilyBinding.classSpinner.getSelectedItemPosition());
-
-                Log.d("value", name + " " + getid);
-                contactTypeIDStr = getid.toString();
-                Log.d("classTypeIDStr", contactTypeIDStr);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int radioButtonId = addFamilyBinding.classTypeGroup.getCheckedRadioButtonId();
+                switch (radioButtonId) {
+                    case R.id.self_chk:
+                        classStr = addFamilyBinding.selfChk.getText().toString();
+                        break;
+                    case R.id.child_chk:
+                        classStr = addFamilyBinding.childChk.getText().toString();
+                        break;
+                    case R.id.spouse_chk:
+                        classStr = addFamilyBinding.spouseChk.getText().toString();
+                        break;
+                }
             }
         });
+//        addFamilyBinding.classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                ((TextView)adapterView.getChildAt(i)).setTextColor(Color.parseColor("#ffffff"));
+//                String name = addFamilyBinding.classSpinner.getSelectedItem().toString();
+//                String getid = spinnerClassMap.get(addFamilyBinding.classSpinner.getSelectedItemPosition());
+//
+//                Log.d("value", name + " " + getid);
+//                contactTypeIDStr = getid.toString();
+//                Log.d("classTypeIDStr", contactTypeIDStr);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
         addFamilyBinding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getInsertedValue();
-                if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
-                    if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
-                        if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
-                            if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
-                                if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
-                                    if (!gendarIdStr.equalsIgnoreCase("")) {
-                                        if (!dateofbirthStr.equalsIgnoreCase("") && Util.getAge(dateofbirthStr)) {
-                                            if (type.equalsIgnoreCase("Family")) {
-                                                callFamilyApi();
+                if (!contactTypeIDStr.equalsIgnoreCase("")) {
+                    if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
+                        if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
+                            if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
+                                if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
+                                    if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
+                                        if (!gendarIdStr.equalsIgnoreCase("")) {
+                                            if (!dateofbirthStr.equalsIgnoreCase("")) {
+                                                if (type.equalsIgnoreCase("Family")) {
+                                                    callFamilyApi();
+                                                } else {
+                                                    callNewChildApi();
+                                                }
                                             } else {
-                                                callNewChildApi();
+                                                addFamilyBinding.dateOfBirthEdt.setError("Please Select Your Birth Date.");
                                             }
                                         } else {
-                                            addFamilyBinding.dateOfBirthEdt.setError("Please Select Your Birth Date.");
+                                            addFamilyBinding.femaleChk.setError("Select Gender.");
                                         }
                                     } else {
-                                        addFamilyBinding.femaleChk.setError("Select Gender.");
+                                        addFamilyBinding.phoneNoEdt.setError("Enter 10 digit Phone Number.");
                                     }
                                 } else {
-                                    addFamilyBinding.phoneNoEdt.setError("Enter 10 digit Phone Number.");
+                                    addFamilyBinding.passwordEdt.setError("Password must be 6-12 Characters.");
                                 }
                             } else {
-                                addFamilyBinding.passwordEdt.setError("Password must be 6-12 Characters.");
+                                addFamilyBinding.emailEdt.setError("Please Enter Valid Email Addres.");
                             }
                         } else {
-                            addFamilyBinding.emailEdt.setError("Please Enter Valid Email Addres.");
+                            addFamilyBinding.lastNameEdt.setError("Please Enter LastName.");
                         }
                     } else {
-                        addFamilyBinding.lastNameEdt.setError("Please Enter LastName.");
+                        addFamilyBinding.firstNameEdt.setError("Please Enter First Name");
                     }
                 } else {
-                    addFamilyBinding.firstNameEdt.setError("Please Enter First Name");
+                    Util.ping(mContext, "Please Select ClassType.");
                 }
             }
         });
@@ -237,7 +266,44 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
 
         MonthInt = d + "/" + m + "/" + y;
         addFamilyBinding.dateOfBirthEdt.setText(MonthInt);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        int age = 0;
+        try {
+            Date date1 = dateFormat.parse(addFamilyBinding.dateOfBirthEdt.getText().toString());
+            Calendar now = Calendar.getInstance();
+            Calendar dob = Calendar.getInstance();
+            dob.setTime(date1);
+            if (dob.after(now)) {
+//                throw new IllegalArgumentException("Can't be born in the future");
+//                Util.ping(mContext, "Can't be born in the future");
+                addFamilyBinding.dateOfBirthEdt.setError("Can't be born in the future");
+                addFamilyBinding.dateOfBirthEdt.setText("");
+            }
+            int year1 = now.get(Calendar.YEAR);
+            int year2 = dob.get(Calendar.YEAR);
+            age = year1 - year2;
+            int month1 = now.get(Calendar.MONTH);
+            int month2 = dob.get(Calendar.MONTH);
+            if (month2 > month1) {
+                age--;
+            } else if (month1 == month2) {
+                int day1 = now.get(Calendar.DAY_OF_MONTH);
+                int day2 = dob.get(Calendar.DAY_OF_MONTH);
+                if (day2 > day1) {
+                    age--;
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
+        if(age >= 5) {
+        } else {
+//            Util.ping(mContext, "Please Enter Valid Birthdate.");
+            addFamilyBinding.dateOfBirthEdt.setError("Please Enter Valid Birthdate.");
+            addFamilyBinding.dateOfBirthEdt.setText("");
+
+        }
     }
 
     //Use for New Family
@@ -351,11 +417,15 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         passwordStr = addFamilyBinding.passwordEdt.getText().toString();
         phonenoStr = addFamilyBinding.phoneNoEdt.getText().toString();
         dateofbirthStr = addFamilyBinding.dateOfBirthEdt.getText().toString();
-//        if (type.equalsIgnoreCase("Family")) {
-//            contactTypeIDStr = "1";
-//        } else {
-//            contactTypeIDStr = "3";
-//        }
+        if (type.equalsIgnoreCase("Family")) {
+            contactTypeIDStr = "1";
+        } else {
+            for (int i = 0; i < classListInfo.getData().size(); i++) {
+                if (classStr.equalsIgnoreCase(classListInfo.getData().get(i).getContactTypeName())) {
+                    contactTypeIDStr = classListInfo.getData().get(i).getContactTypeID();
+                }
+            }
+        }
     }
 
     //Use for Family add NewChild
@@ -562,7 +632,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                         } else {
                             Util.ping(mContext, "Family Confirmation Successfully.");
                         }
-                        Fragment fragment = new OldFamilyListFragment();
+                        Fragment fragment = new SessionFragment();
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.frame, fragment);
@@ -618,7 +688,6 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                         Util.dismissDialog();
                         if (classInfo.getData().size() > 0) {
                             classListInfo = classInfo;
-                            fillClassTypeSpinner();
                         }
                     }
                 }
@@ -642,36 +711,39 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     }
 
     public void fillClassTypeSpinner() {
-        ArrayList<Integer> classTypeId = new ArrayList<Integer>();
-        for (int i = 0; i < classListInfo.getData().size(); i++) {
-            classTypeId.add(Integer.valueOf(classListInfo.getData().get(i).getContactTypeID()));
-        }
-        ArrayList<String> className = new ArrayList<String>();
-        for (int j = 0; j < classListInfo.getData().size(); j++) {
-            className.add(classListInfo.getData().get(j).getContactTypeName());
-        }
-
-        String[] spinnerclassIdArray = new String[classTypeId.size()];
-
-        spinnerClassMap = new HashMap<Integer, String>();
-        for (int i = 0; i < classTypeId.size(); i++) {
-            spinnerClassMap.put(i, String.valueOf(classTypeId.get(i)));
-            spinnerclassIdArray[i] = className.get(i).trim();
-        }
-        try {
-            Field popup = Spinner.class.getDeclaredField("mPopup");
-            popup.setAccessible(true);
-
-            // Get private mPopup member variable and try cast to ListPopupWindow
-            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addFamilyBinding.classSpinner);
-
-            popupWindow.setHeight(spinnerclassIdArray.length > 4 ? 500 : spinnerclassIdArray.length * 100);
-        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
-            // silently fail...
-        }
-
-        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, spinnerclassIdArray);
-        addFamilyBinding.classSpinner.setAdapter(adapterTerm);
+//        for (int i = 0; i < classListInfo.getData().size(); i++) {
+//
+//        }
+//        ArrayList<Integer> classTypeId = new ArrayList<Integer>();
+//        for (int i = 0; i < classListInfo.getData().size(); i++) {
+//            classTypeId.add(Integer.valueOf(classListInfo.getData().get(i).getContactTypeID()));
+//        }
+//        ArrayList<String> className = new ArrayList<String>();
+//        for (int j = 0; j < classListInfo.getData().size(); j++) {
+//            className.add(classListInfo.getData().get(j).getContactTypeName());
+//        }
+//
+//        String[] spinnerclassIdArray = new String[classTypeId.size()];
+//
+//        spinnerClassMap = new HashMap<Integer, String>();
+//        for (int i = 0; i < classTypeId.size(); i++) {
+//            spinnerClassMap.put(i, String.valueOf(classTypeId.get(i)));
+//            spinnerclassIdArray[i] = className.get(i).trim();
+//        }
+//        try {
+//            Field popup = Spinner.class.getDeclaredField("mPopup");
+//            popup.setAccessible(true);
+//
+//            // Get private mPopup member variable and try cast to ListPopupWindow
+//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addFamilyBinding.classSpinner);
+//
+//            popupWindow.setHeight(spinnerclassIdArray.length > 4 ? 500 : spinnerclassIdArray.length * 100);
+//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+//            // silently fail...
+//        }
+//
+//        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.spinner_layout, spinnerclassIdArray);
+//        addFamilyBinding.classSpinner.setAdapter(adapterTerm);
     }
 }
 

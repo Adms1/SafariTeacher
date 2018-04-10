@@ -171,7 +171,7 @@ public class PaymentFragment extends Fragment {
         mapHashData.put("address_line_1", address_line_1);
         mapHashData.put("address_line_2", address_line_2);
         mapHashData.put("amount", amount);
-        mapHashData.put("api_key", "0c1d72c0-ab5a-4159-9135-139d53235bbd");//AppConfiguration.api_key
+        mapHashData.put("api_key", "535ee616-a161-4e16-88ed-a338582e841a");//AppConfiguration.api_key
         mapHashData.put("city", city);
         mapHashData.put("country", country);
         mapHashData.put("currency", currency);
@@ -195,7 +195,7 @@ public class PaymentFragment extends Fragment {
         mapPostData.put("address_line_1", address_line_1);
         mapPostData.put("address_line_2", address_line_2);
         mapPostData.put("amount", amount);
-        mapPostData.put("api_key", "0c1d72c0-ab5a-4159-9135-139d53235bbd");//AppConfiguration.api_key
+        mapPostData.put("api_key", "535ee616-a161-4e16-88ed-a338582e841a");//AppConfiguration.api_key
 
 //        if(extras.containsKey("CardDetails")) {
 //            mapPostData.put("card_exp_month", card_exp_month);
@@ -223,7 +223,7 @@ public class PaymentFragment extends Fragment {
         mapPostData.put("zip_code", zip_code);
         mapPostData.put("show_saved_cards", show_saved_cards);
 
-        String hashData = "74ca9c70aea6509d90176172cece61925a4105aa";//AppConfiguration.secret_key;
+        String hashData = "531553f8d6b906aa3342948a3c535ca301de9d5d";//AppConfiguration.secret_key;
         String postData = "";
 
         for (String key : new TreeSet<String>(mapHashData.keySet())) {
