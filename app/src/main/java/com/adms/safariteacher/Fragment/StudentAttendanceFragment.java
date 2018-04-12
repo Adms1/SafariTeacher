@@ -58,12 +58,12 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
     int mYear, mMonth, mDay;
     StudentAttendanceAdapter studentAttendanceAdapter;
     ArrayList<String> arrayList;
-    String sessionIDStr, attendanceIDStr, ContactEnrollmentIDStr="", noteStr, classTypeIDStr="", totalstudetnStr, priceStr;//, SesionDetailIDStr, sessionDateStr, sessionTimeStr;
+    String sessionIDStr, attendanceIDStr, ContactEnrollmentIDStr = "", noteStr, classTypeIDStr = "", totalstudetnStr, priceStr;//, SesionDetailIDStr, sessionDateStr, sessionTimeStr;
     SessionDetailModel dataResponse;
     TeacherInfoModel classListInfo;
     List<sessionDataModel> studentList;
     HashMap<Integer, String> spinnerClassMap;
-    String classType="";
+    String classType = "";
 
     public StudentAttendanceFragment() {
     }
@@ -89,7 +89,6 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
         } else {
             studentAttendanceBinding.firstRowLinear.setVisibility(View.VISIBLE);
         }
-
         callSessionDetailApi();
         callClassAttendanceDetailApi();
 
@@ -113,10 +112,10 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
             @Override
             public void onClick(View view) {
                 InsertAttendanceDetail();
-                if(!ContactEnrollmentIDStr.equalsIgnoreCase("") && !classTypeIDStr.equalsIgnoreCase("")) {
+                if (!ContactEnrollmentIDStr.equalsIgnoreCase("") && !classTypeIDStr.equalsIgnoreCase("")) {
                     callGetSessionStudentAttendanceApi();
-                }else{
-                    Util.ping(mContext,"Select Attendnance.");
+                } else {
+                    Util.ping(mContext, "Select Attendnance.");
                 }
 
             }
@@ -283,9 +282,9 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                     }
                     if (attendanceInfo.getSuccess().equalsIgnoreCase("True")) {
                         Util.dismissDialog();
-                        if (classType.equalsIgnoreCase("")){
+                        if (classType.equalsIgnoreCase("")) {
                             Util.ping(mContext, "Attendance Added Successfully.");
-                        }else {
+                        } else {
                             Util.ping(mContext, "Attendance Updated Successfully.");
                         }
                         studentAttendanceBinding.submitBtn.setText("Update");
@@ -434,12 +433,12 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                 if (sessionInfoObj.getReason().equalsIgnoreCase("null")) {
                     sessionInfoObj.setReason("");
                 }
-                    if (!isEnable) {
-                        studentString = String.valueOf(stuId) + "@" + sessionInfoObj.getAttendanceID() + "@" + sessionInfoObj.getReason();
-                        isEnable = true;
-                    } else {
-                        studentString = studentString + "|" + String.valueOf(stuId) + "," + sessionInfoObj.getAttendanceID() + "@" + sessionInfoObj.getReason();
-                    }
+                if (!isEnable) {
+                    studentString = String.valueOf(stuId) + "@" + sessionInfoObj.getAttendanceID() + "@" + sessionInfoObj.getReason();
+                    isEnable = true;
+                } else {
+                    studentString = studentString + "|" + String.valueOf(stuId) + "," + sessionInfoObj.getAttendanceID() + "@" + sessionInfoObj.getReason();
+                }
             }
             newArray.add(studentString);
         }
@@ -449,7 +448,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                 responseString = responseString + "|" + s;
             }
         }
-        if(!responseString.equalsIgnoreCase("")) {
+        if (!responseString.equalsIgnoreCase("")) {
             responseString = responseString.substring(1, responseString.length());
             Log.d("responseString ", responseString);
 
@@ -547,7 +546,7 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                     studentAttendanceBinding.classSpinner.setSelection(m);
                 }
             }
-        }else{
+        } else {
             studentAttendanceBinding.classSpinner.setSelection(0);
         }
     }
@@ -586,9 +585,9 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
 //                            studentAttendanceBinding.submitBtn.setText("UPDATE");
                             dataResponse = classattendanceInfo;
                             classType = dataResponse.getData().get(0).getClassType();
-                            if (classType.equalsIgnoreCase("")){
+                            if (classType.equalsIgnoreCase("")) {
                                 studentAttendanceBinding.submitBtn.setText("SUBMIT");
-                            }else{
+                            } else {
                                 studentAttendanceBinding.submitBtn.setText("UPDATE");
                             }
                             if (classattendanceInfo.getData().get(0).getAttendanceData() != null) {

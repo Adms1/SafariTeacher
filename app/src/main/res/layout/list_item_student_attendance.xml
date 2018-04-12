@@ -71,10 +71,11 @@
             android:layout_marginRight="@dimen/_5sdp"
             android:layout_marginTop="@dimen/_1sdp"
             android:layout_marginBottom="@dimen/_2sdp"
-            android:layout_weight="1"
+            android:layout_weight="0.86"
             android:background="@drawable/remarks_text"
             android:hint="Remark"
             android:paddingLeft="@dimen/_3sdp"
+            android:paddingRight="@dimen/_3sdp"
             android:textAlignment="textStart"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_10sdp" />

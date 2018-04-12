@@ -16,13 +16,12 @@
             android:id="@+id/session_name_txt_view"
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_25sdp"
-            android:layout_marginLeft="@dimen/_30sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
             android:text="Session Name"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
-            android:textStyle="normal" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="@dimen/_5sdp"
@@ -36,7 +35,7 @@
 
         <TextView
             android:id="@+id/session_title_txt"
-            android:layout_width="@dimen/_160sdp"
+            android:layout_width="@dimen/_220sdp"
             android:layout_height="@dimen/_25sdp"
             android:gravity="start|center_vertical"
             android:paddingLeft="@dimen/_1sdp"
@@ -55,13 +54,12 @@
             android:id="@+id/date_txt_view"
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_25sdp"
-            android:layout_marginLeft="@dimen/_30sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
             android:text="Date"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
-            android:textStyle="normal" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="@dimen/_5sdp"
@@ -75,7 +73,7 @@
 
         <TextView
             android:id="@+id/date_txt"
-            android:layout_width="@dimen/_160sdp"
+            android:layout_width="@dimen/_220sdp"
             android:layout_height="@dimen/_25sdp"
             android:gravity="start|center_vertical"
             android:paddingLeft="@dimen/_1sdp"
@@ -88,20 +86,18 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_27sdp"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/_10sdp"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/start_time_txt_view"
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_25sdp"
-            android:layout_marginLeft="@dimen/_30sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
             android:text="Time"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
-            android:textStyle="normal" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="@dimen/_5sdp"
@@ -157,7 +153,76 @@
             android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_27sdp"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/total_spot_txt_view"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/_5sdp"
+            android:text="Total Spot"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="@dimen/_5sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:gravity="center_vertical"
+            android:text=":"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/total_spot_txt"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:gravity="start|center_vertical"
+            android:paddingLeft="@dimen/_1sdp"
+            android:text="1000"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/spot_left_txt_view"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/_5sdp"
+            android:text="Spot Left"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="@dimen/_5sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:gravity="center_vertical"
+            android:text=":"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/spot_left_txt"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/_1sdp"
+            android:text="11:00"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="normal" />
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="0.1dp"

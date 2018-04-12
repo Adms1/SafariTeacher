@@ -27,8 +27,10 @@ import com.adms.safariteacher.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -219,37 +221,33 @@ public class Util {
         return age >= 5;
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 123;
+public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
+    public static boolean checkAndRequestPermissions(final Context context) {
+        int permissionSendMessage = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.SEND_SMS);
+        int receiveSMS = ContextCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS);
+        int readSMS = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_SMS);
+        int callPhone=ContextCompat.checkSelfPermission(context,Manifest.permission.CALL_PHONE);
+        List<String> listPermissionsNeeded = new ArrayList<>();
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static boolean checkPermission(final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.CALL_PHONE)) {
-                    android.support.v7.app.AlertDialog.Builder alertBuilder = new android.support.v7.app.AlertDialog.Builder(context);
-                    alertBuilder.setCancelable(false);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("External storage permission is necessary");
-                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
-
-                        }
-                    });
-                    android.support.v7.app.AlertDialog alert = alertBuilder.create();
-                    alert.show();
-
-                } else {
-                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
-                }
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
+        if(callPhone!=PackageManager.PERMISSION_GRANTED){
+            listPermissionsNeeded.add(Manifest.permission.CALL_PHONE);
         }
+        if (receiveSMS != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.RECEIVE_MMS);
+        }
+        if (readSMS != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.READ_SMS);
+        }
+        if (permissionSendMessage != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.SEND_SMS);
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            android.support.v13.app.ActivityCompat.requestPermissions((Activity) context,
+                    listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
+                    REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
     }
 }

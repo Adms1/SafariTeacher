@@ -16,6 +16,11 @@
             android:id="@+id/payment_report"
             android:icon="@drawable/payment_report"
             android:title="Payment Report"/>
+
+        <item
+            android:id="@+id/change_password"
+            android:icon="@drawable/payment_report"
+            android:title="Change Password"/>
         <item
             android:id="@+id/logout"
             android:icon="@drawable/logout"

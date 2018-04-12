@@ -153,7 +153,11 @@ public class OldFamilyListFragment extends Fragment {
 
         getsessionID();
 
-        session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
+        if (AppConfiguration.SessionPrice.equalsIgnoreCase("0.00")) {
+            session_fee_txt.setText("Free");
+        } else {
+            session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
+        }
         session_name_txt.setText(AppConfiguration.SessionName);
         location_txt.setText(AppConfiguration.SessionLocation);
         duration_txt.setText(AppConfiguration.SessionDuration);

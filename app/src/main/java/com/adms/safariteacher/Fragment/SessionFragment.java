@@ -60,7 +60,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     public Dialog sessionDialog;
     Button cancel_btn, add_attendance_btn, edit_session_btn, add_student_btn;
     String sessionnameStr, sessionstrattimeStr = "", sessionendtimeStr = "", sessionDateStr = "", sessionIDStr, sessionDetailIDStr, priceStr;
-    TextView start_time_txt, end_time_txt, session_title_txt, date_txt;
+    TextView start_time_txt, end_time_txt, session_title_txt, date_txt, total_spot_txt, spot_left_txt;
     RecyclerView studentnamelist_rcView;
     SessionViewStudentListAdapter sessionViewStudentListAdapter;
     List<sessionDataModel> arrayList;
@@ -76,6 +76,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     Calendar calendar;
     String dateStr;
     int k;
+
     public SessionFragment() {
     }
 
@@ -107,6 +108,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     }
 
     public void init() {
+        if (Util.checkAndRequestPermissions(mContext)) {
+        }
         Calendar minDate = Calendar.getInstance();
         Calendar maxDate = Calendar.getInstance();
 
@@ -327,7 +330,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         date_txt = (TextView) sessionDialog.findViewById(R.id.date_txt);
         studentnamelist_rcView = (RecyclerView) sessionDialog.findViewById(R.id.student_name_list_rcView);
         add_student_btn = (Button) sessionDialog.findViewById(R.id.add_student_btn);
-
+        total_spot_txt = (TextView) sessionDialog.findViewById(R.id.total_spot_txt);
+        spot_left_txt = (TextView) sessionDialog.findViewById(R.id.spot_left_txt);
         callGetSessionStudentDetailApi();
 
         date_txt.setText(sessionDateStr);
@@ -557,7 +561,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         studentnamelist_rcView.setLayoutManager(mLayoutManager);
                         studentnamelist_rcView.setItemAnimator(new DefaultItemAnimator());
                         studentnamelist_rcView.setAdapter(sessionViewStudentListAdapter);
-
+                        total_spot_txt.setText(String.valueOf(sessionCapacity));
+                        spot_left_txt.setText(String.valueOf(studentAvailability));
 
                         if (arraySize > 0) {
                             add_attendance_btn.setEnabled(true);
@@ -633,7 +638,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
 
     }
-
 
 
 }

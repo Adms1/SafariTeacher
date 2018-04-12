@@ -55,7 +55,9 @@ public class SessionViewStudentListAdapter extends RecyclerView.Adapter<SessionV
 
     @Override
     public void onBindViewHolder(final SessionViewStudentListAdapter.MyViewHolder holder, int position) {
+
         String str = String.valueOf(position + 1);
+
         holder.no_txt.setText(str);
         Log.d("arrayData", arrayList.get(position));
         final String[] spilt = arrayList.get(position).split("\\|");
@@ -65,10 +67,6 @@ public class SessionViewStudentListAdapter extends RecyclerView.Adapter<SessionV
         holder.phoneno_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean result = Util.checkPermission(mContext);
-                if (result) {
-
-                }
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.fromParts("tel", spilt[1], null));
                 mContext.startActivity(intent);

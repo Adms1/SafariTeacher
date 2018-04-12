@@ -18,4 +18,5 @@ public class AppConfiguration {
     public static String SessionTime;
     public static String SessionPrice;
     public static String UserName;
+    public static String RegisterEmail;
 }

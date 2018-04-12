@@ -20,53 +20,55 @@
             android:paddingRight="@dimen/_2sdp"
             android:paddingTop="@dimen/_5sdp">
 
-            <ImageView
-                android:id="@+id/imgStartDate"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:src="@drawable/orange_cala" />
 
             <LinearLayout
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:background="@color/blue"
+                android:id="@+id/start_date_linear"
+                android:layout_width="@dimen/_110sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@color/white"
                 android:gravity="center|center_vertical"
                 android:orientation="horizontal"
                 android:padding="@dimen/_3sdp">
 
+                <ImageView
+                    android:id="@+id/imgStartDate"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:src="@drawable/orange_cala" />
+
                 <TextView
                     android:id="@+id/txtStartDate"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_25sdp"
-                    android:layout_marginLeft="@dimen/_3sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:background="@color/blue"
                     android:gravity="center"
                     android:text="@string/strStartDate"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imgEndDate"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:src="@drawable/orange_cala" />
+
 
             <LinearLayout
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:background="@color/blue"
+                android:id="@+id/end_date_linear"
+                android:layout_width="@dimen/_110sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="@dimen/_3sdp">
-
+                <ImageView
+                    android:id="@+id/imgEndDate"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:src="@drawable/orange_cala" />
                 <TextView
                     android:id="@+id/txtEndDate"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_25sdp"
-                    android:layout_marginLeft="@dimen/_3sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:background="@color/blue"
-                    android:gravity="center|center_vertical"
+                    android:gravity="center"
                     android:text="@string/strEndDate"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
@@ -81,6 +83,7 @@
                 android:text="@string/strShow"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
         </LinearLayout>

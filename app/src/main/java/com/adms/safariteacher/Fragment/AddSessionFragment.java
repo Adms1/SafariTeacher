@@ -100,7 +100,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     //Use for selectedSessionTimeValue
     String coachIdStr, lessionTypeNameStr = "", sessionNameStr = "", boardStr = "", standardStr = "", streamStr = "", startDateStr = "", endDateStr = "",
             address1Str = "", address2Str = "", regionStr = "", cityStr = "", stateStr = "", zipcodeStr = "", descriptionStr = "", sessionamtStr = "0",
-            sessioncapacityStr = "", alerttimeStr = "", scheduleStr = "", sessiontypeStr = "1", sessionTypeValueStr = "Recurring", doneStartDate, doneEndDate,selectprice;
+            sessioncapacityStr = "", alerttimeStr = "", scheduleStr = "", sessiontypeStr = "1", sessionTypeValueStr = "Recurring", doneStartDate = "", doneEndDate = "", selectprice = "Free";
 
     String sunstartTimeStr, sunendTimeStr, finalsunTimeStr, monstartTimeStr, monendTimeStr, finalmonTimeStr,
             tuestartTimeStr, tueendTimeStr, finaltueTimeStr, wedstartTimeStr, wedendTimeStr, finalwedTimeStr,
@@ -207,11 +207,11 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 switch (radioButtonId) {
                     case R.id.free_rb:
                         addSessionBinding.sessionPriceEdt.setVisibility(View.GONE);
-                        selectprice=addSessionBinding.freeRb.getText().toString();
+                        selectprice = addSessionBinding.freeRb.getText().toString();
                         break;
                     case R.id.paid_rb:
                         addSessionBinding.sessionPriceEdt.setVisibility(View.VISIBLE);
-                        selectprice=addSessionBinding.paidRb.getText().toString();
+                        selectprice = addSessionBinding.paidRb.getText().toString();
                         break;
                 }
             }
@@ -470,7 +470,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         } else {
             if (!scheduleStr.equalsIgnoreCase("")) {
                 start_date_txt.setText(doneStartDate);
-                end_date_txt.setText(doneStartDate);
+                end_date_txt.setText(doneEndDate);
                 String[] spiltPipes = scheduleStr.split("\\|");
                 String[] spiltComma;
                 String[] spiltDash;
@@ -1256,75 +1256,161 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         startDateStr = start_date_txt.getText().toString();
         endDateStr = end_date_txt.getText().toString();
 
-        sun_start_time_txt.setText("Add");
-        sun_start_add_session_btn.setText("+");
-        sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+        if (flag.equalsIgnoreCase("edit")) {
+            if (EditStartDateStr.equalsIgnoreCase(startDateStr)) {
+                if (EditEndDateStr.equalsIgnoreCase(endDateStr)) {
 
-        sun_end_time_txt.setText("Add");
-        sun_end_add_session_btn.setText("+");
-        sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                }
+            } else {
+                sun_start_time_txt.setText("Add");
+                sun_start_add_session_btn.setText("+");
+                sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        mon_start_time_txt.setText("Add");
-        mon_start_add_session_btn.setText("+");
-        mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                sun_end_time_txt.setText("Add");
+                sun_end_add_session_btn.setText("+");
+                sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        mon_end_time_txt.setText("Add");
-        mon_end_add_session_btn.setText("+");
-        mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                mon_start_time_txt.setText("Add");
+                mon_start_add_session_btn.setText("+");
+                mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        tue_start_time_txt.setText("Add");
-        tue_start_add_session_btn.setText("+");
-        tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                mon_end_time_txt.setText("Add");
+                mon_end_add_session_btn.setText("+");
+                mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        tue_end_time_txt.setText("Add");
-        tue_end_add_session_btn.setText("+");
-        tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                tue_start_time_txt.setText("Add");
+                tue_start_add_session_btn.setText("+");
+                tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        wed_start_time_txt.setText("Add");
-        wed_start_add_session_btn.setText("+");
-        wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                tue_end_time_txt.setText("Add");
+                tue_end_add_session_btn.setText("+");
+                tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        wed_end_time_txt.setText("Add");
-        wed_end_add_session_btn.setText("+");
-        wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                wed_start_time_txt.setText("Add");
+                wed_start_add_session_btn.setText("+");
+                wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        thu_start_time_txt.setText("Add");
-        thu_start_add_session_btn.setText("+");
-        thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                wed_end_time_txt.setText("Add");
+                wed_end_add_session_btn.setText("+");
+                wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        thu_end_time_txt.setText("Add");
-        thu_end_add_session_btn.setText("+");
-        thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                thu_start_time_txt.setText("Add");
+                thu_start_add_session_btn.setText("+");
+                thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        fri_start_time_txt.setText("Add");
-        fri_start_add_session_btn.setText("+");
-        fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                thu_end_time_txt.setText("Add");
+                thu_end_add_session_btn.setText("+");
+                thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        fri_end_time_txt.setText("Add");
-        fri_end_add_session_btn.setText("+");
-        fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                fri_start_time_txt.setText("Add");
+                fri_start_add_session_btn.setText("+");
+                fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        sat_start_time_txt.setText("Add");
-        sat_start_add_session_btn.setText("+");
-        sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                fri_end_time_txt.setText("Add");
+                fri_end_add_session_btn.setText("+");
+                fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
 
-        sat_end_time_txt.setText("Add");
-        sat_end_add_session_btn.setText("+");
-        sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-        sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+                sat_start_time_txt.setText("Add");
+                sat_start_add_session_btn.setText("+");
+                sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sat_end_time_txt.setText("Add");
+                sat_end_add_session_btn.setText("+");
+                sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+            }
+
+        } else {
+            if (doneStartDate.equalsIgnoreCase(startDateStr)) {
+                if (doneEndDate.equalsIgnoreCase(endDateStr)) {
+
+                }
+            } else {
+                sun_start_time_txt.setText("Add");
+                sun_start_add_session_btn.setText("+");
+                sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sun_end_time_txt.setText("Add");
+                sun_end_add_session_btn.setText("+");
+                sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                mon_start_time_txt.setText("Add");
+                mon_start_add_session_btn.setText("+");
+                mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                mon_end_time_txt.setText("Add");
+                mon_end_add_session_btn.setText("+");
+                mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                tue_start_time_txt.setText("Add");
+                tue_start_add_session_btn.setText("+");
+                tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                tue_end_time_txt.setText("Add");
+                tue_end_add_session_btn.setText("+");
+                tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                wed_start_time_txt.setText("Add");
+                wed_start_add_session_btn.setText("+");
+                wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                wed_end_time_txt.setText("Add");
+                wed_end_add_session_btn.setText("+");
+                wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                thu_start_time_txt.setText("Add");
+                thu_start_add_session_btn.setText("+");
+                thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                thu_end_time_txt.setText("Add");
+                thu_end_add_session_btn.setText("+");
+                thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                fri_start_time_txt.setText("Add");
+                fri_start_add_session_btn.setText("+");
+                fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                fri_end_time_txt.setText("Add");
+                fri_end_add_session_btn.setText("+");
+                fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sat_start_time_txt.setText("Add");
+                sat_start_add_session_btn.setText("+");
+                sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sat_end_time_txt.setText("Add");
+                sat_end_add_session_btn.setText("+");
+                sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+            }
+        }
+
 
         List<String> days = getDates(start_date_txt.getText().toString(), end_date_txt.getText().toString());
         System.out.println(days);
@@ -1366,12 +1452,15 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
             } else {
                 hour_of_12_hour_format = hourOfDay;
             }
+            if(hour_of_12_hour_format==0){
+                hour_of_12_hour_format=12;
+            }
 
             if (hour_of_12_hour_format < 10) {
                 hour = "0" + hour_of_12_hour_format;
                 hourFinal = hour;
             } else {
-                hourFinal = String.valueOf(hour_of_12_hour_format);
+                    hourFinal = String.valueOf(hour_of_12_hour_format);
             }
 
             String m = "";
@@ -1487,9 +1576,9 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
         descriptionStr = addSessionBinding.descriptionEdt.getText().toString();
         sessioncapacityStr = addSessionBinding.sportsEdt.getText().toString();
         alerttimeStr = addSessionBinding.alertBtn.getText().toString();
-        if (selectprice.equalsIgnoreCase("Free")){
+        if (selectprice.equalsIgnoreCase("Free")) {
             sessionamtStr = "0";
-        }else{
+        } else {
             sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
         }
     }
@@ -2080,35 +2169,36 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                         if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                             callUpdateSessionApi();
                                                         } else {
-                                                            Util.ping(mContext, "Please select session start date and end date should be same.");
+                                                            Util.ping(mContext, getString(R.string.Date));
                                                         }
                                                     }
                                                 } else {
-                                                    addSessionBinding.sessionPriceEdt.setError("Please enter session amount.");
+                                                    addSessionBinding.sessionPriceEdt.setError(getString(R.string.sessionAmount));
                                                 }
                                             } else {
-                                                addSessionBinding.sportsEdt.setError("Please enter session capacity.");
+                                                addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
                                             }
                                         } else {
-                                            addSessionBinding.zipcodeEdt.setError("Please enter zipcode.");
+                                            addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
                                         }
                                     } else {
-                                        addSessionBinding.stateEdt.setError("Please enter session state.");
+                                        addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
                                     }
                                 } else {
-                                    addSessionBinding.cityEdt.setError("Please enter session city.");
+                                    addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
                                 }
                             } else {
-                                addSessionBinding.areaEdt.setError("Please enter session area.");
+                                addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
                             }
                         } else {
-                            addSessionBinding.addressEdt.setError("Please enter session area.");
+                            addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
                         }
                     } else {
-                        addSessionBinding.subjectEdt.setError("Please enter lesson name.");
+                        addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
                     }
                 } else {
-                    addSessionBinding.sessionNameEdt.setError("Please enter session name.");
+                    addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
+                    addSessionBinding.scrollView.setScrollY(0);
                 }
             } else {
                 if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
@@ -2129,44 +2219,44 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                                     if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                                         callCreateSessionApi();
                                                                     } else {
-                                                                        Util.ping(mContext, "Please select session start date and end date should be same.");
+                                                                        Util.ping(mContext, getString(R.string.Date));
                                                                     }
                                                                 }
                                                             } else {
-                                                                addSessionBinding.sessionPriceEdt.setError("Please enter session amount.");
+                                                                addSessionBinding.sessionPriceEdt.setError(getString(R.string.sessionAmount));
                                                             }
                                                         } else {
-                                                            addSessionBinding.sportsEdt.setError("Please enter session capacity.");
+                                                            addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
                                                         }
                                                     } else {
-                                                        addSessionBinding.zipcodeEdt.setError("Please enter zipcode.");
+                                                        addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
                                                     }
                                                 } else {
-                                                    addSessionBinding.stateEdt.setError("Please enter session state.");
+                                                    addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
                                                 }
                                             } else {
-                                                addSessionBinding.cityEdt.setError("Please enter session city.");
+                                                addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
                                             }
                                         } else {
-                                            addSessionBinding.areaEdt.setError("Please enter session area.");
+                                            addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
                                         }
                                     } else {
-                                        addSessionBinding.addressEdt.setError("Please enter session address.");
+                                        addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
                                     }
                                 } else {
-                                    Util.ping(mContext,"Please enter session time.");
+                                    Util.ping(mContext, getString(R.string.sessionTime));
                                 }
                             } else {
-                                Util.ping(mContext, "Please add session time.");
+                                Util.ping(mContext, getString(R.string.sessionTime));
                             }
                         } else {
-                            Util.ping(mContext, "Please add session time.");
+                            Util.ping(mContext, getString(R.string.sessionTime));
                         }
                     } else {
-                        addSessionBinding.subjectEdt.setError("Please enter lession name.");
+                        addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
                     }
                 } else {
-                    addSessionBinding.sessionNameEdt.setError("Please enter session name.");
+                    addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
                 }
             }
         } else {
@@ -2189,44 +2279,44 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                                     if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                                         callUpdateSessionApi();
                                                                     } else {
-                                                                        Util.ping(mContext, "Please select session start date and end date should be same.");
+                                                                        Util.ping(mContext, getString(R.string.Date));
                                                                     }
                                                                 }
                                                             } else {
-                                                                addSessionBinding.sessionPriceEdt.setError("Please enter session amount.");
+                                                                addSessionBinding.sessionPriceEdt.setError(getString(R.string.sessionAmount));
                                                             }
                                                         } else {
-                                                            addSessionBinding.sportsEdt.setError("Please enter session capacity.");
+                                                            addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
                                                         }
                                                     } else {
-                                                        addSessionBinding.zipcodeEdt.setError("Please enter zipcode.");
+                                                        addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
                                                     }
                                                 } else {
-                                                    addSessionBinding.stateEdt.setError("Please enter session state.");
+                                                    addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
                                                 }
                                             } else {
-                                                addSessionBinding.cityEdt.setError("Please enter session city.");
+                                                addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
                                             }
                                         } else {
-                                            addSessionBinding.areaEdt.setError("Please enter session area.");
+                                            addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
                                         }
                                     } else {
-                                        addSessionBinding.addressEdt.setError("Please enter session address.");
+                                        addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
                                     }
                                 } else {
-                                    addSessionBinding.subjectEdt.setError("Please enter lession name.");
+                                    addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
                                 }
                             } else {
-                                addSessionBinding.streamEdt.setError("Please enter stream name.");
+                                addSessionBinding.streamEdt.setError(getString(R.string.streamName));
                             }
                         } else {
-                            addSessionBinding.standardEdt.setError("Please enter standard name.");
+                            addSessionBinding.standardEdt.setError(getString(R.string.standardName));
                         }
                     } else {
-                        addSessionBinding.boardNameEdt.setError("Please enter board name.");
+                        addSessionBinding.boardNameEdt.setError(getString(R.string.boardName));
                     }
                 } else {
-                    addSessionBinding.sessionNameEdt.setError("Please enter session name.");
+                    addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
                 }
             } else {
                 if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
@@ -2250,53 +2340,53 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                                                                 if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                                                     callCreateSessionApi();
                                                                                 } else {
-                                                                                    Util.ping(mContext, "Please select session start date and end date should be same.");
+                                                                                    Util.ping(mContext, getString(R.string.Date));
                                                                                 }
                                                                             }
                                                                         } else {
-                                                                            Util.ping(mContext, "Please enter session amount.");
+                                                                            Util.ping(mContext, getString(R.string.sessionAmount));
                                                                         }
                                                                     } else {
-                                                                        addSessionBinding.sportsEdt.setError("Please enter session capacity.");
+                                                                        addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
                                                                     }
                                                                 } else {
-                                                                    addSessionBinding.zipcodeEdt.setError("Please enter zipcode.");
+                                                                    addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
                                                                 }
                                                             } else {
-                                                                addSessionBinding.stateEdt.setError("Please enter session state.");
+                                                                addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
                                                             }
                                                         } else {
-                                                            addSessionBinding.cityEdt.setError("Please enter session city.");
+                                                            addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
                                                         }
                                                     } else {
-                                                        addSessionBinding.areaEdt.setError("Please enter session area.");
+                                                        addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
                                                     }
                                                 } else {
-                                                    addSessionBinding.addressEdt.setError("Please enter session address.");
+                                                    addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
                                                 }
                                             } else {
-                                                addSessionBinding.sessionTimeTxt.setError("Please enter session time.");
+                                                addSessionBinding.sessionTimeTxt.setError(getString(R.string.sessionTime));
                                             }
                                         } else {
-                                            Util.ping(mContext, "Please add session time.");
+                                            Util.ping(mContext, getString(R.string.sessionTime));
                                         }
                                     } else {
-                                        Util.ping(mContext, "Please add session time.");
+                                        Util.ping(mContext, getString(R.string.sessionTime));
                                     }
                                 } else {
-                                    addSessionBinding.subjectEdt.setError("Please enter lession name.");
+                                    addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
                                 }
                             } else {
-                                addSessionBinding.streamEdt.setError("Please enter stream name.");
+                                addSessionBinding.streamEdt.setError(getString(R.string.streamName));
                             }
                         } else {
-                            addSessionBinding.standardEdt.setError("Please enter standard.");
+                            addSessionBinding.standardEdt.setError(getString(R.string.standardName));
                         }
                     } else {
-                        addSessionBinding.boardNameEdt.setError("Please enter board.");
+                        addSessionBinding.boardNameEdt.setError(getString(R.string.boardName));
                     }
                 } else {
-                    addSessionBinding.sessionNameEdt.setError("Please enter session name.");
+                    addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
                 }
             }
         }

@@ -63,6 +63,7 @@ public class PaymentReportFragment extends Fragment implements DatePickerDialog.
     private static boolean isFromDate = false;
     PaymentSucessReportAdapter paymentSucessReportAdapter;
     List<FamilyDetailModel> paymentReportList;
+    String startDateStr,endDateStr;
 
     public PaymentReportFragment() {
     }
@@ -89,12 +90,12 @@ public class PaymentReportFragment extends Fragment implements DatePickerDialog.
         Month = calendar.get(Calendar.MONTH);
         Day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        paymentReportBinding.txtStartDate.setText(Util.getTodaysDate());
-        paymentReportBinding.txtEndDate.setText(Util.getTodaysDate());
+        paymentReportBinding.txtStartDate.setText("dd/MM/yyyy");
+        paymentReportBinding.txtEndDate.setText("dd/MM/yyyy");
     }
 
     public void setListners() {
-        paymentReportBinding.txtStartDate.setOnClickListener(new View.OnClickListener() {
+        paymentReportBinding.startDateLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isFromDate = true;
@@ -107,7 +108,7 @@ public class PaymentReportFragment extends Fragment implements DatePickerDialog.
                 datePickerDialog.show(getActivity().getFragmentManager(), "Datepickerdialog");
             }
         });
-        paymentReportBinding.txtEndDate.setOnClickListener(new View.OnClickListener() {
+        paymentReportBinding.endDateLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isFromDate = false;
@@ -123,7 +124,13 @@ public class PaymentReportFragment extends Fragment implements DatePickerDialog.
         paymentReportBinding.btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callPaymentReportApi();
+                startDateStr=paymentReportBinding.txtStartDate.getText().toString();
+                endDateStr=paymentReportBinding.txtEndDate.getText().toString();
+                if(!startDateStr.equalsIgnoreCase("")&&!endDateStr.equalsIgnoreCase("")) {
+                    callPaymentReportApi();
+                }else{
+                    Util.ping(mContext,"Please Date.");
+                }
             }
         });
     }
@@ -211,8 +218,8 @@ public class PaymentReportFragment extends Fragment implements DatePickerDialog.
 
         Map<String, String> map = new HashMap<>();
         map.put("CoachID", Util.getPref(mContext, "coachID"));
-//        map.put("SessionTypeID", sessiontypeStr);
-//        map.put("SessionName", sessionNameStr);
+        map.put("StartDate", startDateStr);
+        map.put("EndDate", endDateStr);
 
         return map;
     }

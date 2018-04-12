@@ -10,6 +10,7 @@
     <string name="last_name">Last Name</string>
     <string name="phone_no">Phone Number</string>
     <string name="family_register1">Registration</string>
+    <string name="forgot">Forgot Password</string>
     <string name="title_activity_dash_board">DashBoardActivity</string>
     <string name="session_time">Add Session Time</string>
     <string name="date">Date</string>
@@ -60,7 +61,7 @@
     <string name="openDrawer">open_drawer</string>
     <string name="closeDrawer">close_drawer</string>
     <string name="session_price">Session Price</string>
-    <string name="s_subject">Lession</string>
+    <string name="s_subject">Lesson</string>
     <string name="batch_time">Time</string>
     <string name="total_student">Student</string>
     <string name="start_date">Start Date</string>
@@ -77,6 +78,7 @@
         <item>Session Calendar</item>
         <item>Add Session</item>
         <item>Payment Report</item>
+        <item>Change Password</item>
         <item>Student Attendance</item>
     </string-array>
 
@@ -109,4 +111,37 @@
     <string name="strEndDate">End Date</string>
     <string name="strShow">Show</string>
 
+    <!--Forgot Screen-->
+    <string name="strEnterRegdMobNum">Enter your registered email address</string>
+    <string name="strRegdMobNum">Registered Email Address</string>
+    <string name="strSendOtp">Send</string>
+    <string name="strConfirmPin">Confirm Pin/Password</string>
+    <string name="strChangePwd">CHANGE PASSWORD</string>
+    <string name="strCancel">CANCEL</string>
+    <string name="strPinPwd">Pin/Password</string>
+    <string name="strPinDoNotMatch">Pin do not match. Please try again</string>
+    <string name="strPinUpdated">Your New Pin has been updated successfully.</string>
+    <string name="strOtpNotMatch">Enter OTP does not match. Please try again</string>
+    <string name="strPlEnterPin">Please enter Pin</string>
+    <string name="strOtpMesgText">Code has been sent to your registered number. Enter the code to verify your account.</string>
+
+    <!-- Session Page String-->
+    <string name="sessionName">Please enter session\'s name.</string>
+    <string name="boardName">Please enter board.</string>
+    <string name="standardName">Please enter standard.</string>
+    <string name="streamName">Please enter stream name.</string>
+    <string name="lessonName">Please enter lesson name.</string>
+    <string name="sessionTime">Please add session\'s time.</string>
+    <string name="sessionAddress">Please enter session\'s address.</string>
+    <string name="sessionArea">Please enter session\'s area.</string>
+    <string name="sessionCity">Please enter session\'s city.</string>
+    <string name="sessionState">Please enter session\'s state.</string>
+    <string name="sessionZipcode">Please enter zipcode.</string>
+    <string name="sessionCapacity">Please enter session\'s capacity.</string>
+    <string name="sessionAmount">Please enter session\'s amount.</string>
+    <string name="Date">Please select session start date and end date should be same.</string>
+
+<!--Change Passsword String-->
+    <string name="newPassword">Enter New Password</string>
+    <string name="changPassword">Your Password Change Succesfully.</string>
 </resources>

@@ -73,6 +73,7 @@
                         android:button="@drawable/absent_radio_type"
                         android:paddingLeft="@dimen/_3sdp"
                         android:tag="2"
+                        android:checked="true"
                         android:text="Child"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_12sdp" />

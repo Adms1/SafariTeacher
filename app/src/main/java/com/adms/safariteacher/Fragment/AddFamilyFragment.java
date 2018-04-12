@@ -58,7 +58,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     Calendar calendar;
     private DatePickerDialog datePickerDialog;
     int mYear, mMonth, mDay;
-    String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr, classStr = "";
+    String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr, classStr = "Child";
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt, session_student_txt_view;
     TeacherInfoModel classListInfo;
@@ -94,7 +94,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         callClassTypeDetailApi();
         if (type.equalsIgnoreCase("Family")) {
             addFamilyBinding.classTypeGroup.setVisibility(View.GONE);
-        }else{
+        } else {
             addFamilyBinding.classTypeGroup.setVisibility(View.VISIBLE);
         }
     }
@@ -207,8 +207,8 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
             public void onClick(View view) {
                 getInsertedValue();
                 if (!contactTypeIDStr.equalsIgnoreCase("")) {
-                    if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
-                        if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
+                    if (!firstNameStr.equalsIgnoreCase("")) {
+                        if (!lastNameStr.equalsIgnoreCase("")) {
                             if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
                                 if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
                                     if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
@@ -297,7 +297,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
             e.printStackTrace();
         }
 
-        if(age >= 5) {
+        if (age >= 5) {
         } else {
 //            Util.ping(mContext, "Please Enter Valid Birthdate.");
             addFamilyBinding.dateOfBirthEdt.setError("Please Enter Valid Birthdate.");
@@ -533,8 +533,11 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         duration_txt.setText(AppConfiguration.SessionDuration);
         time_txt.setText(AppConfiguration.SessionTime);
         session_student_txt.setText(firstNameStr + " " + lastNameStr);
-        session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
-
+        if (AppConfiguration.SessionPrice.equalsIgnoreCase("0.00")) {
+            session_fee_txt.setText("Free");
+        } else {
+            session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
+        }
         AppConfiguration.UserName = session_student_txt.getText().toString();
         confimDialog.show();
 

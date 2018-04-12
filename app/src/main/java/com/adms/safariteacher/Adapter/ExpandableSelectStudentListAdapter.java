@@ -130,10 +130,10 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
             itembinding.phoneNoTxt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    boolean result = Util.checkPermission(mContext);
-                    if (result) {
-
-                    }
+//                    boolean result = Util.checkPermission(mContext);
+//                    if (result) {
+//
+//                    }
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.fromParts("tel", itembinding.phoneNoTxt.getText().toString(), null));
                     mContext.startActivity(intent);
@@ -265,10 +265,10 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
         groupbinding.noTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean result = Util.checkPermission(mContext);
-                if (result) {
-
-                }
+//                boolean result = Util.checkPermission(mContext);
+//                if (result) {
+//
+//                }
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.fromParts("tel", spiltValue[2], null));
                 mContext.startActivity(intent);

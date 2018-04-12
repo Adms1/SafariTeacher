@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import com.adms.safariteacher.Fragment.AddFamilyFragment;
 import com.adms.safariteacher.Fragment.AddSessionFragment;
+import com.adms.safariteacher.Fragment.ChangePasswordFragment;
 import com.adms.safariteacher.Fragment.OldFamilyListFragment;
 import com.adms.safariteacher.Fragment.PaymentReportFragment;
 import com.adms.safariteacher.Fragment.SessionFragment;
@@ -45,6 +47,7 @@ public class DashBoardActivity extends AppCompatActivity {
     private static final String TAG_Add_Session = "Add Session";
     private static final String TAG_Payment_Report = "Payment Report";
     private static final String TAG_Logout = "Logout";
+    private static final String TAG_CHANGE_PASSWORD = "Change Password";
     private static final String TAG_Student_Attendance = "Student Attendance";
 
     public static String CURRENT_TAG = TAG_Session;
@@ -53,7 +56,7 @@ public class DashBoardActivity extends AppCompatActivity {
 
     public static int navItemIndex = 0;
     private String[] activityTitles;
-
+    private int drawerLayoutGravity = Gravity.LEFT;
     // flag to load home fragment when user presses back key
     private boolean shouldLoadHomeFragOnBackPress = true;
     private Handler mHandler;
@@ -81,7 +84,7 @@ public class DashBoardActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SessionFragment()).addToBackStack(null).commit();
             getSupportActionBar().setTitle(activityTitles[navItemIndex]);
-        }else{
+        } else {
             getSupportActionBar().setTitle(activityTitles[navItemIndex]);
         }
 
@@ -106,9 +109,9 @@ public class DashBoardActivity extends AppCompatActivity {
     private void loadHomeFragment() {
         // selecting appropriate nav menu item
         selectNavMenu();
-        if(navItemIndex==3) {
+        if (navItemIndex == 4) {
 
-        }else{
+        } else {
             // set toolbar title
             setToolbarTitle();
         }
@@ -143,16 +146,16 @@ public class DashBoardActivity extends AppCompatActivity {
 //            mHandler.post(mPendingRunnable);
 //        }
 //Closing drawer on item click
-        drawer.closeDrawers();
+
         displayView(navItemIndex);
-
-
+        drawer.closeDrawers();
+//        toggleDrawerState();
         // refresh toolbar menu
         invalidateOptionsMenu();
     }
 
     private void setToolbarTitle() {
-            getSupportActionBar().setTitle(activityTitles[navItemIndex]);
+        getSupportActionBar().setTitle(activityTitles[navItemIndex]);
     }
 
     private void selectNavMenu() {
@@ -250,6 +253,10 @@ public class DashBoardActivity extends AppCompatActivity {
                 myid = fragment.getId();
                 break;
             case 3:
+                fragment = new ChangePasswordFragment();
+                myid = fragment.getId();
+                break;
+            case 4:
                 new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
                         .setCancelable(false)
                         .setTitle("Logout")
@@ -327,8 +334,12 @@ public class DashBoardActivity extends AppCompatActivity {
                         navItemIndex = 2;
                         CURRENT_TAG = TAG_Payment_Report;
                         break;
-                    case R.id.logout:
+                    case R.id.change_password:
                         navItemIndex = 3;
+                        CURRENT_TAG = TAG_CHANGE_PASSWORD;
+                        break;
+                    case R.id.logout:
+                        navItemIndex = 4;
                         CURRENT_TAG = TAG_Logout;
                         break;
                     default:
@@ -442,4 +453,15 @@ public class DashBoardActivity extends AppCompatActivity {
 //        drawer.closeDrawer(GravityCompat.START);
 //        return true;
 //    }
+
+    private void toggleDrawerState() {
+        if (drawer.isDrawerOpen(drawerLayoutGravity)) {
+            drawer.closeDrawer(drawerLayoutGravity);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        } else {
+            drawer.openDrawer(drawerLayoutGravity);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+        }
+    }
+
 }

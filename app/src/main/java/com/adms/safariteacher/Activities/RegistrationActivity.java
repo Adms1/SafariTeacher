@@ -247,7 +247,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
             e.printStackTrace();
         }
 
-        if(age >= 5) {
+        if (age >= 5) {
         } else {
 //            Util.ping(mContext, "Please Enter Valid Birthdate.");
             registrationBinding.dateOfBirthEdt.setError("Please Enter Valid Birthdate.");
@@ -388,6 +388,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                         String[] splitCoachID = teacherInfoModel.getCoachID().split("\\,");
                         Util.setPref(mContext, "coachID", splitCoachID[0]);
                         Util.setPref(mContext, "coachTypeID", splitCoachID[1]);
+                        AppConfiguration.RegisterEmail = emailStr;
                         AppConfiguration.coachId = teacherInfoModel.getCoachID();
                         if (!Util.getPref(mContext, "coachID").equalsIgnoreCase("")) {
                             Intent intentDashboard = new Intent(mContext, DashBoardActivity.class);
