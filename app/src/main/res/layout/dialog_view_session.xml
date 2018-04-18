@@ -7,8 +7,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_27sdp"
+        android:layout_height="@dimen/_33sdp"
         android:layout_gravity="center"
+        android:layout_marginRight="@dimen/_2sdp"
         android:layout_marginTop="@dimen/_3sdp"
         android:orientation="horizontal">
 
@@ -35,12 +36,15 @@
 
         <TextView
             android:id="@+id/session_title_txt"
-            android:layout_width="@dimen/_220sdp"
-            android:layout_height="@dimen/_25sdp"
+            android:layout_width="@dimen/_210sdp"
+            android:layout_height="@dimen/_32sdp"
             android:gravity="start|center_vertical"
             android:paddingLeft="@dimen/_1sdp"
+            android:paddingRight="@dimen/_6sdp"
+            android:layout_marginRight="@dimen/_10sdp"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
+            android:maxLines="5"
             android:textStyle="normal" />
     </LinearLayout>
 
@@ -165,7 +169,7 @@
             android:layout_height="@dimen/_25sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
-            android:text="Total Spot"
+            android:text="Total Spots"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
@@ -178,7 +182,7 @@
             android:text=":"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
-            android:textStyle="bold" />
+            android:textStyle="normal" />
 
         <TextView
             android:id="@+id/total_spot_txt"
@@ -186,19 +190,19 @@
             android:layout_height="@dimen/_25sdp"
             android:gravity="start|center_vertical"
             android:paddingLeft="@dimen/_1sdp"
-            android:text="1000"
-            android:textColor="@color/text_color"
+            android:text="0"
+            android:textColor="@color/present"
             android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
 
         <TextView
             android:id="@+id/spot_left_txt_view"
-            android:layout_width="@dimen/_60sdp"
+            android:layout_width="@dimen/_67sdp"
             android:layout_height="@dimen/_25sdp"
             android:layout_marginLeft="@dimen/_5sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_5sdp"
-            android:text="Spot Left"
+            android:text="Spots Left"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
@@ -211,15 +215,15 @@
             android:text=":"
             android:textColor="@color/text_color"
             android:textSize="@dimen/_12sdp"
-            android:textStyle="bold" />
+            android:textStyle="normal" />
         <TextView
             android:id="@+id/spot_left_txt"
             android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_25sdp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/_1sdp"
-            android:text="11:00"
-            android:textColor="@color/text_color"
+            android:text="0"
+            android:textColor="@color/search_boder"
             android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
     </LinearLayout>
@@ -227,8 +231,19 @@
         android:layout_width="match_parent"
         android:layout_height="0.1dp"
         android:background="@color/dark_gray" />
-
+    <TextView
+        android:id="@+id/no_record_txt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_150sdp"
+        android:layout_margin="0.1dp"
+        android:gravity="center"
+        android:text="No Record Found."
+        android:textColor="@color/search_boder"
+        android:textSize="@dimen/_11sdp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
     <LinearLayout
+        android:id="@+id/list_linear"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_150sdp"
         android:layout_marginBottom="@dimen/_5sdp"
@@ -307,16 +322,16 @@
     <Button
         android:id="@+id/cancel_btn"
         android:layout_width="@dimen/_130sdp"
-        android:layout_height="@dimen/_30sdp"
+        android:layout_height="@dimen/_35sdp"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/_6sdp"
         android:layout_marginLeft="@dimen/_5sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        android:background="@drawable/submit_shape"
+        android:background="@drawable/register_btn"
         android:gravity="center"
         android:text="Cancel"
         android:textAllCaps="false"
-        android:textColor="@color/blue"
+        android:textColor="@color/white"
         android:textSize="@dimen/_12sdp"
         android:textStyle="bold" />
 </LinearLayout>

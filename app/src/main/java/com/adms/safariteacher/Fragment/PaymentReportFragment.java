@@ -126,10 +126,10 @@ public class PaymentReportFragment extends Fragment implements DatePickerDialog.
             public void onClick(View view) {
                 startDateStr=paymentReportBinding.txtStartDate.getText().toString();
                 endDateStr=paymentReportBinding.txtEndDate.getText().toString();
-                if(!startDateStr.equalsIgnoreCase("")&&!endDateStr.equalsIgnoreCase("")) {
+                if(!startDateStr.equalsIgnoreCase("dd/MM/yyyy")&&!endDateStr.equalsIgnoreCase("dd/MM/yyyy")) {
                     callPaymentReportApi();
                 }else{
-                    Util.ping(mContext,"Please Date.");
+                    Util.ping(mContext,"Please Select StartDate and EndDate.");
                 }
             }
         });
@@ -189,6 +189,7 @@ public class PaymentReportFragment extends Fragment implements DatePickerDialog.
                         if (paymentInfoModel.getData().size() > 0) {
                             paymentReportBinding.noRecordTxt.setVisibility(View.GONE);
                             paymentReportBinding.listLinear.setVisibility(View.VISIBLE);
+                            paymentReportBinding.headerLinear.setVisibility(View.VISIBLE);
                             paymentSucessReportAdapter = new PaymentSucessReportAdapter(mContext, paymentReportList);
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                             paymentReportBinding.reportRcList.setLayoutManager(mLayoutManager);
@@ -197,6 +198,7 @@ public class PaymentReportFragment extends Fragment implements DatePickerDialog.
                         } else {
                             paymentReportBinding.noRecordTxt.setVisibility(View.VISIBLE);
                             paymentReportBinding.listLinear.setVisibility(View.GONE);
+                            paymentReportBinding.headerLinear.setVisibility(View.GONE);
                         }
                     }
                 }

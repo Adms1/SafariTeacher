@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -90,11 +91,30 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 passwordStr = registrationBinding.passwordEdt.getText().toString();
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
+                    if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 4 && passwordStr.length() <= 8) {
                     } else {
-                        registrationBinding.passwordEdt.setError("Password must be 6-12 Characters.");
+                        registrationBinding.passwordEdt.setError("Password must be 4-8 Characters.");
                     }
                 }
+                return false;
+            }
+        });
+        registrationBinding.phoneNoEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    registrationBinding.dateOfBirthEdt.setError(null);
+                    datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(RegistrationActivity.this, Year, Month, Day);
+                    datePickerDialog.setThemeDark(false);
+                    datePickerDialog.setOkText("Done");
+                    datePickerDialog.showYearPickerFirst(false);
+                    datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
+//                datePickerDialog.setTitle("Select Date From DatePickerDialog");
+                    datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
+                }
+
                 return false;
             }
         });
@@ -102,12 +122,10 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
             @Override
             public void onClick(View view) {
                 getInsertedValue();
-
-
                 if (!firstNameStr.equalsIgnoreCase("") && firstNameStr.length() > 3) {
                     if (!lastNameStr.equalsIgnoreCase("") && lastNameStr.length() > 3) {
                         if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
-                            if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
+                            if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 4 && passwordStr.length() <= 8) {
                                 if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                     if (!gendarIdStr.equalsIgnoreCase("")) {
                                         if (!dateofbirthStr.equalsIgnoreCase("")) {
@@ -122,7 +140,7 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                                     registrationBinding.phoneNoEdt.setError("Enter 10 digit Phone Number.");
                                 }
                             } else {
-                                registrationBinding.passwordEdt.setError("Password must be 6-12 Characters.");
+                                registrationBinding.passwordEdt.setError("Password must be 4-8 Characters.");
                             }
                         } else {
                             registrationBinding.emailEdt.setError("Please Enter Email Address.");
@@ -186,6 +204,8 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
         passwordStr = registrationBinding.passwordEdt.getText().toString();
         phonenoStr = registrationBinding.phoneNoEdt.getText().toString();
         dateofbirthStr = registrationBinding.dateOfBirthEdt.getText().toString();
+
+        Util.setPref(mContext, "Password", passwordStr);
     }
 
     @Override
@@ -388,6 +408,8 @@ public class RegistrationActivity extends AppCompatActivity implements DatePicke
                         String[] splitCoachID = teacherInfoModel.getCoachID().split("\\,");
                         Util.setPref(mContext, "coachID", splitCoachID[0]);
                         Util.setPref(mContext, "coachTypeID", splitCoachID[1]);
+                        Util.setPref(mContext, "RegisterUserName", teacherInfoModel.getName());
+                        Util.setPref(mContext, "RegisterEmail", teacherInfoModel.getEmailID());
                         AppConfiguration.RegisterEmail = emailStr;
                         AppConfiguration.coachId = teacherInfoModel.getCoachID();
                         if (!Util.getPref(mContext, "coachID").equalsIgnoreCase("")) {

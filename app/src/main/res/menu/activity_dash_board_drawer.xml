@@ -19,7 +19,7 @@
 
         <item
             android:id="@+id/change_password"
-            android:icon="@drawable/payment_report"
+            android:icon="@drawable/change_password"
             android:title="Change Password"/>
         <item
             android:id="@+id/logout"

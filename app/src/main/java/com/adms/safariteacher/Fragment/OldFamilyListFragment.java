@@ -153,7 +153,7 @@ public class OldFamilyListFragment extends Fragment {
 
         getsessionID();
 
-        if (AppConfiguration.SessionPrice.equalsIgnoreCase("0.00")) {
+        if (AppConfiguration.SessionPrice.equalsIgnoreCase("0")) {
             session_fee_txt.setText("Free");
         } else {
             session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
@@ -174,7 +174,7 @@ public class OldFamilyListFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("") && !AppConfiguration.SessionPrice.equalsIgnoreCase("0.00")) {
+                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("") && !AppConfiguration.SessionPrice.equalsIgnoreCase("0")) {
                     callpaymentRequestApi();
                 } else {
                     callSessionConfirmationApi();
@@ -480,7 +480,7 @@ public class OldFamilyListFragment extends Fragment {
                         Bundle args = new Bundle();
                         args.putString("orderID", orderIDStr);
                         args.putString("amount", AppConfiguration.SessionPrice);
-                        args.putString("mode", "TEST");
+                        args.putString("mode", "LIVE");
                         args.putString("username", session_student_txt.getText().toString());
                         args.putString("sessionID", sessionIDStr);
                         args.putString("contactID", contatIDstr);

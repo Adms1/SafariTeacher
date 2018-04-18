@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_below="@+id/select_linear"
-            android:layout_weight="2.41"
+            android:layout_weight="2.68"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -84,7 +84,8 @@
             android:layout_weight="0.34"
             android:background="@color/search_boder"
             android:gravity="bottom|start"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/session_email"

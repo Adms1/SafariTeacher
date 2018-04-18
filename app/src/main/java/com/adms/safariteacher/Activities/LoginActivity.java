@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getInsertedValue();
-                if (!usernameStr.equalsIgnoreCase("") && Util.isValidEmaillId(usernameStr) && !passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
+                if (!usernameStr.equalsIgnoreCase("") && Util.isValidEmaillId(usernameStr) && !passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 4 && passwordStr.length() <= 8) {
                     callTeacherLoginApi();
                 } else {
                     Util.ping(mContext, "Invalid Email Address or Password.");
@@ -229,8 +229,9 @@ public class LoginActivity extends AppCompatActivity {
                         String[] splitCoachID = teacherInfoModel.getCoachID().split("\\,");
                         Util.setPref(mContext, "coachID", splitCoachID[0]);
                         Util.setPref(mContext, "coachTypeID", splitCoachID[1]);
+                        Util.setPref(mContext, "RegisterUserName", teacherInfoModel.getName());
+                        Util.setPref(mContext, "RegisterEmail", teacherInfoModel.getEmailID());
                         AppConfiguration.coachId = teacherInfoModel.getCoachID();
-
                         Intent inLogin = new Intent(mContext, DashBoardActivity.class);
                         startActivity(inLogin);
                     }
@@ -260,6 +261,7 @@ public class LoginActivity extends AppCompatActivity {
     public void getInsertedValue() {
         usernameStr = loginScreenBinding.emailEdt.getText().toString();
         passwordStr = loginScreenBinding.passwordEdt.getText().toString();
+        Util.setPref(mContext, "Password", passwordStr);
     }
 
     public void checkUnmPwd() {
@@ -297,7 +299,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Util.ping(mContext, "Invalid Email Address.");
                 }
-                forgotDialog.dismiss();
+
 
             }
         });

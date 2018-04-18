@@ -547,7 +547,21 @@ public class StudentAttendanceFragment extends Fragment implements DatePickerDia
                 }
             }
         } else {
-            studentAttendanceBinding.classSpinner.setSelection(0);
+            String classValue;
+            if (AppConfiguration.SessionPrice.equalsIgnoreCase("0")) {
+                classValue = "Free Class";
+            }else{
+                classValue="Regular Class";
+            }
+            for (int m = 0; m < spinnerclassIdArray.length; m++) {
+                    if (classValue.equalsIgnoreCase((spinnerclassIdArray[m]))) {
+                        Log.d("spinnerValue", spinnerclassIdArray[m]);
+                        int index = m;
+                        Log.d("indexOf", String.valueOf(index));
+                        studentAttendanceBinding.classSpinner.setSelection(m);
+                    }
+
+            }
         }
     }
 

@@ -29,9 +29,32 @@ public class TeacherInfoModel {
     @SerializedName("OrderID")
     @Expose
     private String orderID;
+    @SerializedName("EmailID")
+    @Expose
+    private String emailID;
+    @SerializedName("Name")
+    @Expose
+    private String name;
     @SerializedName("Data")
     @Expose
     private List<FamilyDetailModel> data = new ArrayList<FamilyDetailModel>();
+
+    public String getEmailID() {
+        return emailID;
+    }
+
+    public void setEmailID(String emailID) {
+        this.emailID = emailID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getSuccess() {
         return success;
     }

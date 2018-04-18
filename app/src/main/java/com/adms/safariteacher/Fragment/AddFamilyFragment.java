@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Activities.LoginActivity;
+import com.adms.safariteacher.Activities.RegistrationActivity;
 import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
@@ -144,10 +146,10 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 passwordStr = addFamilyBinding.passwordEdt.getText().toString();
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
+                    if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 4 && passwordStr.length() <= 8) {
 
                     } else {
-                        addFamilyBinding.passwordEdt.setError("Password must be 6-12 Characters.");
+                        addFamilyBinding.passwordEdt.setError("Password must be 4-8 Characters.");
                     }
                 }
                 return false;
@@ -166,6 +168,23 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                         break;
                     default:
                 }
+            }
+        });
+        addFamilyBinding.phoneNoEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    addFamilyBinding.dateOfBirthEdt.setError(null);
+                    datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(AddFamilyFragment.this, Year, Month, Day);
+                    datePickerDialog.setThemeDark(false);
+                    datePickerDialog.setOkText("Done");
+                    datePickerDialog.showYearPickerFirst(false);
+                    datePickerDialog.setAccentColor(Color.parseColor("#f2552c"));
+//                datePickerDialog.setTitle("Select Date From DatePickerDialog");
+                    datePickerDialog.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                }
+
+                return false;
             }
         });
         addFamilyBinding.classTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -210,7 +229,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                     if (!firstNameStr.equalsIgnoreCase("")) {
                         if (!lastNameStr.equalsIgnoreCase("")) {
                             if (!emailStr.equalsIgnoreCase("") && Util.isValidEmaillId(emailStr)) {
-                                if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 6 && passwordStr.length() <= 12) {
+                                if (!passwordStr.equalsIgnoreCase("") && passwordStr.length() >= 4 && passwordStr.length() <= 8) {
                                     if (!phonenoStr.equalsIgnoreCase("") && phonenoStr.length() >= 10) {
                                         if (!gendarIdStr.equalsIgnoreCase("")) {
                                             if (!dateofbirthStr.equalsIgnoreCase("")) {
@@ -229,7 +248,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                                         addFamilyBinding.phoneNoEdt.setError("Enter 10 digit Phone Number.");
                                     }
                                 } else {
-                                    addFamilyBinding.passwordEdt.setError("Password must be 6-12 Characters.");
+                                    addFamilyBinding.passwordEdt.setError("Password must be 4-8 Characters.");
                                 }
                             } else {
                                 addFamilyBinding.emailEdt.setError("Please Enter Valid Email Addres.");
@@ -515,7 +534,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         confirm_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("") && !AppConfiguration.SessionPrice.equalsIgnoreCase("0.00")) {
+                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("") && !AppConfiguration.SessionPrice.equalsIgnoreCase("0")) {
                     callpaymentRequestApi();
                 } else {
                     callSessionConfirmationApi();
@@ -533,7 +552,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         duration_txt.setText(AppConfiguration.SessionDuration);
         time_txt.setText(AppConfiguration.SessionTime);
         session_student_txt.setText(firstNameStr + " " + lastNameStr);
-        if (AppConfiguration.SessionPrice.equalsIgnoreCase("0.00")) {
+        if (AppConfiguration.SessionPrice.equalsIgnoreCase("0")) {
             session_fee_txt.setText("Free");
         } else {
             session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
@@ -573,7 +592,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                         Bundle args = new Bundle();
                         args.putString("orderID", orderIDStr);
                         args.putString("amount", AppConfiguration.SessionPrice);
-                        args.putString("mode", "TEST");
+                        args.putString("mode", "LIVE");
                         args.putString("username", session_student_txt.getText().toString());
                         args.putString("sessionID", sessionIDStr);
                         args.putString("contactID", contatIDstr);

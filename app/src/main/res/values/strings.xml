@@ -4,7 +4,7 @@
     <string name="user_id">Email</string>
     <string name="user_pass">Password</string>
     <string name="register_str">Don\’t have an account?</string>
-    <string name="register"><u>Register?</u></string>
+    <string name="register"><u>Register</u></string>
     <string name="forgot_pass">Forgot Password?</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -78,8 +78,9 @@
         <item>Session Calendar</item>
         <item>Add Session</item>
         <item>Payment Report</item>
-        <item>Change Password</item>
         <item>Student Attendance</item>
+        <!--<item>Change Password</item>-->
+        <!--<item>Logout</item>-->
     </string-array>
 
 
@@ -144,4 +145,6 @@
 <!--Change Passsword String-->
     <string name="newPassword">Enter New Password</string>
     <string name="changPassword">Your Password Change Succesfully.</string>
+    <string name="confirmpassword">Enter Confirm Password</string>
+    <string name="currentpassword">Enter Current Password</string>
 </resources>

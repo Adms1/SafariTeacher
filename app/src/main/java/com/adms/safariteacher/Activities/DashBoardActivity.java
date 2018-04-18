@@ -1,5 +1,6 @@
 package com.adms.safariteacher.Activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,9 +35,18 @@ import com.adms.safariteacher.Fragment.OldFamilyListFragment;
 import com.adms.safariteacher.Fragment.PaymentReportFragment;
 import com.adms.safariteacher.Fragment.SessionFragment;
 import com.adms.safariteacher.Fragment.StudentAttendanceFragment;
+import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
+import com.adms.safariteacher.Utility.ApiHandler;
+import com.adms.safariteacher.Utility.AppConfiguration;
 import com.adms.safariteacher.Utility.Util;
 import com.facebook.internal.Utility;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class DashBoardActivity extends AppCompatActivity {
     private NavigationView navigationView;
@@ -60,12 +74,19 @@ public class DashBoardActivity extends AppCompatActivity {
     // flag to load home fragment when user presses back key
     private boolean shouldLoadHomeFragOnBackPress = true;
     private Handler mHandler;
+    //Use for dialog
+    Dialog changeDialog;
+    EditText edtnewpassword, edtconfirmpassword, edtcurrentpassword;
+    Button changepwd_btn, cancel_btn;
+    String EmailIdStr, passWordStr, confirmpassWordStr, currentpasswordStr;
+    ImageView session_cal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        session_cal = (ImageView) findViewById(R.id.session_cal);
         setSupportActionBar(toolbar);
         mHandler = new Handler();
         mContex = DashBoardActivity.this;
@@ -82,12 +103,24 @@ public class DashBoardActivity extends AppCompatActivity {
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
 
         if (savedInstanceState == null) {
+            navItemIndex = 0;
             getSupportFragmentManager().beginTransaction().replace(R.id.frame, new SessionFragment()).addToBackStack(null).commit();
             getSupportActionBar().setTitle(activityTitles[navItemIndex]);
         } else {
             getSupportActionBar().setTitle(activityTitles[navItemIndex]);
         }
 
+        session_cal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new SessionFragment();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
         // load nav menu header data
         loadNavHeader();
 
@@ -100,8 +133,8 @@ public class DashBoardActivity extends AppCompatActivity {
 
     private void loadNavHeader() {
         // name, website
-        txtName.setText("ADMS");
-        txtWebsite.setText("test@adms.net");
+        txtName.setText(Util.getPref(mContex, "RegisterUserName"));
+        txtWebsite.setText(Util.getPref(mContex, "RegisterEmail"));
         imgProfile.setImageResource(R.drawable.person_placeholder);
 
     }
@@ -109,7 +142,7 @@ public class DashBoardActivity extends AppCompatActivity {
     private void loadHomeFragment() {
         // selecting appropriate nav menu item
         selectNavMenu();
-        if (navItemIndex == 4) {
+        if (navItemIndex == 4 || navItemIndex == 3) {
 
         } else {
             // set toolbar title
@@ -253,8 +286,7 @@ public class DashBoardActivity extends AppCompatActivity {
                 myid = fragment.getId();
                 break;
             case 3:
-                fragment = new ChangePasswordFragment();
-                myid = fragment.getId();
+                changePasswordDialog();
                 break;
             case 4:
                 new AlertDialog.Builder(new ContextThemeWrapper(mContex, R.style.AppTheme))
@@ -268,6 +300,8 @@ public class DashBoardActivity extends AppCompatActivity {
                                 Util.setPref(mContex, "SessionID", "");
                                 Util.setPref(mContex, "FamilyID", "");
                                 Util.setPref(mContex, "sessionDetailID", "");
+                                Util.setPref(mContex, "RegisterUserName", "");
+                                Util.setPref(mContex, "RegisterEmail", "");
                                 Intent intentLogin = new Intent(DashBoardActivity.this, LoginActivity.class);
                                 startActivity(intentLogin);
                                 finish();
@@ -402,6 +436,8 @@ public class DashBoardActivity extends AppCompatActivity {
             } else {
 //                loadHomeFragment();
                 Util.ping(mContex, "Press again to exist.");
+                finish();
+                System.exit(0);
             }
         }
 
@@ -411,27 +447,39 @@ public class DashBoardActivity extends AppCompatActivity {
     public void setActionBar(int session, String flag) {
         if (session == 1 && flag.equalsIgnoreCase("edit")) {
             getSupportActionBar().setTitle("Edit Session");
+            session_cal.setVisibility(View.VISIBLE);
         } else if (session == 1 && flag.equalsIgnoreCase("add")) {
             getSupportActionBar().setTitle("Add Session");
+            session_cal.setVisibility(View.VISIBLE);
         } else if (session == 1 && flag.equalsIgnoreCase("view")) {
             getSupportActionBar().setTitle("View Session");
+            session_cal.setVisibility(View.VISIBLE);
         } else if (session == 10 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Add Family");
+            session_cal.setVisibility(View.GONE);
         } else if (session == 11 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Add Contact");
+            session_cal.setVisibility(View.GONE);
         } else if (session == 12 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Payment");
+            session_cal.setVisibility(View.VISIBLE);
         } else if (session == 13 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Family List");
+            session_cal.setVisibility(View.VISIBLE);
         } else if (session == 14 && flag.equalsIgnoreCase("false")) {
             getSupportActionBar().setTitle("Payment Sucess");
+            session_cal.setVisibility(View.GONE);
         } else if (session == 3 && flag.equalsIgnoreCase("true")) {
             getSupportActionBar().setTitle("Student Attendance");
+            session_cal.setVisibility(View.VISIBLE);
         }
 //        else if (session == 15 && flag.equalsIgnoreCase("false")) {
 //            getSupportActionBar().setTitle("Payment Report");
 //        }
         else {
+            if(session==0){
+                session_cal.setVisibility(View.GONE);
+            }
             getSupportActionBar().setTitle(activityTitles[session]);
         }
     }
@@ -439,7 +487,7 @@ public class DashBoardActivity extends AppCompatActivity {
 //        getSupportActionBar().setTitle("Payment Sucess Report");
 //    }
 
-//    @SuppressWarnings("StatementWithEmptyBody")
+    //    @SuppressWarnings("StatementWithEmptyBody")
 //    @Override
 //    public boolean onNavigationItemSelected(MenuItem item) {
 //        // Handle navigation view item clicks here.
@@ -453,15 +501,111 @@ public class DashBoardActivity extends AppCompatActivity {
 //        drawer.closeDrawer(GravityCompat.START);
 //        return true;
 //    }
+    public void changePasswordDialog() {
+        changeDialog = new Dialog(mContex, R.style.Theme_Dialog);
+        Window window = changeDialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        changeDialog.getWindow().getAttributes().verticalMargin = 0.0f;
+        wlp.gravity = Gravity.CENTER;
+        window.setAttributes(wlp);
 
-    private void toggleDrawerState() {
-        if (drawer.isDrawerOpen(drawerLayoutGravity)) {
-            drawer.closeDrawer(drawerLayoutGravity);
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        changeDialog.getWindow().setBackgroundDrawableResource(R.drawable.session_confirm);
+
+        changeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        changeDialog.setCancelable(false);
+        changeDialog.setContentView(R.layout.change_password_dialog);
+
+        cancel_btn = (Button) changeDialog.findViewById(R.id.cancel_btn);
+        changepwd_btn = (Button) changeDialog.findViewById(R.id.changepwd_btn);
+        edtconfirmpassword = (EditText) changeDialog.findViewById(R.id.edtconfirmpassword);
+        edtnewpassword = (EditText) changeDialog.findViewById(R.id.edtnewpassword);
+        edtcurrentpassword = (EditText) changeDialog.findViewById(R.id.edtcurrentpassword);
+
+        changepwd_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentpasswordStr = edtcurrentpassword.getText().toString();
+                confirmpassWordStr = edtconfirmpassword.getText().toString();
+                passWordStr = edtnewpassword.getText().toString();
+                if (currentpasswordStr.equalsIgnoreCase(Util.getPref(mContex, "Password"))) {
+                    if (!passWordStr.equalsIgnoreCase("") && passWordStr.length() >= 6 && passWordStr.length() <= 12) {
+                        if (passWordStr.equalsIgnoreCase(confirmpassWordStr)) {
+                            callChangePasswordApi();
+                        } else {
+                            edtcurrentpassword.setError("Confirm Password does not match.");
+                        }
+                    } else {
+//                    Util.ping(mContex, "Confirm Password does not match.");
+                        edtconfirmpassword.setError("Password must be 6-12 Characters.");
+                        edtconfirmpassword.setText("");
+                        edtconfirmpassword.setText("");
+                    }
+                } else {
+                    edtcurrentpassword.setError("Password does not match to current password.");
+                }
+
+
+            }
+        });
+        cancel_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeDialog.dismiss();
+            }
+        });
+
+        changeDialog.show();
+
+    }
+
+    //USe for Change Password
+    public void callChangePasswordApi() {
+        if (Util.isNetworkConnected(mContex)) {
+
+            Util.showDialog(mContex);
+            ApiHandler.getApiService().get_Change_Password(getChangePasswordDetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel forgotInfoModel, Response response) {
+                    Util.dismissDialog();
+                    if (forgotInfoModel == null) {
+                        Util.ping(mContex, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (forgotInfoModel.getSuccess() == null) {
+                        Util.ping(mContex, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (forgotInfoModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContex, "Please Enter Valid Password.");
+                        return;
+                    }
+                    if (forgotInfoModel.getSuccess().equalsIgnoreCase("True")) {
+                        Util.ping(mContex, getResources().getString(R.string.changPassword));
+                        changeDialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContex, getString(R.string.something_wrong));
+                }
+            });
         } else {
-            drawer.openDrawer(drawerLayoutGravity);
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+            Util.ping(mContex, getString(R.string.internet_connection_error));
         }
+    }
+
+    private Map<String, String> getChangePasswordDetail() {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("EmailAddress", Util.getPref(mContex, "RegisterEmail"));
+        map.put("Password", passWordStr);
+
+
+        return map;
     }
 
 }

@@ -46,8 +46,6 @@ import retrofit.client.Response;
 
 
 public class ChangePasswordFragment extends Fragment {
-
-
     private View rootView;
     private Context mContext;
     private Fragment fragment = null;

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
@@ -60,8 +61,9 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     public Dialog sessionDialog;
     Button cancel_btn, add_attendance_btn, edit_session_btn, add_student_btn;
     String sessionnameStr, sessionstrattimeStr = "", sessionendtimeStr = "", sessionDateStr = "", sessionIDStr, sessionDetailIDStr, priceStr;
-    TextView start_time_txt, end_time_txt, session_title_txt, date_txt, total_spot_txt, spot_left_txt;
+    TextView start_time_txt, end_time_txt, session_title_txt, date_txt, total_spot_txt, spot_left_txt, no_record_txt;
     RecyclerView studentnamelist_rcView;
+    LinearLayout list_linear;
     SessionViewStudentListAdapter sessionViewStudentListAdapter;
     List<sessionDataModel> arrayList;
     SessionDetailModel finalsessionfullDetailModel;
@@ -102,7 +104,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
         }
 
-
         setListner();
         return rootView;
     }
@@ -116,7 +117,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         minDate.add(Calendar.MONTH, -2);
         maxDate.add(Calendar.YEAR, 1);
 
-
         mockList(eventList);
         calendarBinding.agendaCalendarView.init(eventList, minDate, maxDate, Locale.US, this);
     }
@@ -125,6 +125,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         calendarBinding.addEventFabBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DashBoardActivity.navItemIndex=1;
                 Fragment fragment = new AddSessionFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -132,7 +133,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 args.putString("flag", "Add");
                 fragment.setArguments(args);
                 fragmentTransaction.replace(R.id.frame, fragment);
-                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
@@ -237,7 +238,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         AppConfiguration.SessionName = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName();
                         AppConfiguration.SessionDuration = "( " + SessionHour + "hr" + ", " + SessionMinit + "min )";
                         AppConfiguration.SessionTime = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime();
-                        AppConfiguration.SessionPrice = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionPrice();
+                        AppConfiguration.SessionPrice = String.valueOf(Math.round(Float.parseFloat(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionPrice())));
                         Util.setPref(mContext, "sessionDetailID", sessionDetailIDStr);
                     }
 
@@ -329,9 +330,11 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         end_time_txt = (TextView) sessionDialog.findViewById(R.id.end_time_txt);
         date_txt = (TextView) sessionDialog.findViewById(R.id.date_txt);
         studentnamelist_rcView = (RecyclerView) sessionDialog.findViewById(R.id.student_name_list_rcView);
+        list_linear = (LinearLayout) sessionDialog.findViewById(R.id.list_linear);
         add_student_btn = (Button) sessionDialog.findViewById(R.id.add_student_btn);
         total_spot_txt = (TextView) sessionDialog.findViewById(R.id.total_spot_txt);
         spot_left_txt = (TextView) sessionDialog.findViewById(R.id.spot_left_txt);
+        no_record_txt = (TextView) sessionDialog.findViewById(R.id.no_record_txt);
         callGetSessionStudentDetailApi();
 
         date_txt.setText(sessionDateStr);
@@ -350,6 +353,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         edit_session_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DashBoardActivity.navItemIndex=1;
                 Fragment fragment = new AddSessionFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -359,7 +363,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 args.putString("studentAvailable", String.valueOf(arraySize));
                 fragment.setArguments(args);
                 fragmentTransaction.replace(R.id.frame, fragment);
-                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 sessionDialog.dismiss();
             }
@@ -368,6 +372,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         add_attendance_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DashBoardActivity.navItemIndex=1;
                 AppConfiguration.DateStr = date_txt.getText().toString();
                 AppConfiguration.TimeStr = start_time_txt.getText().toString() + "-" + end_time_txt.getText().toString();
                 Fragment fragment = new StudentAttendanceFragment();
@@ -377,7 +382,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 args.putString("session", "2");
                 fragment.setArguments(args);
                 fragmentTransaction.replace(R.id.frame, fragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 sessionDialog.dismiss();
             }
@@ -386,6 +390,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         add_student_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DashBoardActivity.navItemIndex=1;
                 Fragment fragment = new OldFamilyListFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -393,7 +398,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                 args.putString("session", "13");
                 args.putString("sessionID", sessionIDStr);
                 fragmentTransaction.replace(R.id.frame, fragment);
-                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 sessionDialog.dismiss();
             }
@@ -456,7 +461,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
     public void mockList(List<CalendarEvent> eventList) {
         long startDate = 0, endDate = 0;
-        ArrayList<Integer> SelectColor = new ArrayList();
 
         for (int i = 0; i < finalsessionfullDetailModel.getData().size(); i++) {
 
@@ -505,13 +509,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         }
     }
 
-    public static SessionFragment newInstance() {
-        if (fragment == null) {
-            fragment = new SessionFragment();
-        }
-        return fragment;
-    }
-
     //Use for Get SessionStudent Detail
     public void callGetSessionStudentDetailApi() {
         if (Util.isNetworkConnected(mContext)) {
@@ -542,28 +539,25 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         arraySize = arrayList.size();
                         studentAvailability = sessionCapacity - arraySize;
                         Log.d("capacity", "" + sessionCapacity + "arraySize :" + arraySize + "studentAvailability :" + studentAvailability);
-                        if (arrayList.size() > 0) {
+                        if (sessionStudentInfo.getData().size() > 0) {
+                            list_linear.setVisibility(View.VISIBLE);
+                            no_record_txt.setVisibility(View.GONE);
                             for (int i = 0; i < arrayList.size(); i++) {
                                 StudentList.add(arrayList.get(i).getFirstName() + "|" + arrayList.get(i).getPhoneNumber() + "|" + arrayList.get(i).getLastName());
                             }
-                            for (int i = 0; i < sessionCapacity - arrayList.size(); i++) {
-                                StudentList.add("-----" + "|" + "-----" + "|" + "-----");
-                            }
+                            Log.d("arrayList", "" + StudentList);
+                            sessionViewStudentListAdapter = new SessionViewStudentListAdapter(mContext, StudentList);
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                            studentnamelist_rcView.setLayoutManager(mLayoutManager);
+                            studentnamelist_rcView.setItemAnimator(new DefaultItemAnimator());
+                            studentnamelist_rcView.setAdapter(sessionViewStudentListAdapter);
 
                         } else {
-                            for (int i = 0; i < sessionCapacity; i++) {
-                                StudentList.add("-----" + "|" + "-----" + "|" + "-----");
-                            }
+                            list_linear.setVisibility(View.GONE);
+                            no_record_txt.setVisibility(View.VISIBLE);
                         }
-                        Log.d("arrayList", "" + StudentList);
-                        sessionViewStudentListAdapter = new SessionViewStudentListAdapter(mContext, StudentList);
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                        studentnamelist_rcView.setLayoutManager(mLayoutManager);
-                        studentnamelist_rcView.setItemAnimator(new DefaultItemAnimator());
-                        studentnamelist_rcView.setAdapter(sessionViewStudentListAdapter);
                         total_spot_txt.setText(String.valueOf(sessionCapacity));
                         spot_left_txt.setText(String.valueOf(studentAvailability));
-
                         if (arraySize > 0) {
                             add_attendance_btn.setEnabled(true);
                             add_attendance_btn.setAlpha(1);
@@ -578,8 +572,6 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                             add_student_btn.setEnabled(false);
                             add_student_btn.setAlpha(0.5f);
                         }
-
-
                         if (arraySize == 0) {
                             edit_session_btn.setText("Edit Session");
                             flag = "edit";
@@ -624,11 +616,8 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
             min = (int) (difference - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
             hours = (hours < 0 ? -hours : hours);
             SessionHour = hours;
-//            if(min>0){
+
             SessionMinit = min;
-//            }else{
-//                SessionMinit=null;
-//            }
 
             Log.i("======= Hours", " :: " + hours + ":" + min);
 

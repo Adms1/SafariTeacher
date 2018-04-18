@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_300sdp"
+    android:layout_height="@dimen/_320sdp"
     android:background="@drawable/session_confirm"
     android:orientation="vertical">
 
@@ -25,11 +25,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_weight="1"
-                android:gravity="center_vertical|center"
-                android:paddingLeft="@dimen/_5sdp"
-                android:text="PLEASE CONFIRM"
+                android:gravity="center_vertical|start"
+                android:paddingLeft="@dimen/_15sdp"
+                android:text="Please Confirm"
                 android:textColor="@color/blue"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -135,7 +135,7 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_height="@dimen/_45sdp"
                 android:layout_marginTop="@dimen/_1sdp"
                 android:orientation="horizontal">
 
@@ -164,13 +164,14 @@
                     android:textStyle="normal" />
             <TextView
                 android:id="@+id/location_txt"
-                android:layout_width="@dimen/_145sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_155sdp"
+                android:layout_height="@dimen/_44sdp"
                 android:gravity="start|center_vertical"
                 android:layout_gravity="center"
                 android:paddingRight="@dimen/_5sdp"
                 android:paddingLeft="@dimen/_5sdp"
-                android:text="604,Iscon Elegance,S.G highway,Opp.Karnavati club,Ahmedabad-380015."
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="604,Iscon Elegance,S.G highway,Opp.Karnavati club,Ahmedabad,Gujarat-380015."
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/_11sdp"
                 android:textStyle="normal" />
@@ -315,35 +316,37 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/_1sdp"
             android:layout_weight="0.5"
-            android:background="@color/dark_gray"
+            android:background="@color/white"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <TextView
                 android:id="@+id/cancel_txt"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/_35sdp"
                 android:layout_marginRight="@dimen/_1sdp"
                 android:layout_weight="1"
-                android:background="@color/white"
+                android:background="@drawable/register_btn"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:gravity="center_vertical|center"
-                android:paddingLeft="@dimen/_15sdp"
                 android:text="Cancel"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/_13sdp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp"
+                android:textAllCaps="true"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/confirm_txt"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/_35sdp"
                 android:layout_weight="1"
-                android:background="@color/white"
+                android:background="@drawable/register_btn"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:gravity="center_vertical|center"
-                android:paddingRight="@dimen/_25sdp"
                 android:text="Confirm"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/_13sdp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp"
+                android:textAllCaps="true"
                 android:textStyle="bold" />
         </LinearLayout>
 
