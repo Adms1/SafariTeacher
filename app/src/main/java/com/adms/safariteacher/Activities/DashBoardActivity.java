@@ -483,24 +483,7 @@ public class DashBoardActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(activityTitles[session]);
         }
     }
-//else if (session == 15 && flag.equalsIgnoreCase("false")) {
-//        getSupportActionBar().setTitle("Payment Sucess Report");
-//    }
 
-    //    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(MenuItem item) {
-//        // Handle navigation view item clicks here.
-//        int id = item.getItemId();
-//
-//        if (id == R.id.add_session) {
-//
-//        }
-//
-//
-//        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
     public void changePasswordDialog() {
         changeDialog = new Dialog(mContex, R.style.Theme_Dialog);
         Window window = changeDialog.getWindow();
