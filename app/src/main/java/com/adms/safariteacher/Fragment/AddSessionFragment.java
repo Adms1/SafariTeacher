@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
@@ -67,6 +68,9 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     //Use for Alert Dialog
     ArrayList<String> timegapArray;
     AlertListAdapter alertListAdapter;
+    static boolean checkTime_sun = false, checkTime_mon = false,
+            checkTime_tue = false, checkTime_wed = false, checkTime_thu = false, checkTime_fri = false, checkTime_sat = false;
+
 
     //Use for AddSession Time Dialog
     TextView start_date_txt, end_date_txt;
@@ -91,7 +95,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
     Calendar calendar;
     int mYear, mMonth, mDay;
     private static String dateFinal;
-    private static String minuteFinal, hourFinal;
+    private static String minuteFinal, hourFinal, FinalTimeStr;
     private static boolean isFromDate = false;
     private com.wdullaer.materialdatetimepicker.date.DatePickerDialog datePickerDialog;
     public Dialog popularDialog;
@@ -576,160 +580,95 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 scheduleArray = new ArrayList<>();
                 newEnteryArray = new ArrayList<>();
                 scheduleStr = "";
+                if (!checkTime_sun && !checkTime_mon && !checkTime_thu && !checkTime_wed && !checkTime_tue && !checkTime_fri && !checkTime_sat) {
+                    if (!sun_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !sun_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                        sunstartTimeStr = sun_start_time_txt.getText().toString();
+                        sunendTimeStr = sun_end_time_txt.getText().toString();
+                        finalsunTimeStr = "sun" + "," + sunstartTimeStr + "-" + sunendTimeStr;
+                        Log.d("SundayTime", finalsunTimeStr);
 
-                if (!sun_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !sun_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
-                    sunstartTimeStr = sun_start_time_txt.getText().toString();
-                    sunendTimeStr = sun_end_time_txt.getText().toString();
-                    finalsunTimeStr = "sun" + "," + sunstartTimeStr + "-" + sunendTimeStr;
-                    Log.d("SundayTime", finalsunTimeStr);
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-                    try {
-                        Date inTime = sdf.parse(sunstartTimeStr);
-                        Date outTime = sdf.parse(sunendTimeStr);
-                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
-                        } else {
-                            scheduleArray.add(finalsunTimeStr);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-//                    Util.ping(mContext, "Please Select Time.");
-                }
-                if (!mon_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !mon_end_time_txt.getText().toString().equalsIgnoreCase("")) {
-                    monstartTimeStr = mon_start_time_txt.getText().toString();
-                    monendTimeStr = mon_end_time_txt.getText().toString();
-                    finalmonTimeStr = "mon" + "," + monstartTimeStr + "-" + monendTimeStr;
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-                    try {
-                        Date inTime = sdf.parse(monstartTimeStr);
-                        Date outTime = sdf.parse(monendTimeStr);
-                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
-                        } else {
-                            scheduleArray.add(finalmonTimeStr);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                        scheduleArray.add(finalsunTimeStr);
 
-                } else {
+                    } else {
+                    }
+                    if (!mon_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !mon_end_time_txt.getText().toString().equalsIgnoreCase("")) {
+                        monstartTimeStr = mon_start_time_txt.getText().toString();
+                        monendTimeStr = mon_end_time_txt.getText().toString();
+                        finalmonTimeStr = "mon" + "," + monstartTimeStr + "-" + monendTimeStr;
+                        scheduleArray.add(finalmonTimeStr);
+
+                    } else {
 //                    Util.ping(mContext, "Please Select Time.");
 
-                }
-                if (!tue_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !tue_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
-                    tuestartTimeStr = tue_start_time_txt.getText().toString();
-                    tueendTimeStr = tue_end_time_txt.getText().toString();
-                    finaltueTimeStr = "tue" + "," + tuestartTimeStr + "-" + tueendTimeStr;
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-                    try {
-                        Date inTime = sdf.parse(tuestartTimeStr);
-                        Date outTime = sdf.parse(tueendTimeStr);
-                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
-                        } else {
-                            scheduleArray.add(finaltueTimeStr);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
-                } else {
+                    if (!tue_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !tue_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                        tuestartTimeStr = tue_start_time_txt.getText().toString();
+                        tueendTimeStr = tue_end_time_txt.getText().toString();
+                        finaltueTimeStr = "tue" + "," + tuestartTimeStr + "-" + tueendTimeStr;
+                        scheduleArray.add(finaltueTimeStr);
+                    } else {
 //                    Util.ping(mContext, "Please Select Time.");
 
-                }
-                if (!wed_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !wed_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
-                    wedstartTimeStr = wed_start_time_txt.getText().toString();
-                    wedendTimeStr = wed_end_time_txt.getText().toString();
-                    finalwedTimeStr = "wed" + "," + wedstartTimeStr + "-" + wedendTimeStr;
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-                    try {
-                        Date inTime = sdf.parse(wedstartTimeStr);
-                        Date outTime = sdf.parse(wedendTimeStr);
-                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
-                        } else {
-                            scheduleArray.add(finalwedTimeStr);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
-                } else {
+                    if (!wed_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !wed_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                        wedstartTimeStr = wed_start_time_txt.getText().toString();
+                        wedendTimeStr = wed_end_time_txt.getText().toString();
+                        finalwedTimeStr = "wed" + "," + wedstartTimeStr + "-" + wedendTimeStr;
+                        scheduleArray.add(finalwedTimeStr);
+                    } else {
 //                    Util.ping(mContext, "Please Select Time.");
 
-                }
-                if (!thu_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !thu_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
-                    thustartTimeStr = thu_start_time_txt.getText().toString();
-                    thuendTimeStr = thu_end_time_txt.getText().toString();
-                    finalthuTimeStr = "thu" + "," + thustartTimeStr + "-" + thuendTimeStr;
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-                    try {
-                        Date inTime = sdf.parse(thustartTimeStr);
-                        Date outTime = sdf.parse(thuendTimeStr);
-                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
-                        } else {
-                            scheduleArray.add(finalthuTimeStr);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
-                } else {
+                    if (!thu_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !thu_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                        thustartTimeStr = thu_start_time_txt.getText().toString();
+                        thuendTimeStr = thu_end_time_txt.getText().toString();
+                        finalthuTimeStr = "thu" + "," + thustartTimeStr + "-" + thuendTimeStr;
+
+                        scheduleArray.add(finalthuTimeStr);
+                    } else {
 //                    Util.ping(mContext, "Please Select Time.");
 
-                }
-                if (!fri_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !fri_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
-                    fristartTimeStr = fri_start_time_txt.getText().toString();
-                    friendTimeStr = fri_end_time_txt.getText().toString();
-                    finalfriTimeStr = "fri" + "," + fristartTimeStr + "-" + friendTimeStr;
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-                    try {
-                        Date inTime = sdf.parse(fristartTimeStr);
-                        Date outTime = sdf.parse(friendTimeStr);
-                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
-                        } else {
-                            scheduleArray.add(finalfriTimeStr);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
-                } else {
+                    if (!fri_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !fri_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                        fristartTimeStr = fri_start_time_txt.getText().toString();
+                        friendTimeStr = fri_end_time_txt.getText().toString();
+                        finalfriTimeStr = "fri" + "," + fristartTimeStr + "-" + friendTimeStr;
+
+                        scheduleArray.add(finalfriTimeStr);
+
+                    } else {
 //                    Util.ping(mContext, "Please Select Time.");
 
-                }
-                if (!sat_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !sat_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
-                    satstartTimeStr = sat_start_time_txt.getText().toString();
-                    satendTimeStr = sat_end_time_txt.getText().toString();
-                    finalsatTimeStr = "sat" + "," + satstartTimeStr + "-" + satendTimeStr;
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-                    try {
-                        Date inTime = sdf.parse(satstartTimeStr);
-                        Date outTime = sdf.parse(satendTimeStr);
-                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
-                        } else {
-                            scheduleArray.add(finalsatTimeStr);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
-                } else {
+                    if (!sat_start_time_txt.getText().toString().equalsIgnoreCase("Add") && !sat_end_time_txt.getText().toString().equalsIgnoreCase("Add")) {
+                        satstartTimeStr = sat_start_time_txt.getText().toString();
+                        satendTimeStr = sat_end_time_txt.getText().toString();
+                        finalsatTimeStr = "sat" + "," + satstartTimeStr + "-" + satendTimeStr;
+
+                        scheduleArray.add(finalsatTimeStr);
+                    } else {
 //                    Util.ping(mContext, "Please Select Time.");
-                }
-                Log.d("scheduleArray", "" + scheduleArray.size());
+                    }
+                    Log.d("scheduleArray", "" + scheduleArray.size());
 
-                for (int i = 0; i < scheduleArray.size(); i++) {
-                    newEnteryArray.add(scheduleArray.get(i));
-                }
-                Log.d("newEnteryArray", "" + newEnteryArray);
+                    for (int i = 0; i < scheduleArray.size(); i++) {
+                        newEnteryArray.add(scheduleArray.get(i));
+                    }
+                    Log.d("newEnteryArray", "" + newEnteryArray);
 
-                for (String s : newEnteryArray) {
-                    if (!s.equals("")) {
-                        scheduleStr = scheduleStr + "|" + s;
+                    for (String s : newEnteryArray) {
+                        if (!s.equals("")) {
+                            scheduleStr = scheduleStr + "|" + s;
+
+                        }
 
                     }
-
-                }
-                Log.d("scheduleStr", scheduleStr);
-                if (!scheduleStr.equalsIgnoreCase("")) {
-                    scheduleStr = scheduleStr.substring(1, scheduleStr.length());
-                    Log.d("responseString ", scheduleStr);
-                }
-                if (days.size() == scheduleArray.size()) {
+                    Log.d("scheduleStr", scheduleStr);
+                    if (!scheduleStr.equalsIgnoreCase("")) {
+                        scheduleStr = scheduleStr.substring(1, scheduleStr.length());
+                        Log.d("responseString ", scheduleStr);
+                    }
+//                if (days.size() == scheduleArray.size()) {
                     if (sessiontypeStr.equalsIgnoreCase("1")) {
                         if (!scheduleStr.equalsIgnoreCase("")) {
                             popularDialog.dismiss();
@@ -748,17 +687,22 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         }
 
                     }
-                }else{
-                    Util.ping(mContext,"Please Enter Proper Time");
+//                }else{
+//                    Util.ping(mContext,"Please Enter Proper Time");
+//                }
+
+                } else
+                    Util.ping(mContext, "Please Select ProperTime.");
+                {
                 }
 
-                }
-            });
+            }
+        });
         start_date_txt.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 isFromDate = true;
                 datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(AddSessionFragment.this, Year, Month, Day);
                 datePickerDialog.setThemeDark(false);
@@ -769,12 +713,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 //                datePickerDialog.setTitle("Select Date From DatePickerDialog");
                 datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
             }
-            });
+        });
         end_date_txt.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 isFromDate = false;
                 datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(AddSessionFragment.this, Year, Month, Day);
                 datePickerDialog.setThemeDark(false);
@@ -786,160 +730,160 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 datePickerDialog.show(getActivity().getFragmentManager(), "DatePickerDialog");
 
             }
-            });
+        });
         sun_start_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
 
         sun_end_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
         mon_start_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
 
         mon_end_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
         tue_start_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
 
         tue_end_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
         wed_start_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
 
         wed_end_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
         thu_start_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
 
         thu_end_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
         fri_start_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
 
         fri_end_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
         sat_start_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
 
         sat_end_linear.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
             }
-            });
+        });
 
         sun_start_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -951,12 +895,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                 }
 
             }
-            });
+        });
         sun_end_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -967,12 +911,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     sun_end_time_txt.setText("Add");
                 }
             }
-            });
+        });
         mon_start_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -983,12 +927,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     mon_start_time_txt.setText("Add");
                 }
             }
-            });
+        });
         mon_end_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -999,12 +943,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     mon_end_time_txt.setText("Add");
                 }
             }
-            });
+        });
         tue_start_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1015,12 +959,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     tue_start_time_txt.setText("Add");
                 }
             }
-            });
+        });
         tue_end_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1031,12 +975,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     tue_end_time_txt.setText("Add");
                 }
             }
-            });
+        });
         wed_start_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1047,12 +991,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     wed_start_time_txt.setText("Add");
                 }
             }
-            });
+        });
         wed_end_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1063,12 +1007,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     wed_end_time_txt.setText("Add");
                 }
             }
-            });
+        });
         thu_start_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1079,12 +1023,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     thu_start_time_txt.setText("Add");
                 }
             }
-            });
+        });
         thu_end_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1095,12 +1039,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     thu_end_time_txt.setText("Add");
                 }
             }
-            });
+        });
         fri_start_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1111,12 +1055,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     fri_start_time_txt.setText("Add");
                 }
             }
-            });
+        });
         fri_end_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1127,12 +1071,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     fri_end_time_txt.setText("Add");
                 }
             }
-            });
+        });
         sat_start_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1143,12 +1087,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     sat_start_time_txt.setText("Add");
                 }
             }
-            });
+        });
         sat_end_add_session_btn.setOnClickListener(new View.OnClickListener()
 
-            {
-                @Override
-                public void onClick (View view){
+        {
+            @Override
+            public void onClick(View view) {
                 Tag = view.getTag().toString();
                 TimePicker mTimePicker = new TimePicker();
                 mTimePicker.show(getActivity().getFragmentManager(), "Select time");
@@ -1159,971 +1103,1075 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                     sat_end_time_txt.setText("Add");
                 }
             }
-            });
+        });
 
-            startDateStr =start_date_txt.getText().
+        startDateStr = start_date_txt.getText().
 
-            toString();
+                toString();
 
-            endDateStr =end_date_txt.getText().
+        endDateStr = end_date_txt.getText().
 
-            toString();
+                toString();
+    }
+
+    static ArrayList<String> days;
+
+    private static List<String> getDates(String dateString1, String dateString2) {
+        days = new ArrayList<String>();
+        DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date date1 = null;
+        Date date2 = null;
+
+        try {
+            date1 = df1.parse(dateString1);
+            date2 = df1.parse(dateString2);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
-        static ArrayList<String> days;
-
-        private static List<String> getDates (String dateString1, String dateString2){
-            days = new ArrayList<String>();
-            DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy");
-
-            Date date1 = null;
-            Date date2 = null;
-
-            try {
-                date1 = df1.parse(dateString1);
-                date2 = df1.parse(dateString2);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            Calendar cal1 = Calendar.getInstance();
-            cal1.setTime(date1);
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
 
 
-            Calendar cal2 = Calendar.getInstance();
-            cal2.setTime(date2);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
 
 //        if(cal2.after(cal1)) {
-            while (!cal1.after(cal2)) {
-                days.add(new SimpleDateFormat("EE").format(cal1.getTime()));
-                cal1.add(Calendar.DATE, 1);
+        while (!cal1.after(cal2)) {
+            days.add(new SimpleDateFormat("EE").format(cal1.getTime()));
+            cal1.add(Calendar.DATE, 1);
 
+        }
+        Log.d("days", "" + days);
+
+
+        sun_start_linear.setEnabled(false);
+        sun_end_linear.setEnabled(false);
+        sun_start_linear.setAlpha(0.2f);
+        sun_end_linear.setAlpha(0.2f);
+        sun_start_add_session_btn.setEnabled(false);
+        sun_end_add_session_btn.setEnabled(false);
+
+        mon_start_linear.setEnabled(false);
+        mon_end_linear.setEnabled(false);
+        mon_start_linear.setAlpha(0.2f);
+        mon_end_linear.setAlpha(0.2f);
+        mon_start_add_session_btn.setEnabled(false);
+        mon_end_add_session_btn.setEnabled(false);
+
+        tue_start_linear.setEnabled(false);
+        tue_end_linear.setEnabled(false);
+        tue_start_linear.setAlpha(0.2f);
+        tue_end_linear.setAlpha(0.2f);
+        tue_start_add_session_btn.setEnabled(false);
+        tue_end_add_session_btn.setEnabled(false);
+
+        wed_start_linear.setEnabled(false);
+        wed_end_linear.setEnabled(false);
+        wed_start_linear.setAlpha(0.2f);
+        wed_end_linear.setAlpha(0.2f);
+        wed_start_add_session_btn.setEnabled(false);
+        wed_end_add_session_btn.setEnabled(false);
+
+        thu_start_linear.setEnabled(false);
+        thu_end_linear.setEnabled(false);
+        thu_start_linear.setAlpha(0.2f);
+        thu_end_linear.setAlpha(0.2f);
+        thu_start_add_session_btn.setEnabled(false);
+        thu_end_add_session_btn.setEnabled(false);
+
+        fri_start_linear.setEnabled(false);
+        fri_end_linear.setEnabled(false);
+        fri_start_linear.setAlpha(0.2f);
+        fri_end_linear.setAlpha(0.2f);
+        fri_start_add_session_btn.setEnabled(false);
+        fri_end_add_session_btn.setEnabled(false);
+
+        sat_start_linear.setEnabled(false);
+        sat_end_linear.setEnabled(false);
+        sat_start_linear.setAlpha(0.2f);
+        sat_end_linear.setAlpha(0.2f);
+        sat_start_add_session_btn.setEnabled(false);
+        sat_end_add_session_btn.setEnabled(false);
+        for (int i = 0; i < days.size(); i++) {
+            switch (days.get(i)) {
+                case "Sun":
+                    sun_start_linear.setEnabled(true);
+                    sun_end_linear.setEnabled(true);
+                    sun_start_linear.setAlpha(1);
+                    sun_end_linear.setAlpha(1);
+                    sun_start_add_session_btn.setEnabled(true);
+                    sun_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Mon":
+                    mon_start_linear.setEnabled(true);
+                    mon_end_linear.setEnabled(true);
+                    mon_start_linear.setAlpha(1);
+                    mon_end_linear.setAlpha(1);
+                    mon_start_add_session_btn.setEnabled(true);
+                    mon_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Tue":
+                    tue_start_linear.setEnabled(true);
+                    tue_end_linear.setEnabled(true);
+                    tue_start_linear.setAlpha(1);
+                    tue_end_linear.setAlpha(1);
+                    tue_start_add_session_btn.setEnabled(true);
+                    tue_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Wed":
+                    wed_start_linear.setEnabled(true);
+                    wed_end_linear.setEnabled(true);
+                    wed_start_linear.setAlpha(1);
+                    wed_end_linear.setAlpha(1);
+                    wed_start_add_session_btn.setEnabled(true);
+                    wed_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Thu":
+                    thu_start_linear.setEnabled(true);
+                    thu_end_linear.setEnabled(true);
+                    thu_start_linear.setAlpha(1);
+                    thu_end_linear.setAlpha(1);
+                    thu_start_add_session_btn.setEnabled(true);
+                    thu_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Fri":
+                    fri_start_linear.setEnabled(true);
+                    fri_end_linear.setEnabled(true);
+                    fri_start_linear.setAlpha(1);
+                    fri_end_linear.setAlpha(1);
+                    fri_start_add_session_btn.setEnabled(true);
+                    fri_end_add_session_btn.setEnabled(true);
+                    break;
+                case "Sat":
+                    sat_start_linear.setEnabled(true);
+                    sat_end_linear.setEnabled(true);
+                    sat_start_linear.setAlpha(1);
+                    sat_end_linear.setAlpha(1);
+                    sat_start_add_session_btn.setEnabled(true);
+                    sat_end_add_session_btn.setEnabled(true);
+                    break;
+                default:
             }
-            Log.d("days", "" + days);
+        }
+        return days;
+    }
 
 
-            sun_start_linear.setEnabled(false);
-            sun_end_linear.setEnabled(false);
-            sun_start_linear.setAlpha(0.2f);
-            sun_end_linear.setAlpha(0.2f);
-            sun_start_add_session_btn.setEnabled(false);
-            sun_end_add_session_btn.setEnabled(false);
+    @Override
+    public void onDateSet(com.wdullaer.materialdatetimepicker.date.DatePickerDialog view,
+                          int year, int monthOfYear, int dayOfMonth) {
+        mDay = dayOfMonth;
+        mMonth = monthOfYear + 1;
+        mYear = year;
+        String d, m, y;
+        d = Integer.toString(mDay);
+        m = Integer.toString(mMonth);
+        y = Integer.toString(mYear);
 
-            mon_start_linear.setEnabled(false);
-            mon_end_linear.setEnabled(false);
-            mon_start_linear.setAlpha(0.2f);
-            mon_end_linear.setAlpha(0.2f);
-            mon_start_add_session_btn.setEnabled(false);
-            mon_end_add_session_btn.setEnabled(false);
+        if (mDay < 10) {
+            d = "0" + d;
+        }
+        if (mMonth < 10) {
+            m = "0" + m;
+        }
+        dateFinal = d + "/" + m + "/" + y;
+        if (sessiontypeStr.equalsIgnoreCase("1")) {
+            if (isFromDate) {
+                start_date_txt.setText(dateFinal);
+            } else {
+                end_date_txt.setText(dateFinal);
+            }
+        } else {
+            start_date_txt.setText(dateFinal);
+            end_date_txt.setText(dateFinal);
+            end_date_txt.setEnabled(false);
+        }
+        startDateStr = start_date_txt.getText().toString();
+        endDateStr = end_date_txt.getText().toString();
 
-            tue_start_linear.setEnabled(false);
-            tue_end_linear.setEnabled(false);
-            tue_start_linear.setAlpha(0.2f);
-            tue_end_linear.setAlpha(0.2f);
-            tue_start_add_session_btn.setEnabled(false);
-            tue_end_add_session_btn.setEnabled(false);
+        if (flag.equalsIgnoreCase("edit")) {
+            if (EditStartDateStr.equalsIgnoreCase(startDateStr)) {
+                if (EditEndDateStr.equalsIgnoreCase(endDateStr)) {
 
-            wed_start_linear.setEnabled(false);
-            wed_end_linear.setEnabled(false);
-            wed_start_linear.setAlpha(0.2f);
-            wed_end_linear.setAlpha(0.2f);
-            wed_start_add_session_btn.setEnabled(false);
-            wed_end_add_session_btn.setEnabled(false);
-
-            thu_start_linear.setEnabled(false);
-            thu_end_linear.setEnabled(false);
-            thu_start_linear.setAlpha(0.2f);
-            thu_end_linear.setAlpha(0.2f);
-            thu_start_add_session_btn.setEnabled(false);
-            thu_end_add_session_btn.setEnabled(false);
-
-            fri_start_linear.setEnabled(false);
-            fri_end_linear.setEnabled(false);
-            fri_start_linear.setAlpha(0.2f);
-            fri_end_linear.setAlpha(0.2f);
-            fri_start_add_session_btn.setEnabled(false);
-            fri_end_add_session_btn.setEnabled(false);
-
-            sat_start_linear.setEnabled(false);
-            sat_end_linear.setEnabled(false);
-            sat_start_linear.setAlpha(0.2f);
-            sat_end_linear.setAlpha(0.2f);
-            sat_start_add_session_btn.setEnabled(false);
-            sat_end_add_session_btn.setEnabled(false);
-            for (int i = 0; i < days.size(); i++) {
-                switch (days.get(i)) {
-                    case "Sun":
-                        sun_start_linear.setEnabled(true);
-                        sun_end_linear.setEnabled(true);
-                        sun_start_linear.setAlpha(1);
-                        sun_end_linear.setAlpha(1);
-                        sun_start_add_session_btn.setEnabled(true);
-                        sun_end_add_session_btn.setEnabled(true);
-                        break;
-                    case "Mon":
-                        mon_start_linear.setEnabled(true);
-                        mon_end_linear.setEnabled(true);
-                        mon_start_linear.setAlpha(1);
-                        mon_end_linear.setAlpha(1);
-                        mon_start_add_session_btn.setEnabled(true);
-                        mon_end_add_session_btn.setEnabled(true);
-                        break;
-                    case "Tue":
-                        tue_start_linear.setEnabled(true);
-                        tue_end_linear.setEnabled(true);
-                        tue_start_linear.setAlpha(1);
-                        tue_end_linear.setAlpha(1);
-                        tue_start_add_session_btn.setEnabled(true);
-                        tue_end_add_session_btn.setEnabled(true);
-                        break;
-                    case "Wed":
-                        wed_start_linear.setEnabled(true);
-                        wed_end_linear.setEnabled(true);
-                        wed_start_linear.setAlpha(1);
-                        wed_end_linear.setAlpha(1);
-                        wed_start_add_session_btn.setEnabled(true);
-                        wed_end_add_session_btn.setEnabled(true);
-                        break;
-                    case "Thu":
-                        thu_start_linear.setEnabled(true);
-                        thu_end_linear.setEnabled(true);
-                        thu_start_linear.setAlpha(1);
-                        thu_end_linear.setAlpha(1);
-                        thu_start_add_session_btn.setEnabled(true);
-                        thu_end_add_session_btn.setEnabled(true);
-                        break;
-                    case "Fri":
-                        fri_start_linear.setEnabled(true);
-                        fri_end_linear.setEnabled(true);
-                        fri_start_linear.setAlpha(1);
-                        fri_end_linear.setAlpha(1);
-                        fri_start_add_session_btn.setEnabled(true);
-                        fri_end_add_session_btn.setEnabled(true);
-                        break;
-                    case "Sat":
-                        sat_start_linear.setEnabled(true);
-                        sat_end_linear.setEnabled(true);
-                        sat_start_linear.setAlpha(1);
-                        sat_end_linear.setAlpha(1);
-                        sat_start_add_session_btn.setEnabled(true);
-                        sat_end_add_session_btn.setEnabled(true);
-                        break;
-                    default:
                 }
+            } else {
+                sun_start_time_txt.setText("Add");
+                sun_start_add_session_btn.setText("+");
+                sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sun_end_time_txt.setText("Add");
+                sun_end_add_session_btn.setText("+");
+                sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                mon_start_time_txt.setText("Add");
+                mon_start_add_session_btn.setText("+");
+                mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                mon_end_time_txt.setText("Add");
+                mon_end_add_session_btn.setText("+");
+                mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                tue_start_time_txt.setText("Add");
+                tue_start_add_session_btn.setText("+");
+                tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                tue_end_time_txt.setText("Add");
+                tue_end_add_session_btn.setText("+");
+                tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                wed_start_time_txt.setText("Add");
+                wed_start_add_session_btn.setText("+");
+                wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                wed_end_time_txt.setText("Add");
+                wed_end_add_session_btn.setText("+");
+                wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                thu_start_time_txt.setText("Add");
+                thu_start_add_session_btn.setText("+");
+                thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                thu_end_time_txt.setText("Add");
+                thu_end_add_session_btn.setText("+");
+                thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                fri_start_time_txt.setText("Add");
+                fri_start_add_session_btn.setText("+");
+                fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                fri_end_time_txt.setText("Add");
+                fri_end_add_session_btn.setText("+");
+                fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sat_start_time_txt.setText("Add");
+                sat_start_add_session_btn.setText("+");
+                sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sat_end_time_txt.setText("Add");
+                sat_end_add_session_btn.setText("+");
+                sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
             }
-            return days;
+
+        } else {
+            if (doneStartDate.equalsIgnoreCase(startDateStr)) {
+                if (doneEndDate.equalsIgnoreCase(endDateStr)) {
+
+                } else {
+                }
+            } else {
+                sun_start_time_txt.setText("Add");
+                sun_start_add_session_btn.setText("+");
+                sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sun_end_time_txt.setText("Add");
+                sun_end_add_session_btn.setText("+");
+                sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                mon_start_time_txt.setText("Add");
+                mon_start_add_session_btn.setText("+");
+                mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                mon_end_time_txt.setText("Add");
+                mon_end_add_session_btn.setText("+");
+                mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                tue_start_time_txt.setText("Add");
+                tue_start_add_session_btn.setText("+");
+                tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                tue_end_time_txt.setText("Add");
+                tue_end_add_session_btn.setText("+");
+                tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                wed_start_time_txt.setText("Add");
+                wed_start_add_session_btn.setText("+");
+                wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                wed_end_time_txt.setText("Add");
+                wed_end_add_session_btn.setText("+");
+                wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                thu_start_time_txt.setText("Add");
+                thu_start_add_session_btn.setText("+");
+                thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                thu_end_time_txt.setText("Add");
+                thu_end_add_session_btn.setText("+");
+                thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                fri_start_time_txt.setText("Add");
+                fri_start_add_session_btn.setText("+");
+                fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                fri_end_time_txt.setText("Add");
+                fri_end_add_session_btn.setText("+");
+                fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sat_start_time_txt.setText("Add");
+                sat_start_add_session_btn.setText("+");
+                sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+
+                sat_end_time_txt.setText("Add");
+                sat_end_add_session_btn.setText("+");
+                sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
+                sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
+            }
         }
 
+
+        List<String> days = getDates(start_date_txt.getText().toString(), end_date_txt.getText().toString());
+        System.out.println(days);
+
+    }
+
+
+    public static class TimePicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
         @Override
-        public void onDateSet (com.wdullaer.materialdatetimepicker.date.DatePickerDialog view,
-        int year, int monthOfYear, int dayOfMonth){
-            mDay = dayOfMonth;
-            mMonth = monthOfYear + 1;
-            mYear = year;
-            String d, m, y;
-            d = Integer.toString(mDay);
-            m = Integer.toString(mMonth);
-            y = Integer.toString(mYear);
-
-            if (mDay < 10) {
-                d = "0" + d;
-            }
-            if (mMonth < 10) {
-                m = "0" + m;
-            }
-            dateFinal = d + "/" + m + "/" + y;
-            if (sessiontypeStr.equalsIgnoreCase("1")) {
-                if (isFromDate) {
-                    start_date_txt.setText(dateFinal);
-                } else {
-                    end_date_txt.setText(dateFinal);
-                }
-            } else {
-                start_date_txt.setText(dateFinal);
-                end_date_txt.setText(dateFinal);
-                end_date_txt.setEnabled(false);
-            }
-            startDateStr = start_date_txt.getText().toString();
-            endDateStr = end_date_txt.getText().toString();
-
-            if (flag.equalsIgnoreCase("edit")) {
-                if (EditStartDateStr.equalsIgnoreCase(startDateStr)) {
-                    if (EditEndDateStr.equalsIgnoreCase(endDateStr)) {
-
-                    }
-                } else {
-                    sun_start_time_txt.setText("Add");
-                    sun_start_add_session_btn.setText("+");
-                    sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    sun_end_time_txt.setText("Add");
-                    sun_end_add_session_btn.setText("+");
-                    sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    mon_start_time_txt.setText("Add");
-                    mon_start_add_session_btn.setText("+");
-                    mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    mon_end_time_txt.setText("Add");
-                    mon_end_add_session_btn.setText("+");
-                    mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    tue_start_time_txt.setText("Add");
-                    tue_start_add_session_btn.setText("+");
-                    tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    tue_end_time_txt.setText("Add");
-                    tue_end_add_session_btn.setText("+");
-                    tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    wed_start_time_txt.setText("Add");
-                    wed_start_add_session_btn.setText("+");
-                    wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    wed_end_time_txt.setText("Add");
-                    wed_end_add_session_btn.setText("+");
-                    wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    thu_start_time_txt.setText("Add");
-                    thu_start_add_session_btn.setText("+");
-                    thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    thu_end_time_txt.setText("Add");
-                    thu_end_add_session_btn.setText("+");
-                    thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    fri_start_time_txt.setText("Add");
-                    fri_start_add_session_btn.setText("+");
-                    fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    fri_end_time_txt.setText("Add");
-                    fri_end_add_session_btn.setText("+");
-                    fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    sat_start_time_txt.setText("Add");
-                    sat_start_add_session_btn.setText("+");
-                    sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    sat_end_time_txt.setText("Add");
-                    sat_end_add_session_btn.setText("+");
-                    sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-                }
-
-            } else {
-                if (doneStartDate.equalsIgnoreCase(startDateStr)) {
-                    if (doneEndDate.equalsIgnoreCase(endDateStr)) {
-
-                    } else {
-                    }
-                } else {
-                    sun_start_time_txt.setText("Add");
-                    sun_start_add_session_btn.setText("+");
-                    sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    sun_end_time_txt.setText("Add");
-                    sun_end_add_session_btn.setText("+");
-                    sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    mon_start_time_txt.setText("Add");
-                    mon_start_add_session_btn.setText("+");
-                    mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    mon_end_time_txt.setText("Add");
-                    mon_end_add_session_btn.setText("+");
-                    mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    tue_start_time_txt.setText("Add");
-                    tue_start_add_session_btn.setText("+");
-                    tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    tue_end_time_txt.setText("Add");
-                    tue_end_add_session_btn.setText("+");
-                    tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    wed_start_time_txt.setText("Add");
-                    wed_start_add_session_btn.setText("+");
-                    wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    wed_end_time_txt.setText("Add");
-                    wed_end_add_session_btn.setText("+");
-                    wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    thu_start_time_txt.setText("Add");
-                    thu_start_add_session_btn.setText("+");
-                    thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    thu_end_time_txt.setText("Add");
-                    thu_end_add_session_btn.setText("+");
-                    thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    fri_start_time_txt.setText("Add");
-                    fri_start_add_session_btn.setText("+");
-                    fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    fri_end_time_txt.setText("Add");
-                    fri_end_add_session_btn.setText("+");
-                    fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    sat_start_time_txt.setText("Add");
-                    sat_start_add_session_btn.setText("+");
-                    sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-
-                    sat_end_time_txt.setText("Add");
-                    sat_end_add_session_btn.setText("+");
-                    sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.blue));
-                    sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_btn));
-                }
-            }
-
-
-            List<String> days = getDates(start_date_txt.getText().toString(), end_date_txt.getText().toString());
-            System.out.println(days);
-
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            TimePickerDialog tpd4 = new TimePickerDialog(getActivity(),
+                    android.app.AlertDialog.THEME_HOLO_LIGHT, this, hour, minute, android.text.format.DateFormat.is24HourFormat(getActivity()));
+            return tpd4;
         }
 
+        @Override
+        public void onTimeSet(android.widget.TimePicker view, int hourOfDay, int minute) {
+            String status = "AM";
 
-        public static class TimePicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
-
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                final Calendar c = Calendar.getInstance();
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
-                TimePickerDialog tpd4 = new TimePickerDialog(getActivity(),
-                        android.app.AlertDialog.THEME_HOLO_LIGHT, this, hour, minute, android.text.format.DateFormat.is24HourFormat(getActivity()));
-                return tpd4;
+            if (hourOfDay > 11) {
+                // If the hour is greater than or equal to 12
+                // Then the current AM PM status is PM
+                status = "PM";
             }
 
-            @Override
-            public void onTimeSet(android.widget.TimePicker view, int hourOfDay, int minute) {
-                String status = "AM";
+            // Initialize a new variable to hold 12 hour format hour value
+            int hour_of_12_hour_format;
+            String hour = "";
+            if (hourOfDay > 11) {
+                // If the hour is greater than or equal to 12
+                // Then we subtract 12 from the hour to make it 12 hour format time
 
-                if (hourOfDay > 11) {
-                    // If the hour is greater than or equal to 12
-                    // Then the current AM PM status is PM
-                    status = "PM";
-                }
+                hour_of_12_hour_format = hourOfDay - 12;
 
-                // Initialize a new variable to hold 12 hour format hour value
-                int hour_of_12_hour_format;
-                String hour = "";
-                if (hourOfDay > 11) {
-                    // If the hour is greater than or equal to 12
-                    // Then we subtract 12 from the hour to make it 12 hour format time
-
-                    hour_of_12_hour_format = hourOfDay - 12;
-
-                } else {
-                    hour_of_12_hour_format = hourOfDay;
-                }
-                if (hour_of_12_hour_format == 0) {
-                    hour_of_12_hour_format = 12;
-                }
-
-                if (hour_of_12_hour_format < 10) {
-                    hour = "0" + hour_of_12_hour_format;
-                    hourFinal = hour;
-                } else {
-                    hourFinal = String.valueOf(hour_of_12_hour_format);
-                }
-
-                String m = "";
-                if (minute < 10) {
-                    m = "0" + minute;
-                    minuteFinal = m;
-                } else {
-                    minuteFinal = String.valueOf(minute);
-                }
-                switch (Tag) {
-                    case "0":
-                        sun_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        sun_start_add_session_btn.setText("x");
-                        sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "1":
-                        sun_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        sun_end_add_session_btn.setText("x");
-                        sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "2":
-                        mon_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        mon_start_add_session_btn.setText("x");
-                        mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "3":
-                        mon_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        mon_end_add_session_btn.setText("x");
-                        mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "4":
-                        tue_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        tue_start_add_session_btn.setText("x");
-                        tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "5":
-                        tue_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        tue_end_add_session_btn.setText("x");
-                        tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "6":
-                        wed_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        wed_start_add_session_btn.setText("x");
-                        wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "7":
-                        wed_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        wed_end_add_session_btn.setText("x");
-                        wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "8":
-                        thu_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        thu_start_add_session_btn.setText("x");
-                        thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "9":
-                        thu_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        thu_end_add_session_btn.setText("x");
-                        thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "10":
-                        fri_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        fri_start_add_session_btn.setText("x");
-                        fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "11":
-                        fri_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        fri_end_add_session_btn.setText("x");
-                        fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "12":
-                        sat_start_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        sat_start_add_session_btn.setText("x");
-                        sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    case "13":
-                        sat_end_time_txt.setText(hourFinal + ":" + minuteFinal + " " + status);
-                        sat_end_add_session_btn.setText("x");
-                        sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
-                        sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
-                        break;
-                    default:
-                }
-            }
-
-        }
-
-        public void getSelectedSessionTimeValue () {
-            sessionNameStr = addSessionBinding.sessionNameEdt.getText().toString();
-            lessionTypeNameStr = addSessionBinding.subjectEdt.getText().toString();
-            boardStr = addSessionBinding.boardNameEdt.getText().toString();
-            standardStr = addSessionBinding.standardEdt.getText().toString();
-            streamStr = addSessionBinding.streamEdt.getText().toString();
-            address1Str = addSessionBinding.addressEdt.getText().toString();
-            address2Str = addSessionBinding.addressEdt.getText().toString();
-            regionStr = addSessionBinding.areaEdt.getText().toString();
-            cityStr = addSessionBinding.cityEdt.getText().toString();
-            stateStr = addSessionBinding.stateEdt.getText().toString();
-            zipcodeStr = addSessionBinding.zipcodeEdt.getText().toString();
-            descriptionStr = addSessionBinding.descriptionEdt.getText().toString();
-            sessioncapacityStr = addSessionBinding.sportsEdt.getText().toString();
-            alerttimeStr = addSessionBinding.alertBtn.getText().toString();
-            if (selectprice.equalsIgnoreCase("Free")) {
-                sessionamtStr = "0";
             } else {
-                sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
+                hour_of_12_hour_format = hourOfDay;
+            }
+            if (hour_of_12_hour_format == 0) {
+                hour_of_12_hour_format = 12;
+            }
+
+            if (hour_of_12_hour_format < 10) {
+                hour = "0" + hour_of_12_hour_format;
+                hourFinal = hour;
+            } else {
+                hourFinal = String.valueOf(hour_of_12_hour_format);
+            }
+
+            String m = "";
+            if (minute < 10) {
+                m = "0" + minute;
+                minuteFinal = m;
+            } else {
+                minuteFinal = String.valueOf(minute);
+            }
+
+            FinalTimeStr = hourFinal + ":" + minuteFinal + " " + status;
+            switch (Tag) {
+                case "0":
+                    sun_start_time_txt.setText(FinalTimeStr);
+                    sun_start_add_session_btn.setText("x");
+                    sun_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    sun_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "1":
+                    sun_end_time_txt.setText(FinalTimeStr);
+                    sun_end_add_session_btn.setText("x");
+                    sun_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    sun_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+                    try {
+                        Date inTime = sdf.parse(sun_start_time_txt.getText().toString());
+                        Date outTime = sdf.parse(sun_end_time_txt.getText().toString());
+                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
+                            sun_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            checkTime_sun = true;
+                        } else {
+                            checkTime_sun = false;
+                            sun_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "2":
+                    mon_start_time_txt.setText(FinalTimeStr);
+                    mon_start_add_session_btn.setText("x");
+                    mon_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    mon_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "3":
+                    mon_end_time_txt.setText(FinalTimeStr);
+                    mon_end_add_session_btn.setText("x");
+                    mon_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    mon_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("hh:mm a");
+                    try {
+                        Date inTime = sdf1.parse(mon_start_time_txt.getText().toString());
+                        Date outTime = sdf1.parse(mon_end_time_txt.getText().toString());
+                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
+                            sun_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            checkTime_mon = true;
+                        } else {
+                            checkTime_mon = false;
+                            mon_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                   break;
+                case "4":
+                    tue_start_time_txt.setText(FinalTimeStr);
+                    tue_start_add_session_btn.setText("x");
+                    tue_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    tue_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "5":
+                    tue_end_time_txt.setText(FinalTimeStr);
+                    tue_end_add_session_btn.setText("x");
+                    tue_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    tue_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm a");
+                    try {
+                        Date inTime = sdf2.parse(tue_start_time_txt.getText().toString());
+                        Date outTime = sdf2.parse(tue_end_time_txt.getText().toString());
+                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
+                            tue_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            checkTime_tue = true;
+                        } else {
+                            checkTime_tue = false;
+                            tue_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "6":
+                    wed_start_time_txt.setText(FinalTimeStr);
+                    wed_start_add_session_btn.setText("x");
+                    wed_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    wed_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "7":
+                    wed_end_time_txt.setText(FinalTimeStr);
+                    wed_end_add_session_btn.setText("x");
+                    wed_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    wed_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+
+                    SimpleDateFormat sdf3 = new SimpleDateFormat("hh:mm a");
+                    try {
+                        Date inTime = sdf3.parse(wed_start_time_txt.getText().toString());
+                        Date outTime = sdf3.parse(wed_end_time_txt.getText().toString());
+                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
+                            wed_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            checkTime_wed = true;
+                        } else {
+                            checkTime_wed = false;
+                            wed_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "8":
+                    thu_start_time_txt.setText(FinalTimeStr);
+                    thu_start_add_session_btn.setText("x");
+                    thu_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    thu_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "9":
+                    thu_end_time_txt.setText(FinalTimeStr);
+                    thu_end_add_session_btn.setText("x");
+                    thu_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    thu_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+
+                    SimpleDateFormat sdf4 = new SimpleDateFormat("hh:mm a");
+                    try {
+                        Date inTime = sdf4.parse(thu_start_time_txt.getText().toString());
+                        Date outTime = sdf4.parse(thu_end_time_txt.getText().toString());
+                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
+                            thu_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            checkTime_thu = true;
+                        } else {
+                            checkTime_thu = false;
+                            thu_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "10":
+                    fri_start_time_txt.setText(FinalTimeStr);
+                    fri_start_add_session_btn.setText("x");
+                    fri_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    fri_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "11":
+                    fri_end_time_txt.setText(FinalTimeStr);
+                    fri_end_add_session_btn.setText("x");
+                    fri_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    fri_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+
+                    SimpleDateFormat sdf5 = new SimpleDateFormat("hh:mm a");
+                    try {
+                        Date inTime = sdf5.parse(fri_start_time_txt.getText().toString());
+                        Date outTime = sdf5.parse(fri_end_time_txt.getText().toString());
+                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
+                            fri_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            checkTime_fri = true;
+                        } else {
+                            checkTime_fri = false;
+                           fri_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "12":
+                    sat_start_time_txt.setText(FinalTimeStr);
+                    sat_start_add_session_btn.setText("x");
+                    sat_start_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    sat_start_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+                    break;
+                case "13":
+                    sat_end_time_txt.setText(FinalTimeStr);
+                    sat_end_add_session_btn.setText("x");
+                    sat_end_add_session_btn.setTextColor(getResources().getColor(R.color.search_boder));
+                    sat_end_add_session_btn.setBackground(getResources().getDrawable(R.drawable.round_red_btn));
+
+                    SimpleDateFormat sdf6 = new SimpleDateFormat("hh:mm a");
+                    try {
+                        Date inTime = sdf6.parse(sat_start_time_txt.getText().toString());
+                        Date outTime = sdf6.parse(sat_end_time_txt.getText().toString());
+                        if (outTime.before(inTime)) { //Same way you can check with after() method also.
+                            sat_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            checkTime_sat = true;
+                        } else {
+                            checkTime_sat = false;
+                            sat_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
             }
         }
 
-        //Use for Create Session
-        public void callCreateSessionApi () {
-            if (Util.isNetworkConnected(mContext)) {
+    }
 
-                Util.showDialog(mContext);
-                ApiHandler.getApiService().getCreate_Session(getNewSessionDetail(), new retrofit.Callback<SessionDetailModel>() {
-                    @Override
-                    public void success(SessionDetailModel sessionDetailModel, Response response) {
-                        Util.dismissDialog();
-                        if (sessionDetailModel == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (sessionDetailModel.getSuccess() == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (sessionDetailModel.getSuccess().equalsIgnoreCase("false")) {
-                            Util.ping(mContext, getString(R.string.false_msg));
-                            return;
-                        }
-                        if (sessionDetailModel.getSuccess().equalsIgnoreCase("True")) {
-                            Util.dismissDialog();
-                            Util.ping(mContext, "Session created Successfully.");
-                            Fragment fragment = new SessionFragment();
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.frame, fragment);
-                            fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.commit();
-                        }
-                    }
+    public void getSelectedSessionTimeValue() {
+        sessionNameStr = addSessionBinding.sessionNameEdt.getText().toString();
+        lessionTypeNameStr = addSessionBinding.subjectEdt.getText().toString();
+        boardStr = addSessionBinding.boardNameEdt.getText().toString();
+        standardStr = addSessionBinding.standardEdt.getText().toString();
+        streamStr = addSessionBinding.streamEdt.getText().toString();
+        address1Str = addSessionBinding.addressEdt.getText().toString();
+        address2Str = addSessionBinding.addressEdt.getText().toString();
+        regionStr = addSessionBinding.areaEdt.getText().toString();
+        cityStr = addSessionBinding.cityEdt.getText().toString();
+        stateStr = addSessionBinding.stateEdt.getText().toString();
+        zipcodeStr = addSessionBinding.zipcodeEdt.getText().toString();
+        descriptionStr = addSessionBinding.descriptionEdt.getText().toString();
+        sessioncapacityStr = addSessionBinding.sportsEdt.getText().toString();
+        alerttimeStr = addSessionBinding.alertBtn.getText().toString();
+        if (selectprice.equalsIgnoreCase("Free")) {
+            sessionamtStr = "0";
+        } else {
+            sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
+        }
+    }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Util.dismissDialog();
-                        error.printStackTrace();
-                        error.getMessage();
+    //Use for Create Session
+    public void callCreateSessionApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().getCreate_Session(getNewSessionDetail(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel sessionDetailModel, Response response) {
+                    Util.dismissDialog();
+                    if (sessionDetailModel == null) {
                         Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
                     }
-                });
-            } else {
-                Util.ping(mContext, getString(R.string.internet_connection_error));
-            }
-        }
-
-        private Map<String, String> getNewSessionDetail () {
-
-            Map<String, String> map = new HashMap<>();
-            map.put("CoachID", coachIdStr);
-            map.put("SessionTypeID", sessiontypeStr);
-            map.put("SessionName", sessionNameStr);
-            map.put("Board", boardStr);
-            map.put("Standard", standardStr);
-            map.put("Stream", streamStr);
-            map.put("LessionTypeName", lessionTypeNameStr);
-            map.put("Address1", address1Str);
-            map.put("Address2", address2Str);
-            map.put("Region", regionStr);
-            map.put("City", cityStr);
-            map.put("State", stateStr);
-            map.put("Zipcode", zipcodeStr);
-            map.put("Description", descriptionStr);
-            map.put("SessionAmount", sessionamtStr);
-            map.put("SessionCapacity", sessioncapacityStr);
-            map.put("AlertTime", alerttimeStr);
-            map.put("StartDate", startDateStr);
-            map.put("EndDate", endDateStr);
-            map.put("Schedule", scheduleStr);
-            return map;
-        }
-
-        //Use for Board
-        public void callBoardApi () {
-            if (Util.isNetworkConnected(mContext)) {
-
-                Util.showDialog(mContext);
-                ApiHandler.getApiService().get_Board(getBoardDetail(), new retrofit.Callback<SessionDetailModel>() {
-                    @Override
-                    public void success(SessionDetailModel boardInfo, Response response) {
-                        Util.dismissDialog();
-                        if (boardInfo == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess() == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
-                            Util.ping(mContext, getString(R.string.false_msg));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
-                            Util.dismissDialog();
-                            if (boardInfo.getData().size() > 0) {
-                                dataResponse = boardInfo;
-                                fillBoard();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Util.dismissDialog();
-                        error.printStackTrace();
-                        error.getMessage();
+                    if (sessionDetailModel.getSuccess() == null) {
                         Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
                     }
-                });
-            } else {
-                Util.ping(mContext, getString(R.string.internet_connection_error));
-            }
+                    if (sessionDetailModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (sessionDetailModel.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        Util.ping(mContext, "Session created Successfully.");
+                        Fragment fragment = new SessionFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
         }
+    }
 
-        private Map<String, String> getBoardDetail () {
-            Map<String, String> map = new HashMap<>();
-            return map;
+    private Map<String, String> getNewSessionDetail() {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("CoachID", coachIdStr);
+        map.put("SessionTypeID", sessiontypeStr);
+        map.put("SessionName", sessionNameStr);
+        map.put("Board", boardStr);
+        map.put("Standard", standardStr);
+        map.put("Stream", streamStr);
+        map.put("LessionTypeName", lessionTypeNameStr);
+        map.put("Address1", address1Str);
+        map.put("Address2", address2Str);
+        map.put("Region", regionStr);
+        map.put("City", cityStr);
+        map.put("State", stateStr);
+        map.put("Zipcode", zipcodeStr);
+        map.put("Description", descriptionStr);
+        map.put("SessionAmount", sessionamtStr);
+        map.put("SessionCapacity", sessioncapacityStr);
+        map.put("AlertTime", alerttimeStr);
+        map.put("StartDate", startDateStr);
+        map.put("EndDate", endDateStr);
+        map.put("Schedule", scheduleStr);
+        return map;
+    }
+
+    //Use for Board
+    public void callBoardApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Board(getBoardDetail(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillBoard();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
         }
+    }
 
-        public void fillBoard () {
-            ArrayList<String> BoardName = new ArrayList<String>();
-            for (int j = 0; j < dataResponse.getData().size(); j++) {
-                BoardName.add(dataResponse.getData().get(j).getBoardName());
-            }
-            ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, BoardName);
-            addSessionBinding.boardNameEdt.setThreshold(1);
-            addSessionBinding.boardNameEdt.setAdapter(adapterTerm);
+    private Map<String, String> getBoardDetail() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
 
+    public void fillBoard() {
+        ArrayList<String> BoardName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            BoardName.add(dataResponse.getData().get(j).getBoardName());
         }
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, BoardName);
+        addSessionBinding.boardNameEdt.setThreshold(1);
+        addSessionBinding.boardNameEdt.setAdapter(adapterTerm);
 
-        //Use for standard
-        public void callstandardApi () {
-            if (Util.isNetworkConnected(mContext)) {
+    }
+
+    //Use for standard
+    public void callstandardApi() {
+        if (Util.isNetworkConnected(mContext)) {
 
 //            Util.showDialog(mContext);
-                ApiHandler.getApiService().get_Standard(getstandardDetail(), new retrofit.Callback<SessionDetailModel>() {
-                    @Override
-                    public void success(SessionDetailModel boardInfo, Response response) {
-                        Util.dismissDialog();
-                        if (boardInfo == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess() == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
-                            Util.dismissDialog();
-
-                            Util.ping(mContext, getString(R.string.false_msg));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
-                            Util.dismissDialog();
-                            if (boardInfo.getData().size() > 0) {
-                                dataResponse = boardInfo;
-                                fillStandard();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Util.dismissDialog();
-                        error.printStackTrace();
-                        error.getMessage();
+            ApiHandler.getApiService().get_Standard(getstandardDetail(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
                         Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
                     }
-                });
-            } else {
-                Util.ping(mContext, getString(R.string.internet_connection_error));
-            }
-        }
-
-        private Map<String, String> getstandardDetail () {
-            Map<String, String> map = new HashMap<>();
-            return map;
-        }
-
-        public void fillStandard () {
-            ArrayList<String> StandardName = new ArrayList<String>();
-            for (int j = 0; j < dataResponse.getData().size(); j++) {
-                StandardName.add(dataResponse.getData().get(j).getStandardName());
-            }
-            ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, StandardName);
-            addSessionBinding.standardEdt.setThreshold(1);
-            addSessionBinding.standardEdt.setAdapter(adapterTerm);
-        }
-
-        //Use for Stream
-        public void callStreamApi () {
-            if (Util.isNetworkConnected(mContext)) {
-
-//            Util.showDialog(mContext);
-                ApiHandler.getApiService().get_Stream(getStreamDeatil(), new retrofit.Callback<SessionDetailModel>() {
-                    @Override
-                    public void success(SessionDetailModel boardInfo, Response response) {
-                        Util.dismissDialog();
-                        if (boardInfo == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess() == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
-                            Util.dismissDialog();
-                            Util.ping(mContext, getString(R.string.false_msg));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
-                            Util.dismissDialog();
-                            if (boardInfo.getData().size() > 0) {
-                                dataResponse = boardInfo;
-                                fillStream();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Util.dismissDialog();
-                        error.printStackTrace();
-                        error.getMessage();
+                    if (boardInfo.getSuccess() == null) {
                         Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
                     }
-                });
-            } else {
-                Util.ping(mContext, getString(R.string.internet_connection_error));
-            }
-        }
-
-        private Map<String, String> getStreamDeatil () {
-            Map<String, String> map = new HashMap<>();
-            return map;
-        }
-
-        public void fillStream () {
-
-            ArrayList<String> StreamName = new ArrayList<String>();
-            for (int j = 0; j < dataResponse.getData().size(); j++) {
-                StreamName.add(dataResponse.getData().get(j).getStreamName());
-            }
-            ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, StreamName);
-            addSessionBinding.streamEdt.setThreshold(1);
-            addSessionBinding.streamEdt.setAdapter(adapterTerm);
-        }
-
-        //Use for Lession
-        public void callLessionApi () {
-            if (Util.isNetworkConnected(mContext)) {
-
-//            Util.showDialog(mContext);
-                ApiHandler.getApiService().get_Lesson(getLessionDeatil(), new retrofit.Callback<SessionDetailModel>() {
-                    @Override
-                    public void success(SessionDetailModel boardInfo, Response response) {
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
                         Util.dismissDialog();
-                        if (boardInfo == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess() == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
-                            Util.ping(mContext, getString(R.string.false_msg));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
-                            Util.dismissDialog();
-                            if (boardInfo.getData().size() > 0) {
-                                dataResponse = boardInfo;
-                                fillLession();
-                            }
-                        }
-                    }
 
-                    @Override
-                    public void failure(RetrofitError error) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
                         Util.dismissDialog();
-                        error.printStackTrace();
-                        error.getMessage();
-                        Util.ping(mContext, getString(R.string.something_wrong));
-                    }
-                });
-            } else {
-                Util.ping(mContext, getString(R.string.internet_connection_error));
-            }
-        }
-
-        private Map<String, String> getLessionDeatil () {
-            Map<String, String> map = new HashMap<>();
-            return map;
-        }
-
-        public void fillLession () {
-
-            ArrayList<String> LessionName = new ArrayList<String>();
-            for (int j = 0; j < dataResponse.getData().size(); j++) {
-                LessionName.add(dataResponse.getData().get(j).getLessonTypeName());
-            }
-
-            ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, LessionName);
-            addSessionBinding.subjectEdt.setThreshold(1);
-            addSessionBinding.subjectEdt.setAdapter(adapterTerm);
-        }
-
-        //Use for Region
-        public void callRegionApi () {
-            if (Util.isNetworkConnected(mContext)) {
-
-//            Util.showDialog(mContext);
-                ApiHandler.getApiService().get_Region(getRegionDeatil(), new retrofit.Callback<SessionDetailModel>() {
-                    @Override
-                    public void success(SessionDetailModel boardInfo, Response response) {
-                        Util.dismissDialog();
-                        if (boardInfo == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess() == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
-                            Util.dismissDialog();
-                            Util.ping(mContext, getString(R.string.false_msg));
-                            return;
-                        }
-                        if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
-                            Util.dismissDialog();
-                            if (boardInfo.getData().size() > 0) {
-                                dataResponse = boardInfo;
-                                fillArea();
-                            }
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillStandard();
                         }
                     }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Util.dismissDialog();
-                        error.printStackTrace();
-                        error.getMessage();
-                        Util.ping(mContext, getString(R.string.something_wrong));
-                    }
-                });
-            } else {
-                Util.ping(mContext, getString(R.string.internet_connection_error));
-            }
-        }
-
-        private Map<String, String> getRegionDeatil () {
-            Map<String, String> map = new HashMap<>();
-            return map;
-        }
-
-        public void fillArea () {
-            ArrayList<String> AreaName = new ArrayList<String>();
-            for (int j = 0; j < dataResponse.getData().size(); j++) {
-                AreaName.add(dataResponse.getData().get(j).getRegionName());
-            }
-            ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, AreaName);
-            addSessionBinding.areaEdt.setThreshold(1);
-            addSessionBinding.areaEdt.setAdapter(adapterTerm);
-        }
-
-        //Use for EditSession
-        public void callEditSessionApi () {
-            if (Util.isNetworkConnected(mContext)) {
-
-//            Util.showDialog(mContext);
-                ApiHandler.getApiService().get_SessionDetailBySessionID(getEditSessionDeatil(), new retrofit.Callback<SessionDetailModel>() {
-                    @Override
-                    public void success(SessionDetailModel editsessionInfo, Response response) {
-                        Util.dismissDialog();
-                        if (editsessionInfo == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (editsessionInfo.getSuccess() == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (editsessionInfo.getSuccess().equalsIgnoreCase("false")) {
-                            Util.dismissDialog();
-                            Util.ping(mContext, getString(R.string.false_msg));
-                            return;
-                        }
-                        if (editsessionInfo.getSuccess().equalsIgnoreCase("True")) {
-                            Util.dismissDialog();
-                            if (editsessionInfo.getData().size() > 0) {
-                                dataResponse = editsessionInfo;
-                                fillEditSessionFiled();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Util.dismissDialog();
-                        error.printStackTrace();
-                        error.getMessage();
-                        Util.ping(mContext, getString(R.string.something_wrong));
-                    }
-                });
-            } else {
-                Util.ping(mContext, getString(R.string.internet_connection_error));
-            }
-        }
-
-        private Map<String, String> getEditSessionDeatil () {
-            Map<String, String> map = new HashMap<>();
-            map.put("CoachID", coachIdStr);//coachIdStr
-            map.put("SessionID", SeslectedsessionID);
-            return map;
-        }
-
-        public void fillEditSessionFiled () {
-            scheduleStr = "";
-            ArrayList<String> editTime = new ArrayList<>();
-            ArrayList<String> newTime = new ArrayList<>();
-            boolean isEnable = false;
-            String studentString = "";
-            for (int i = 0; i < dataResponse.getData().size(); i++) {
-                switch (dataResponse.getData().get(i).getSessionType()) {
-                    case "1":
-                        addSessionBinding.recurringRb.setChecked(true);
-                        break;
-                    case "2":
-                        addSessionBinding.singleRb.setChecked(true);
-                        break;
-                    default:
                 }
-                addSessionBinding.sessionNameEdt.setText(dataResponse.getData().get(i).getSessionName());
-                addSessionBinding.boardNameEdt.setText(dataResponse.getData().get(i).getBoard());
-                addSessionBinding.standardEdt.setText(dataResponse.getData().get(i).getStandard());
-                addSessionBinding.streamEdt.setText(dataResponse.getData().get(i).getStream());
-                addSessionBinding.subjectEdt.setText(dataResponse.getData().get(i).getLessionTypeName());
-                EditStartDateStr = dataResponse.getData().get(i).getStartDate();
-                EditEndDateStr = dataResponse.getData().get(i).getEndDate();
-                EditScheduleStr = dataResponse.getData().get(i).getSchedule();
-                startDateStr = EditStartDateStr;
-                endDateStr = EditEndDateStr;
-                scheduleStr = EditScheduleStr;
-                Log.d("EditscheduleStr ", scheduleStr);
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getstandardDetail() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillStandard() {
+        ArrayList<String> StandardName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            StandardName.add(dataResponse.getData().get(j).getStandardName());
+        }
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, StandardName);
+        addSessionBinding.standardEdt.setThreshold(1);
+        addSessionBinding.standardEdt.setAdapter(adapterTerm);
+    }
+
+    //Use for Stream
+    public void callStreamApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Stream(getStreamDeatil(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.dismissDialog();
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillStream();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getStreamDeatil() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillStream() {
+
+        ArrayList<String> StreamName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            StreamName.add(dataResponse.getData().get(j).getStreamName());
+        }
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, StreamName);
+        addSessionBinding.streamEdt.setThreshold(1);
+        addSessionBinding.streamEdt.setAdapter(adapterTerm);
+    }
+
+    //Use for Lession
+    public void callLessionApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Lesson(getLessionDeatil(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillLession();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getLessionDeatil() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillLession() {
+
+        ArrayList<String> LessionName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            LessionName.add(dataResponse.getData().get(j).getLessonTypeName());
+        }
+
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, LessionName);
+        addSessionBinding.subjectEdt.setThreshold(1);
+        addSessionBinding.subjectEdt.setAdapter(adapterTerm);
+    }
+
+    //Use for Region
+    public void callRegionApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Region(getRegionDeatil(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel boardInfo, Response response) {
+                    Util.dismissDialog();
+                    if (boardInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.dismissDialog();
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (boardInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (boardInfo.getData().size() > 0) {
+                            dataResponse = boardInfo;
+                            fillArea();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getRegionDeatil() {
+        Map<String, String> map = new HashMap<>();
+        return map;
+    }
+
+    public void fillArea() {
+        ArrayList<String> AreaName = new ArrayList<String>();
+        for (int j = 0; j < dataResponse.getData().size(); j++) {
+            AreaName.add(dataResponse.getData().get(j).getRegionName());
+        }
+        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.autocomplete_layout, AreaName);
+        addSessionBinding.areaEdt.setThreshold(1);
+        addSessionBinding.areaEdt.setAdapter(adapterTerm);
+    }
+
+    //Use for EditSession
+    public void callEditSessionApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+//            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_SessionDetailBySessionID(getEditSessionDeatil(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel editsessionInfo, Response response) {
+                    Util.dismissDialog();
+                    if (editsessionInfo == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (editsessionInfo.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (editsessionInfo.getSuccess().equalsIgnoreCase("false")) {
+                        Util.dismissDialog();
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (editsessionInfo.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        if (editsessionInfo.getData().size() > 0) {
+                            dataResponse = editsessionInfo;
+                            fillEditSessionFiled();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getEditSessionDeatil() {
+        Map<String, String> map = new HashMap<>();
+        map.put("CoachID", coachIdStr);//coachIdStr
+        map.put("SessionID", SeslectedsessionID);
+        return map;
+    }
+
+    public void fillEditSessionFiled() {
+        scheduleStr = "";
+        ArrayList<String> editTime = new ArrayList<>();
+        ArrayList<String> newTime = new ArrayList<>();
+        boolean isEnable = false;
+        String studentString = "";
+        for (int i = 0; i < dataResponse.getData().size(); i++) {
+            switch (dataResponse.getData().get(i).getSessionType()) {
+                case "1":
+                    addSessionBinding.recurringRb.setChecked(true);
+                    break;
+                case "2":
+                    addSessionBinding.singleRb.setChecked(true);
+                    break;
+                default:
+            }
+            addSessionBinding.sessionNameEdt.setText(dataResponse.getData().get(i).getSessionName());
+            addSessionBinding.boardNameEdt.setText(dataResponse.getData().get(i).getBoard());
+            addSessionBinding.standardEdt.setText(dataResponse.getData().get(i).getStandard());
+            addSessionBinding.streamEdt.setText(dataResponse.getData().get(i).getStream());
+            addSessionBinding.subjectEdt.setText(dataResponse.getData().get(i).getLessionTypeName());
+            EditStartDateStr = dataResponse.getData().get(i).getStartDate();
+            EditEndDateStr = dataResponse.getData().get(i).getEndDate();
+            EditScheduleStr = dataResponse.getData().get(i).getSchedule();
+            startDateStr = EditStartDateStr;
+            endDateStr = EditEndDateStr;
+            scheduleStr = EditScheduleStr;
+            Log.d("EditscheduleStr ", scheduleStr);
 //            String[] spiltPipes = EditScheduleStr.split("\\|");
 //            String[] spiltComma;
 //            String[] spiltDash;
@@ -2157,194 +2205,191 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
 //            } else {
 //                addSessionBinding.addSessionBtn.performClick();
 //            }
-                addSessionBinding.addressEdt.setText(dataResponse.getData().get(i).getAddressLine1());
-                addSessionBinding.areaEdt.setText(dataResponse.getData().get(i).getRegionName());
-                addSessionBinding.cityEdt.setText(dataResponse.getData().get(i).getAddressCity());
-                addSessionBinding.stateEdt.setText(dataResponse.getData().get(i).getAddressState());
-                addSessionBinding.zipcodeEdt.setText(dataResponse.getData().get(i).getAddressZipCode());
-                addSessionBinding.descriptionEdt.setText(dataResponse.getData().get(i).getDescription());
-                if (dataResponse.getData().get(i).getSessionAmount().equalsIgnoreCase("0.00")) {
-                    addSessionBinding.freeRb.setChecked(true);
-                } else {
-                    addSessionBinding.paidRb.setChecked(true);
-                    addSessionBinding.sessionPriceEdt.setText(String.valueOf(Math.round(Float.parseFloat(dataResponse.getData().get(i).getSessionAmount()))));
-                }
-                addSessionBinding.sportsEdt.setText(dataResponse.getData().get(i).getSessionCapacity());
-                addSessionBinding.alertBtn.setText(dataResponse.getData().get(i).getAlertTime());
-            }
-        }
-
-        //Use for Update Session
-        public void callUpdateSessionApi () {
-            if (Util.isNetworkConnected(mContext)) {
-
-                Util.showDialog(mContext);
-                ApiHandler.getApiService().get_Update_Session(getUpdateSessionDetail(), new retrofit.Callback<SessionDetailModel>() {
-                    @Override
-                    public void success(SessionDetailModel updatesessionDetailModel, Response response) {
-                        Util.dismissDialog();
-                        if (updatesessionDetailModel == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (updatesessionDetailModel.getSuccess() == null) {
-                            Util.ping(mContext, getString(R.string.something_wrong));
-                            return;
-                        }
-                        if (updatesessionDetailModel.getSuccess().equalsIgnoreCase("false")) {
-                            Util.ping(mContext, getString(R.string.false_msg));
-                            return;
-                        }
-                        if (updatesessionDetailModel.getSuccess().equalsIgnoreCase("True")) {
-                            Util.dismissDialog();
-                            Util.ping(mContext, "Session Update Successfully.");
-                            Fragment fragment = new SessionFragment();
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.frame, fragment);
-                            fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.commit();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Util.dismissDialog();
-                        error.printStackTrace();
-                        error.getMessage();
-                        Util.ping(mContext, getString(R.string.something_wrong));
-                    }
-                });
+            addSessionBinding.addressEdt.setText(dataResponse.getData().get(i).getAddressLine1());
+            addSessionBinding.areaEdt.setText(dataResponse.getData().get(i).getRegionName());
+            addSessionBinding.cityEdt.setText(dataResponse.getData().get(i).getAddressCity());
+            addSessionBinding.stateEdt.setText(dataResponse.getData().get(i).getAddressState());
+            addSessionBinding.zipcodeEdt.setText(dataResponse.getData().get(i).getAddressZipCode());
+            addSessionBinding.descriptionEdt.setText(dataResponse.getData().get(i).getDescription());
+            if (dataResponse.getData().get(i).getSessionAmount().equalsIgnoreCase("0.00")) {
+                addSessionBinding.freeRb.setChecked(true);
             } else {
-                Util.ping(mContext, getString(R.string.internet_connection_error));
+                addSessionBinding.paidRb.setChecked(true);
+                addSessionBinding.sessionPriceEdt.setText(String.valueOf(Math.round(Float.parseFloat(dataResponse.getData().get(i).getSessionAmount()))));
             }
+            addSessionBinding.sportsEdt.setText(dataResponse.getData().get(i).getSessionCapacity());
+            addSessionBinding.alertBtn.setText(dataResponse.getData().get(i).getAlertTime());
         }
+    }
 
-        private Map<String, String> getUpdateSessionDetail () {
+    //Use for Update Session
+    public void callUpdateSessionApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_Update_Session(getUpdateSessionDetail(), new retrofit.Callback<SessionDetailModel>() {
+                @Override
+                public void success(SessionDetailModel updatesessionDetailModel, Response response) {
+                    Util.dismissDialog();
+                    if (updatesessionDetailModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (updatesessionDetailModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (updatesessionDetailModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (updatesessionDetailModel.getSuccess().equalsIgnoreCase("True")) {
+                        Util.dismissDialog();
+                        Util.ping(mContext, "Session Update Successfully.");
+                        Fragment fragment = new SessionFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getUpdateSessionDetail() {
 //        getSelectedSessionTimeValue();
-            Map<String, String> map = new HashMap<>();
-            map.put("SessionID", SeslectedsessionID);
-            map.put("CoachID", coachIdStr);//coachIdStr
-            map.put("SessionTypeID", sessiontypeStr);
-            map.put("SessionName", sessionNameStr);
-            map.put("Board", boardStr);
-            map.put("Standard", standardStr);
-            map.put("Stream", streamStr);
-            map.put("LessionTypeName", lessionTypeNameStr);
-            map.put("Address1", address1Str);
-            map.put("Address2", address2Str);
-            map.put("Region", regionStr);
-            map.put("City", cityStr);
-            map.put("State", stateStr);
-            map.put("Zipcode", zipcodeStr);
-            map.put("Description", descriptionStr);
-            map.put("SessionAmount", sessionamtStr);
-            map.put("SessionCapacity", sessioncapacityStr);
-            map.put("AlertTime", alerttimeStr);
-            map.put("StartDate", startDateStr);
-            map.put("EndDate", endDateStr);
-            map.put("Schedule", scheduleStr);
-            return map;
-        }
+        Map<String, String> map = new HashMap<>();
+        map.put("SessionID", SeslectedsessionID);
+        map.put("CoachID", coachIdStr);//coachIdStr
+        map.put("SessionTypeID", sessiontypeStr);
+        map.put("SessionName", sessionNameStr);
+        map.put("Board", boardStr);
+        map.put("Standard", standardStr);
+        map.put("Stream", streamStr);
+        map.put("LessionTypeName", lessionTypeNameStr);
+        map.put("Address1", address1Str);
+        map.put("Address2", address2Str);
+        map.put("Region", regionStr);
+        map.put("City", cityStr);
+        map.put("State", stateStr);
+        map.put("Zipcode", zipcodeStr);
+        map.put("Description", descriptionStr);
+        map.put("SessionAmount", sessionamtStr);
+        map.put("SessionCapacity", sessioncapacityStr);
+        map.put("AlertTime", alerttimeStr);
+        map.put("StartDate", startDateStr);
+        map.put("EndDate", endDateStr);
+        map.put("Schedule", scheduleStr);
+        return map;
+    }
 
 
-        public void editSessionValidation () {
+    public void editSessionValidation() {
 //        sessionamtStr = addSessionBinding.sessionPriceEdt.getText().toString();
-            getSelectedSessionTimeValue();
+        getSelectedSessionTimeValue();
 
-            if (!CoachTypeStr.equalsIgnoreCase("1")) {
-                if (flag.equalsIgnoreCase("edit")) {
-                    if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
-                        if (!lessionTypeNameStr.equalsIgnoreCase("")) {
-                            if (!address1Str.equalsIgnoreCase("")) {
-                                if (!regionStr.equalsIgnoreCase("")) {
-                                    if (!cityStr.equalsIgnoreCase("")) {
-                                        if (!stateStr.equalsIgnoreCase("")) {
-                                            if (!zipcodeStr.equalsIgnoreCase("")) {
-                                                if (!sessioncapacityStr.equalsIgnoreCase("")) {
-                                                    if (!sessionamtStr.equalsIgnoreCase("")) {
-                                                        if (sessiontypeStr.equalsIgnoreCase("1")) {
+        if (!CoachTypeStr.equalsIgnoreCase("1")) {
+            if (flag.equalsIgnoreCase("edit")) {
+                if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
+                    if (!lessionTypeNameStr.equalsIgnoreCase("")) {
+                        if (!address1Str.equalsIgnoreCase("")) {
+                            if (!regionStr.equalsIgnoreCase("")) {
+                                if (!cityStr.equalsIgnoreCase("")) {
+                                    if (!stateStr.equalsIgnoreCase("")) {
+                                        if (!zipcodeStr.equalsIgnoreCase("")) {
+                                            if (!sessioncapacityStr.equalsIgnoreCase("")) {
+                                                if (!sessionamtStr.equalsIgnoreCase("")) {
+                                                    if (sessiontypeStr.equalsIgnoreCase("1")) {
+                                                        callUpdateSessionApi();
+                                                    } else {
+                                                        if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                             callUpdateSessionApi();
                                                         } else {
-                                                            if (startDateStr.equalsIgnoreCase(endDateStr)) {
-                                                                callUpdateSessionApi();
-                                                            } else {
-                                                                Util.ping(mContext, getString(R.string.Date));
-                                                            }
+                                                            Util.ping(mContext, getString(R.string.Date));
                                                         }
-                                                    } else {
-                                                        addSessionBinding.sessionPriceEdt.setError(getString(R.string.sessionAmount));
                                                     }
                                                 } else {
-                                                    addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
+                                                    addSessionBinding.sessionPriceEdt.setError(getString(R.string.sessionAmount));
                                                 }
                                             } else {
-                                                addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
+                                                addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
                                             }
                                         } else {
-                                            addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
+                                            addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
                                         }
                                     } else {
-                                        addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
+                                        addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
                                     }
                                 } else {
-                                    addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
+                                    addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
                                 }
                             } else {
-                                addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
+                                addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
                             }
                         } else {
-                            addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
+                            addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
                         }
                     } else {
-                        addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
-                        addSessionBinding.scrollView.setScrollY(0);
+                        addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
                     }
                 } else {
-                    if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
-                        if (!lessionTypeNameStr.equalsIgnoreCase("")) {
-                            if (!startDateStr.equalsIgnoreCase("")) {
-                                if (!endDateStr.equalsIgnoreCase("")) {
-                                    if (!scheduleStr.equalsIgnoreCase("")) {
-                                        if (!address1Str.equalsIgnoreCase("")) {
-                                            if (!regionStr.equalsIgnoreCase("")) {
-                                                if (!cityStr.equalsIgnoreCase("")) {
-                                                    if (!stateStr.equalsIgnoreCase("")) {
-                                                        if (!zipcodeStr.equalsIgnoreCase("")) {
-                                                            if (!sessioncapacityStr.equalsIgnoreCase("")) {
-                                                                if (!sessionamtStr.equalsIgnoreCase("")) {
-                                                                    if (sessiontypeStr.equalsIgnoreCase("1")) {
+                    addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
+                    addSessionBinding.scrollView.setScrollY(0);
+                }
+            } else {
+                if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
+                    if (!lessionTypeNameStr.equalsIgnoreCase("")) {
+                        if (!startDateStr.equalsIgnoreCase("")) {
+                            if (!endDateStr.equalsIgnoreCase("")) {
+                                if (!scheduleStr.equalsIgnoreCase("")) {
+                                    if (!address1Str.equalsIgnoreCase("")) {
+                                        if (!regionStr.equalsIgnoreCase("")) {
+                                            if (!cityStr.equalsIgnoreCase("")) {
+                                                if (!stateStr.equalsIgnoreCase("")) {
+                                                    if (!zipcodeStr.equalsIgnoreCase("")) {
+                                                        if (!sessioncapacityStr.equalsIgnoreCase("")) {
+                                                            if (!sessionamtStr.equalsIgnoreCase("")) {
+                                                                if (sessiontypeStr.equalsIgnoreCase("1")) {
+                                                                    callCreateSessionApi();
+                                                                } else {
+                                                                    if (startDateStr.equalsIgnoreCase(endDateStr)) {
                                                                         callCreateSessionApi();
                                                                     } else {
-                                                                        if (startDateStr.equalsIgnoreCase(endDateStr)) {
-                                                                            callCreateSessionApi();
-                                                                        } else {
-                                                                            Util.ping(mContext, getString(R.string.Date));
-                                                                        }
+                                                                        Util.ping(mContext, getString(R.string.Date));
                                                                     }
-                                                                } else {
-                                                                    addSessionBinding.sessionPriceEdt.setError(getString(R.string.sessionAmount));
                                                                 }
                                                             } else {
-                                                                addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
+                                                                addSessionBinding.sessionPriceEdt.setError(getString(R.string.sessionAmount));
                                                             }
                                                         } else {
-                                                            addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
+                                                            addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
                                                         }
                                                     } else {
-                                                        addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
+                                                        addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
                                                     }
                                                 } else {
-                                                    addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
+                                                    addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
                                                 }
                                             } else {
-                                                addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
+                                                addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
                                             }
                                         } else {
-                                            addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
+                                            addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
                                         }
                                     } else {
-                                        Util.ping(mContext, getString(R.string.sessionTime));
+                                        addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
                                     }
                                 } else {
                                     Util.ping(mContext, getString(R.string.sessionTime));
@@ -2353,184 +2398,172 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                                 Util.ping(mContext, getString(R.string.sessionTime));
                             }
                         } else {
-                            addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
+                            Util.ping(mContext, getString(R.string.sessionTime));
                         }
                     } else {
-                        addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
-                        addSessionBinding.scrollView.setScrollY(0);
-                    }
-                }
-            } else {
-                if (flag.equalsIgnoreCase("edit")) {
-                    if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
-                        if (!boardStr.equalsIgnoreCase("")) {
-                            if (!standardStr.equalsIgnoreCase("")) {
-                                if (!streamStr.equalsIgnoreCase("")) {
-                                    if (!lessionTypeNameStr.equalsIgnoreCase("")) {
-                                        if (!address1Str.equalsIgnoreCase("")) {
-                                            if (!regionStr.equalsIgnoreCase("")) {
-                                                if (!cityStr.equalsIgnoreCase("")) {
-                                                    if (!stateStr.equalsIgnoreCase("")) {
-                                                        if (!zipcodeStr.equalsIgnoreCase("")) {
-                                                            if (!sessioncapacityStr.equalsIgnoreCase("")) {
-                                                                if (!sessionamtStr.equalsIgnoreCase("")) {
-                                                                    if (sessiontypeStr.equalsIgnoreCase("1")) {
-                                                                        callUpdateSessionApi();
-                                                                    } else {
-                                                                        if (startDateStr.equalsIgnoreCase(endDateStr)) {
-                                                                            callUpdateSessionApi();
-                                                                        } else {
-                                                                            Util.ping(mContext, getString(R.string.Date));
-                                                                        }
-                                                                    }
-                                                                } else {
-                                                                    addSessionBinding.sessionPriceEdt.setError(getString(R.string.sessionAmount));
-                                                                }
-                                                            } else {
-                                                                addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
-                                                            }
-                                                        } else {
-                                                            addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
-                                                        }
-                                                    } else {
-                                                        addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
-                                                    }
-                                                } else {
-                                                    addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
-                                                }
-                                            } else {
-                                                addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
-                                            }
-                                        } else {
-                                            addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
-                                        }
-                                    } else {
-                                        addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
-                                    }
-                                } else {
-                                    addSessionBinding.streamEdt.setError(getString(R.string.streamName));
-                                }
-                            } else {
-                                addSessionBinding.standardEdt.setError(getString(R.string.standardName));
-                            }
-                        } else {
-                            addSessionBinding.boardNameEdt.setError(getString(R.string.boardName));
-                        }
-                    } else {
-                        addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
-                        addSessionBinding.scrollView.setScrollY(0);
+                        addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
                     }
                 } else {
-                    if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
-                        if (!boardStr.equalsIgnoreCase("")) {
-                            if (!standardStr.equalsIgnoreCase("")) {
-                                if (!streamStr.equalsIgnoreCase("")) {
-                                    if (!lessionTypeNameStr.equalsIgnoreCase("")) {
-                                        if (!startDateStr.equalsIgnoreCase("")) {
-                                            if (!endDateStr.equalsIgnoreCase("")) {
-                                                if (!scheduleStr.equalsIgnoreCase("")) {
-                                                    if (!address1Str.equalsIgnoreCase("")) {
-                                                        if (!regionStr.equalsIgnoreCase("")) {
-                                                            if (!cityStr.equalsIgnoreCase("")) {
-                                                                if (!stateStr.equalsIgnoreCase("")) {
-                                                                    if (!zipcodeStr.equalsIgnoreCase("")) {
-                                                                        if (!sessioncapacityStr.equalsIgnoreCase("")) {
-                                                                            if (!sessionamtStr.equalsIgnoreCase("")) {
-                                                                                if (sessiontypeStr.equalsIgnoreCase("1")) {
-                                                                                    callCreateSessionApi();
-                                                                                } else {
-                                                                                    if (startDateStr.equalsIgnoreCase(endDateStr)) {
-                                                                                        callCreateSessionApi();
-                                                                                    } else {
-                                                                                        Util.ping(mContext, getString(R.string.Date));
-                                                                                    }
-                                                                                }
-                                                                            } else {
-                                                                                Util.ping(mContext, getString(R.string.sessionAmount));
-                                                                            }
-                                                                        } else {
-                                                                            addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
-                                                                        }
-                                                                    } else {
-                                                                        addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
-                                                                    }
+                    addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
+                    addSessionBinding.scrollView.setScrollY(0);
+                }
+            }
+        } else {
+            if (flag.equalsIgnoreCase("edit")) {
+                if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
+                    if (!boardStr.equalsIgnoreCase("")) {
+                        if (!standardStr.equalsIgnoreCase("")) {
+                            if (!streamStr.equalsIgnoreCase("")) {
+                                if (!lessionTypeNameStr.equalsIgnoreCase("")) {
+                                    if (!address1Str.equalsIgnoreCase("")) {
+                                        if (!regionStr.equalsIgnoreCase("")) {
+                                            if (!cityStr.equalsIgnoreCase("")) {
+                                                if (!stateStr.equalsIgnoreCase("")) {
+                                                    if (!zipcodeStr.equalsIgnoreCase("")) {
+                                                        if (!sessioncapacityStr.equalsIgnoreCase("")) {
+                                                            if (!sessionamtStr.equalsIgnoreCase("")) {
+                                                                if (sessiontypeStr.equalsIgnoreCase("1")) {
+                                                                    callUpdateSessionApi();
                                                                 } else {
-                                                                    addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
+                                                                    if (startDateStr.equalsIgnoreCase(endDateStr)) {
+                                                                        callUpdateSessionApi();
+                                                                    } else {
+                                                                        Util.ping(mContext, getString(R.string.Date));
+                                                                    }
                                                                 }
                                                             } else {
-                                                                addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
+                                                                addSessionBinding.sessionPriceEdt.setError(getString(R.string.sessionAmount));
                                                             }
                                                         } else {
-                                                            addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
+                                                            addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
                                                         }
                                                     } else {
-                                                        addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
+                                                        addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
                                                     }
                                                 } else {
-                                                    addSessionBinding.sessionTimeTxt.setError(getString(R.string.sessionTime));
+                                                    addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
                                                 }
                                             } else {
-                                                Util.ping(mContext, getString(R.string.sessionTime));
+                                                addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
+                                            }
+                                        } else {
+                                            addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
+                                        }
+                                    } else {
+                                        addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
+                                    }
+                                } else {
+                                    addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
+                                }
+                            } else {
+                                addSessionBinding.streamEdt.setError(getString(R.string.streamName));
+                            }
+                        } else {
+                            addSessionBinding.standardEdt.setError(getString(R.string.standardName));
+                        }
+                    } else {
+                        addSessionBinding.boardNameEdt.setError(getString(R.string.boardName));
+                    }
+                } else {
+                    addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
+                    addSessionBinding.scrollView.setScrollY(0);
+                }
+            } else {
+                if (!coachIdStr.equalsIgnoreCase("") && !sessionNameStr.equalsIgnoreCase("")) {
+                    if (!boardStr.equalsIgnoreCase("")) {
+                        if (!standardStr.equalsIgnoreCase("")) {
+                            if (!streamStr.equalsIgnoreCase("")) {
+                                if (!lessionTypeNameStr.equalsIgnoreCase("")) {
+                                    if (!startDateStr.equalsIgnoreCase("")) {
+                                        if (!endDateStr.equalsIgnoreCase("")) {
+                                            if (!scheduleStr.equalsIgnoreCase("")) {
+                                                if (!address1Str.equalsIgnoreCase("")) {
+                                                    if (!regionStr.equalsIgnoreCase("")) {
+                                                        if (!cityStr.equalsIgnoreCase("")) {
+                                                            if (!stateStr.equalsIgnoreCase("")) {
+                                                                if (!zipcodeStr.equalsIgnoreCase("")) {
+                                                                    if (!sessioncapacityStr.equalsIgnoreCase("")) {
+                                                                        if (!sessionamtStr.equalsIgnoreCase("")) {
+                                                                            if (sessiontypeStr.equalsIgnoreCase("1")) {
+                                                                                callCreateSessionApi();
+                                                                            } else {
+                                                                                if (startDateStr.equalsIgnoreCase(endDateStr)) {
+                                                                                    callCreateSessionApi();
+                                                                                } else {
+                                                                                    Util.ping(mContext, getString(R.string.Date));
+                                                                                }
+                                                                            }
+                                                                        } else {
+                                                                            Util.ping(mContext, getString(R.string.sessionAmount));
+                                                                        }
+                                                                    } else {
+                                                                        addSessionBinding.sportsEdt.setError(getString(R.string.sessionCapacity));
+                                                                    }
+                                                                } else {
+                                                                    addSessionBinding.zipcodeEdt.setError(getString(R.string.sessionZipcode));
+                                                                }
+                                                            } else {
+                                                                addSessionBinding.stateEdt.setError(getString(R.string.sessionState));
+                                                            }
+                                                        } else {
+                                                            addSessionBinding.cityEdt.setError(getString(R.string.sessionCity));
+                                                        }
+                                                    } else {
+                                                        addSessionBinding.areaEdt.setError(getString(R.string.sessionArea));
+                                                    }
+                                                } else {
+                                                    addSessionBinding.addressEdt.setError(getString(R.string.sessionAddress));
+                                                }
+                                            } else {
+                                                addSessionBinding.sessionTimeTxt.setError(getString(R.string.sessionTime));
                                             }
                                         } else {
                                             Util.ping(mContext, getString(R.string.sessionTime));
                                         }
                                     } else {
-                                        addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
+                                        Util.ping(mContext, getString(R.string.sessionTime));
                                     }
                                 } else {
-                                    addSessionBinding.streamEdt.setError(getString(R.string.streamName));
+                                    addSessionBinding.subjectEdt.setError(getString(R.string.lessonName));
                                 }
                             } else {
-                                addSessionBinding.standardEdt.setError(getString(R.string.standardName));
+                                addSessionBinding.streamEdt.setError(getString(R.string.streamName));
                             }
                         } else {
-                            addSessionBinding.boardNameEdt.setError(getString(R.string.boardName));
+                            addSessionBinding.standardEdt.setError(getString(R.string.standardName));
                         }
                     } else {
-                        addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
-                        addSessionBinding.scrollView.setScrollY(0);
+                        addSessionBinding.boardNameEdt.setError(getString(R.string.boardName));
                     }
-                }
-            }
-
-        }
-
-        public void disableControl () {
-            addSessionBinding.sessionTimeLinear.setVisibility(View.GONE);
-            addSessionBinding.submitBtn.setVisibility(View.GONE);
-            addSessionBinding.recurringRb.setEnabled(false);
-            addSessionBinding.singleRb.setEnabled(false);
-            addSessionBinding.sessionNameEdt.setEnabled(false);
-            addSessionBinding.boardNameEdt.setEnabled(false);
-            addSessionBinding.standardEdt.setEnabled(false);
-            addSessionBinding.streamEdt.setEnabled(false);
-            addSessionBinding.subjectEdt.setEnabled(false);
-            addSessionBinding.addressEdt.setEnabled(false);
-            addSessionBinding.areaEdt.setEnabled(false);
-            addSessionBinding.cityEdt.setEnabled(false);
-            addSessionBinding.stateEdt.setEnabled(false);
-            addSessionBinding.zipcodeEdt.setEnabled(false);
-            addSessionBinding.descriptionEdt.setEnabled(false);
-            addSessionBinding.freeRb.setEnabled(false);
-            addSessionBinding.paidRb.setEnabled(false);
-            addSessionBinding.sportsEdt.setEnabled(false);
-            addSessionBinding.alertBtn.setEnabled(false);
-        }
-
-        public void TimeValidation (String startTime1, String endTime1){
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-            try {
-                Date inTime = sdf.parse(startTime1);
-                Date outTime = sdf.parse(endTime1);
-                if (outTime.before(inTime)) { //Same way you can check with after() method also.
-                    Util.ping(mContext, "Please Select Proper Time");
                 } else {
-
+                    addSessionBinding.sessionNameEdt.setError(getString(R.string.sessionName));
+                    addSessionBinding.scrollView.setScrollY(0);
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
-
         }
+
     }
+
+    public void disableControl() {
+        addSessionBinding.sessionTimeLinear.setVisibility(View.GONE);
+        addSessionBinding.submitBtn.setVisibility(View.GONE);
+        addSessionBinding.recurringRb.setEnabled(false);
+        addSessionBinding.singleRb.setEnabled(false);
+        addSessionBinding.sessionNameEdt.setEnabled(false);
+        addSessionBinding.boardNameEdt.setEnabled(false);
+        addSessionBinding.standardEdt.setEnabled(false);
+        addSessionBinding.streamEdt.setEnabled(false);
+        addSessionBinding.subjectEdt.setEnabled(false);
+        addSessionBinding.addressEdt.setEnabled(false);
+        addSessionBinding.areaEdt.setEnabled(false);
+        addSessionBinding.cityEdt.setEnabled(false);
+        addSessionBinding.stateEdt.setEnabled(false);
+        addSessionBinding.zipcodeEdt.setEnabled(false);
+        addSessionBinding.descriptionEdt.setEnabled(false);
+        addSessionBinding.freeRb.setEnabled(false);
+        addSessionBinding.paidRb.setEnabled(false);
+        addSessionBinding.sportsEdt.setEnabled(false);
+        addSessionBinding.alertBtn.setEnabled(false);
+    }
+
+}

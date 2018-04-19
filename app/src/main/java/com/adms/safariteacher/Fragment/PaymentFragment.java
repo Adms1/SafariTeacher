@@ -1,59 +1,34 @@
 package com.adms.safariteacher.Fragment;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
-import com.adms.safariteacher.Activities.DrawableCalendarEvent;
-import com.adms.safariteacher.Adapter.SessionViewStudentListAdapter;
-import com.adms.safariteacher.Model.Session.SessionDetailModel;
 import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
 import com.adms.safariteacher.Utility.Util;
-import com.adms.safariteacher.databinding.FragmentCalendarBinding;
 import com.adms.safariteacher.databinding.FragmentPaymentBinding;
-import com.github.tibolte.agendacalendarview.CalendarPickerController;
-import com.github.tibolte.agendacalendarview.models.CalendarEvent;
-import com.github.tibolte.agendacalendarview.models.DayItem;
 
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeSet;
 

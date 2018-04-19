@@ -69,6 +69,7 @@
     <string name="sports">Spot</string>
     <string name="alert_msg">Alert Msg</string>
     <string name="ok">OK</string>
+    <string name="add_familyname">Family Name :</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

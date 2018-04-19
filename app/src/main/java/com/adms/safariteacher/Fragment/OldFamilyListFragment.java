@@ -57,7 +57,7 @@ public class OldFamilyListFragment extends Fragment {
 
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt, session_student_txt, session_student_txt_view, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt;
-    String familyIdStr = "", contatIDstr, orderIDStr, sessionIDStr, type;
+    String familyIdStr = "", contatIDstr, orderIDStr, sessionIDStr, type, familyNameStr = "";
     ArrayList<String> selectedId;
 
     public OldFamilyListFragment() {
@@ -301,6 +301,7 @@ public class OldFamilyListFragment extends Fragment {
                                         args.putString("session", "11");
                                         args.putString("type", "Child");
                                         args.putString("familyID", familyIdStr);
+                                        args.putString("familyNameStr",familyNameStr);
                                         fragment.setArguments(args);
                                         fragmentTransaction.replace(R.id.frame, fragment);
                                         fragmentTransaction.addToBackStack(null);
@@ -372,7 +373,9 @@ public class OldFamilyListFragment extends Fragment {
         selectedId = expandableSelectStudentListAdapter.getFamilyID();
         Log.d("selectedId", "" + selectedId);
         for (int i = 0; i < selectedId.size(); i++) {
-            familyIdStr = selectedId.get(i);
+            String[] spiltValue = selectedId.get(i).split("\\|");
+            familyIdStr = spiltValue[0];
+            familyNameStr = spiltValue[1] + " " + spiltValue[2];
             Log.d("selectedIdStr", familyIdStr);
         }
     }

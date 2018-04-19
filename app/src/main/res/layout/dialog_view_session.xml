@@ -237,7 +237,7 @@
         android:layout_height="@dimen/_150sdp"
         android:layout_margin="0.1dp"
         android:gravity="center"
-        android:text="No Record Found."
+        android:text="no students found."
         android:textColor="@color/search_boder"
         android:textSize="@dimen/_11sdp"
         android:textStyle="bold"

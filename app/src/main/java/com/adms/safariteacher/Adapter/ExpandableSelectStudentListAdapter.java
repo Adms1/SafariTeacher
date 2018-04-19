@@ -257,7 +257,7 @@ public class ExpandableSelectStudentListAdapter extends BaseExpandableListAdapte
             @Override
             public void onClick(View view) {
                 familyIdCheck = new ArrayList<String>();
-                familyIdCheck.add(spiltValue[3]);
+                familyIdCheck.add(spiltValue[3]+"|"+spiltValue[0] + "|" + spiltValue[1]);
                 onChlidClick.getChilClick();
             }
         });

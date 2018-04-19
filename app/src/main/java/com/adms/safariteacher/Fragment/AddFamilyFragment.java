@@ -28,8 +28,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.adms.safariteacher.Activities.DashBoardActivity;
-import com.adms.safariteacher.Activities.LoginActivity;
-import com.adms.safariteacher.Activities.RegistrationActivity;
 import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
@@ -60,7 +58,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     Calendar calendar;
     private DatePickerDialog datePickerDialog;
     int mYear, mMonth, mDay;
-    String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr, classStr = "Child";
+    String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr, classStr = "Child", familyNameStr;
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt, session_student_txt_view;
     TeacherInfoModel classListInfo;
@@ -80,11 +78,12 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         pageTitle = getArguments().getString("session");
         type = getArguments().getString("type");
         familyIDStr = getArguments().getString("familyID");
+        familyNameStr = getArguments().getString("familyNameStr");
         sessionIDStr = Util.getPref(mContext, "SessionID");
         ((DashBoardActivity) getActivity()).setActionBar(Integer.parseInt(pageTitle), "false");
         initViews();
         setListners();
-        Log.d("type", type);
+        Log.d("ADMStype", type+familyNameStr);
         return rootView;
     }
 
@@ -96,8 +95,13 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         callClassTypeDetailApi();
         if (type.equalsIgnoreCase("Family")) {
             addFamilyBinding.classTypeGroup.setVisibility(View.GONE);
+            addFamilyBinding.familynameTxt.setVisibility(View.GONE);
+            addFamilyBinding.familynameTxtView.setVisibility(View.GONE);
         } else {
             addFamilyBinding.classTypeGroup.setVisibility(View.VISIBLE);
+            addFamilyBinding.familynameTxtView.setVisibility(View.VISIBLE);
+            addFamilyBinding.familynameTxt.setVisibility(View.VISIBLE);
+            addFamilyBinding.familynameTxt.setText(familyNameStr);
         }
     }
 
