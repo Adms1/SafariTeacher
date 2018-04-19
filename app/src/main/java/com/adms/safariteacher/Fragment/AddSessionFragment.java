@@ -1526,6 +1526,7 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         Date outTime = sdf.parse(sun_end_time_txt.getText().toString());
                         if (outTime.before(inTime)) { //Same way you can check with after() method also.
                             sun_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            sun_end_linear.setBackgroundResource(R.drawable.red_linear);
                             checkTime_sun = true;
                         } else {
                             checkTime_sun = false;
@@ -1551,16 +1552,18 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         Date inTime = sdf1.parse(mon_start_time_txt.getText().toString());
                         Date outTime = sdf1.parse(mon_end_time_txt.getText().toString());
                         if (outTime.before(inTime)) { //Same way you can check with after() method also.
-                            sun_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            mon_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            mon_end_linear.setBackgroundResource(R.drawable.red_linear);
                             checkTime_mon = true;
                         } else {
                             checkTime_mon = false;
                             mon_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                            mon_end_linear.setBackgroundResource(R.drawable.linear_shape);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                   break;
+                    break;
                 case "4":
                     tue_start_time_txt.setText(FinalTimeStr);
                     tue_start_add_session_btn.setText("x");
@@ -1578,10 +1581,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         Date outTime = sdf2.parse(tue_end_time_txt.getText().toString());
                         if (outTime.before(inTime)) { //Same way you can check with after() method also.
                             tue_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            tue_end_linear.setBackgroundResource(R.drawable.red_linear);
                             checkTime_tue = true;
                         } else {
                             checkTime_tue = false;
                             tue_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                            tue_end_linear.setBackgroundResource(R.drawable.linear_shape);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -1605,10 +1610,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         Date outTime = sdf3.parse(wed_end_time_txt.getText().toString());
                         if (outTime.before(inTime)) { //Same way you can check with after() method also.
                             wed_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            wed_end_linear.setBackgroundResource(R.drawable.red_linear);
                             checkTime_wed = true;
                         } else {
                             checkTime_wed = false;
                             wed_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                            wed_end_linear.setBackgroundResource(R.drawable.linear_shape);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -1632,10 +1639,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         Date outTime = sdf4.parse(thu_end_time_txt.getText().toString());
                         if (outTime.before(inTime)) { //Same way you can check with after() method also.
                             thu_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            thu_end_linear.setBackgroundResource(R.drawable.red_linear);
                             checkTime_thu = true;
                         } else {
                             checkTime_thu = false;
                             thu_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                            thu_end_linear.setBackgroundResource(R.drawable.linear_shape);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -1659,10 +1668,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         Date outTime = sdf5.parse(fri_end_time_txt.getText().toString());
                         if (outTime.before(inTime)) { //Same way you can check with after() method also.
                             fri_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            fri_end_linear.setBackgroundResource(R.drawable.red_linear);
                             checkTime_fri = true;
                         } else {
                             checkTime_fri = false;
-                           fri_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                            fri_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                            fri_end_linear.setBackgroundResource(R.drawable.linear_shape);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -1686,10 +1697,12 @@ public class AddSessionFragment extends Fragment implements com.wdullaer.materia
                         Date outTime = sdf6.parse(sat_end_time_txt.getText().toString());
                         if (outTime.before(inTime)) { //Same way you can check with after() method also.
                             sat_end_time_txt.setTextColor(getResources().getColor(R.color.search_boder));
+                            sat_end_linear.setBackgroundResource(R.drawable.red_linear);
                             checkTime_sat = true;
                         } else {
                             checkTime_sat = false;
                             sat_end_time_txt.setTextColor(getResources().getColor(R.color.text_color));
+                            sat_end_linear.setBackgroundResource(R.drawable.linear_shape);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
