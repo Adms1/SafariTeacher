@@ -5,8 +5,8 @@ package com.adms.safariteacher.Utility;
  */
 
 public class AppConfiguration {
-//    public static final String BASEURL = "http://192.168.1.20:8088/WebService.asmx/";// use for office
-  public static final String BASEURL = "http://www.classsafari.admssvc.com/webservice.asmx/"; // use for client
+    public static final String BASEURL = "http://192.168.1.20:8088/WebService.asmx/";// use for office
+//  public static final String BASEURL = "http://www.classsafari.admssvc.com/webservice.asmx/"; // use for client
 
 
     public static String coachId;
@@ -19,4 +19,5 @@ public class AppConfiguration {
     public static String SessionPrice;
     public static String UserName;
     public static String RegisterEmail;
+    public static String contactID;
 }

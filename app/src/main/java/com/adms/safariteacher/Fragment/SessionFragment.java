@@ -27,8 +27,10 @@ import android.widget.TextView;
 import com.adms.safariteacher.Activities.DashBoardActivity;
 import com.adms.safariteacher.Activities.DrawableCalendarEvent;
 import com.adms.safariteacher.Adapter.SessionViewStudentListAdapter;
+import com.adms.safariteacher.Interface.onViewClick;
 import com.adms.safariteacher.Model.Session.SessionDetailModel;
 import com.adms.safariteacher.Model.Session.sessionDataModel;
+import com.adms.safariteacher.Model.TeacherInfo.TeacherInfoModel;
 import com.adms.safariteacher.R;
 import com.adms.safariteacher.Utility.ApiHandler;
 import com.adms.safariteacher.Utility.AppConfiguration;
@@ -70,7 +72,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     List<CalendarEvent> eventList = new ArrayList<>();
     ArrayList<Integer> colorList = new ArrayList<>();
     int sessionCapacity, arraySize, studentAvailability;
-    ArrayList<String> StudentList;
+    ArrayList<sessionDataModel> StudentList;
     String Address;
     int SessionHour = 0;
     Integer SessionMinit = 0;
@@ -78,6 +80,12 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
     Calendar calendar;
     String dateStr;
     int k;
+
+    //Use for Confirmation Dialog
+    Dialog confimDialog;
+    TextView cancel_txt, confirm_txt, session_student_txt, session_student_txt_view, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt;
+    String contatIDstr, orderIDStr,familyNameStr;
+    ArrayList<String> selectedId;
 
     public SessionFragment() {
     }
@@ -125,7 +133,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         calendarBinding.addEventFabBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DashBoardActivity.navItemIndex=1;
+                DashBoardActivity.navItemIndex = 1;
                 Fragment fragment = new AddSessionFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -219,13 +227,14 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
             parseTodaysDate(String.valueOf(event.getStartTime().getTime()), String.valueOf(event.getEndTime().getTime()));
 
             sessionnameStr = event.getTitle();
-            sessionIDStr = String.valueOf(event.getId());
-            Log.d("sessionID", sessionIDStr);
-            Util.setPref(mContext, "SessionID", sessionIDStr);
+            sessionDetailIDStr = String.valueOf(event.getId());
+            Log.d("sessionDetailIDStr", sessionDetailIDStr);
+            Util.setPref(mContext, "sessionDetailID", sessionDetailIDStr);
+
             for (int i = 0; i < finalsessionfullDetailModel.getData().size(); i++) {
                 for (int j = 0; j < finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().size(); j++) {
-                    if (sessionIDStr.equalsIgnoreCase(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID())) {
-                        sessionDetailIDStr = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionDetailID();
+                    if (sessionDetailIDStr.equalsIgnoreCase(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionDetailID())) {
+                        sessionIDStr = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID();
                         sessionCapacity = Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionCapacity());
                         priceStr = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionPrice();
                         AppConfiguration.SessionLocation = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressLine1()
@@ -239,7 +248,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         AppConfiguration.SessionDuration = "( " + SessionHour + "hr" + ", " + SessionMinit + "min )";
                         AppConfiguration.SessionTime = finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime();
                         AppConfiguration.SessionPrice = String.valueOf(Math.round(Float.parseFloat(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionPrice())));
-                        Util.setPref(mContext, "sessionDetailID", sessionDetailIDStr);
+                        Util.setPref(mContext, "SessionID", sessionIDStr);
                     }
 
                 }
@@ -335,6 +344,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         total_spot_txt = (TextView) sessionDialog.findViewById(R.id.total_spot_txt);
         spot_left_txt = (TextView) sessionDialog.findViewById(R.id.spot_left_txt);
         no_record_txt = (TextView) sessionDialog.findViewById(R.id.no_record_txt);
+
         callGetSessionStudentDetailApi();
 
         date_txt.setText(sessionDateStr);
@@ -353,7 +363,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         edit_session_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DashBoardActivity.navItemIndex=1;
+                DashBoardActivity.navItemIndex = 1;
                 Fragment fragment = new AddSessionFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -372,7 +382,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         add_attendance_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DashBoardActivity.navItemIndex=1;
+                DashBoardActivity.navItemIndex = 1;
                 AppConfiguration.DateStr = date_txt.getText().toString();
                 AppConfiguration.TimeStr = start_time_txt.getText().toString() + "-" + end_time_txt.getText().toString();
                 Fragment fragment = new StudentAttendanceFragment();
@@ -390,7 +400,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
         add_student_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DashBoardActivity.navItemIndex=1;
+                DashBoardActivity.navItemIndex = 1;
                 Fragment fragment = new OldFamilyListFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -497,7 +507,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                         + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressCity()
                         + ", " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressState()
                         + "- " + finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getAddressZipCode();
-                DrawableCalendarEvent event = new DrawableCalendarEvent(Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionID()),
+                DrawableCalendarEvent event = new DrawableCalendarEvent(Integer.parseInt(finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionDetailID()),
                         colorList.get(k), finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
                         finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionName(),
                         finalsessionfullDetailModel.getData().get(i).getSessionFullDetails().get(j).getSessionTime()
@@ -535,7 +545,7 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                     if (sessionStudentInfo.getSuccess().equalsIgnoreCase("True")) {
                         Util.dismissDialog();
                         arrayList = sessionStudentInfo.getData();
-                        StudentList = new ArrayList<>();
+                        StudentList = new ArrayList<sessionDataModel>();
                         arraySize = arrayList.size();
                         studentAvailability = sessionCapacity - arraySize;
                         Log.d("capacity", "" + sessionCapacity + "arraySize :" + arraySize + "studentAvailability :" + studentAvailability);
@@ -543,10 +553,17 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
                             list_linear.setVisibility(View.VISIBLE);
                             no_record_txt.setVisibility(View.GONE);
                             for (int i = 0; i < arrayList.size(); i++) {
-                                StudentList.add(arrayList.get(i).getFirstName() + "|" + arrayList.get(i).getPhoneNumber() + "|" + arrayList.get(i).getLastName());
+                                StudentList.add(arrayList.get(i));
                             }
-                            Log.d("arrayList", "" + StudentList);
-                            sessionViewStudentListAdapter = new SessionViewStudentListAdapter(mContext, StudentList);
+                            Log.d("StudentList", "" + StudentList);
+                            sessionViewStudentListAdapter = new SessionViewStudentListAdapter(mContext, StudentList, new onViewClick() {
+                                @Override
+                                public void getViewClick() {
+                                    getFamilyID();
+                                    ConformationDialog();
+
+                                }
+                            });
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                             studentnamelist_rcView.setLayoutManager(mLayoutManager);
                             studentnamelist_rcView.setItemAnimator(new DefaultItemAnimator());
@@ -628,6 +645,145 @@ public class SessionFragment extends Fragment implements CalendarPickerControlle
 
     }
 
+    public void ConformationDialog() {
+        confimDialog = new Dialog(getActivity(), R.style.Theme_Dialog);
+        Window window = confimDialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        confimDialog.getWindow().getAttributes().verticalMargin = 0.10f;
+        wlp.gravity = Gravity.CENTER;
+        window.setAttributes(wlp);
+
+        confimDialog.getWindow().setBackgroundDrawableResource(R.drawable.session_confirm);
+
+        confimDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        confimDialog.setCancelable(false);
+        confimDialog.setContentView(R.layout.confirm_session_dialog);
+
+        session_student_txt_view = (TextView) confimDialog.findViewById(R.id.session_student_txt_view);
+        session_student_txt = (TextView) confimDialog.findViewById(R.id.session_student_txt);
+        session_name_txt = (TextView) confimDialog.findViewById(R.id.session_name_txt);
+        location_txt = (TextView) confimDialog.findViewById(R.id.location_txt);
+        duration_txt = (TextView) confimDialog.findViewById(R.id.duration_txt);
+        time_txt = (TextView) confimDialog.findViewById(R.id.time_txt);
+        session_fee_txt = (TextView) confimDialog.findViewById(R.id.session_fee_txt);
+        confirm_txt = (TextView) confimDialog.findViewById(R.id.confirm_txt);
+        cancel_txt = (TextView) confimDialog.findViewById(R.id.cancel_txt);
+
+//        getsessionID();
+
+        if (AppConfiguration.SessionPrice.equalsIgnoreCase("0")) {
+            session_fee_txt.setText("Free");
+        } else {
+            session_fee_txt.setText("₹ " + AppConfiguration.SessionPrice);
+        }
+
+        session_student_txt.setText(familyNameStr);
+        session_name_txt.setText(AppConfiguration.SessionName);
+        location_txt.setText(AppConfiguration.SessionLocation);
+        duration_txt.setText(AppConfiguration.SessionDuration);
+        time_txt.setText(AppConfiguration.SessionTime);
+        AppConfiguration.UserName = session_student_txt.getText().toString();
+
+        cancel_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confimDialog.dismiss();
+            }
+        });
+        confirm_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("")) {
+                    callpaymentRequestApi();
+                }
+                confimDialog.dismiss();
+                sessionDialog.dismiss();
+
+            }
+        });
+
+
+        confimDialog.show();
+
+    }
+
+    //Use for paymentRequest
+    public void callpaymentRequestApi() {
+        if (Util.isNetworkConnected(mContext)) {
+
+            Util.showDialog(mContext);
+            ApiHandler.getApiService().get_GeneratePaymentRequest(getpaymentRequestdetail(), new retrofit.Callback<TeacherInfoModel>() {
+                @Override
+                public void success(TeacherInfoModel paymentRequestModel, Response response) {
+                    Util.dismissDialog();
+                    if (paymentRequestModel == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (paymentRequestModel.getSuccess() == null) {
+                        Util.ping(mContext, getString(R.string.something_wrong));
+                        return;
+                    }
+                    if (paymentRequestModel.getSuccess().equalsIgnoreCase("false")) {
+                        Util.ping(mContext, getString(R.string.false_msg));
+                        return;
+                    }
+                    if (paymentRequestModel.getSuccess().equalsIgnoreCase("True")) {
+
+                        orderIDStr = paymentRequestModel.getOrderID();
+                        Fragment fragment = new PaymentFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        Bundle args = new Bundle();
+                        args.putString("orderID", orderIDStr);
+                        args.putString("amount", AppConfiguration.SessionPrice);
+                        args.putString("mode", "TEST");
+                        args.putString("username", session_student_txt.getText().toString());
+                        args.putString("sessionID", sessionIDStr);
+                        args.putString("contactID", contatIDstr);
+                        args.putString("type", Util.getPref(mContext, "Type"));
+                        fragment.setArguments(args);
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Util.dismissDialog();
+                    error.printStackTrace();
+                    error.getMessage();
+                    Util.ping(mContext, getString(R.string.something_wrong));
+                }
+            });
+        } else {
+            Util.ping(mContext, getString(R.string.internet_connection_error));
+        }
+    }
+
+    private Map<String, String> getpaymentRequestdetail() {
+        Map<String, String> map = new HashMap<>();
+        map.put("ContactID", contatIDstr);
+        map.put("SessionID", sessionIDStr);
+        map.put("Amount", AppConfiguration.SessionPrice);
+        return map;
+    }
+
+    public void getFamilyID() {
+        selectedId = new ArrayList<String>();
+
+        selectedId = sessionViewStudentListAdapter.getContactID();
+        Log.d("selectedId", "" + selectedId);
+        for (int i = 0; i < selectedId.size(); i++) {
+            String[] spiltValue = selectedId.get(i).split("\\|");
+            contatIDstr = spiltValue[0];
+            familyNameStr = spiltValue[1] + " " + spiltValue[2];
+            Log.d("selectedIdStr", contatIDstr);
+        }
+    }
 
 }
 

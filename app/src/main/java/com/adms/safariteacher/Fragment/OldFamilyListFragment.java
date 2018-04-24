@@ -57,7 +57,7 @@ public class OldFamilyListFragment extends Fragment {
 
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt, session_student_txt, session_student_txt_view, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt;
-    String familyIdStr = "", contatIDstr, orderIDStr, sessionIDStr, type, familyNameStr = "";
+    String familyIdStr = "", contatIDstr, orderIDStr, sessionIDStr, type, familyNameStr = "",paymentStatusstr;
     ArrayList<String> selectedId;
 
     public OldFamilyListFragment() {
@@ -177,6 +177,7 @@ public class OldFamilyListFragment extends Fragment {
                 if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("") && !AppConfiguration.SessionPrice.equalsIgnoreCase("0")) {
                     callpaymentRequestApi();
                 } else {
+                    paymentStatusstr="1";
                     callSessionConfirmationApi();
                 }
                 confimDialog.dismiss();
@@ -389,9 +390,11 @@ public class OldFamilyListFragment extends Fragment {
 //            contatIDstr = selectedId.get(i);
             String[] spilt = selectedId.get(i).split("\\|");
             contatIDstr = spilt[2];
+            Util.setPref(mContext, "FamilyID", contatIDstr);
             session_student_txt.setText(spilt[0] + " " + spilt[1]);
             session_student_txt_view.setText(spilt[3]);
             type = spilt[4];
+            Util.setPref(mContext,"Type",type);
             Log.d("selectedIdStr", contatIDstr);
         }
     }
@@ -451,6 +454,7 @@ public class OldFamilyListFragment extends Fragment {
         Map<String, String> map = new HashMap<>();
         map.put("SessionID", sessionIDStr);
         map.put("ContactID", contatIDstr);
+        map.put("PaymentStatus",paymentStatusstr);
         return map;
     }
 

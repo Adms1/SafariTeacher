@@ -542,6 +542,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
                         android:hint="@string/sports"
+                        android:imeOptions="actionDone"
                         android:inputType="number"
                         android:maxLines="1" />
                 </LinearLayout>

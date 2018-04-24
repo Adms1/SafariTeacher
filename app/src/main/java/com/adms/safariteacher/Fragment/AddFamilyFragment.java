@@ -58,7 +58,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
     Calendar calendar;
     private DatePickerDialog datePickerDialog;
     int mYear, mMonth, mDay;
-    String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr, classStr = "Child", familyNameStr;
+    String pageTitle, type, firstNameStr, lastNameStr, emailStr = "", passwordStr, phonenoStr, gendarIdStr = "1", dateofbirthStr, contactTypeIDStr, familyIDStr, contatIDstr, orderIDStr, sessionIDStr, classStr = "Child", familyNameStr,paymentStatusstr;
     Dialog confimDialog;
     TextView cancel_txt, confirm_txt, session_student_txt, session_name_txt, location_txt, duration_txt, time_txt, session_fee_txt, session_student_txt_view;
     TeacherInfoModel classListInfo;
@@ -473,6 +473,8 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                         return;
                     }
                     if (childInfoModel.getSuccess().equalsIgnoreCase("True")) {
+
+                        Util.setPref(mContext, "FamilyID", childInfoModel.getContactID());
                         contatIDstr = childInfoModel.getContactID();
 //                        Util.ping(mContext, "Child Added Sucessfully.");
                         ConformationDialog();
@@ -541,6 +543,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                 if (!contatIDstr.equalsIgnoreCase("") && !sessionIDStr.equalsIgnoreCase("") && !AppConfiguration.SessionPrice.equalsIgnoreCase("0")) {
                     callpaymentRequestApi();
                 } else {
+                    paymentStatusstr="1";
                     callSessionConfirmationApi();
                 }
                 confimDialog.dismiss();
@@ -596,7 +599,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
                         Bundle args = new Bundle();
                         args.putString("orderID", orderIDStr);
                         args.putString("amount", AppConfiguration.SessionPrice);
-                        args.putString("mode", "LIVE");
+                        args.putString("mode", "TEST");
                         args.putString("username", session_student_txt.getText().toString());
                         args.putString("sessionID", sessionIDStr);
                         args.putString("contactID", contatIDstr);
@@ -685,6 +688,7 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         Map<String, String> map = new HashMap<>();
         map.put("SessionID", sessionIDStr);
         map.put("ContactID", contatIDstr);
+        map.put("PaymentStatus",paymentStatusstr);
         return map;
     }
 
@@ -736,40 +740,6 @@ public class AddFamilyFragment extends Fragment implements DatePickerDialog.OnDa
         return map;
     }
 
-    public void fillClassTypeSpinner() {
-//        for (int i = 0; i < classListInfo.getData().size(); i++) {
-//
-//        }
-//        ArrayList<Integer> classTypeId = new ArrayList<Integer>();
-//        for (int i = 0; i < classListInfo.getData().size(); i++) {
-//            classTypeId.add(Integer.valueOf(classListInfo.getData().get(i).getContactTypeID()));
-//        }
-//        ArrayList<String> className = new ArrayList<String>();
-//        for (int j = 0; j < classListInfo.getData().size(); j++) {
-//            className.add(classListInfo.getData().get(j).getContactTypeName());
-//        }
-//
-//        String[] spinnerclassIdArray = new String[classTypeId.size()];
-//
-//        spinnerClassMap = new HashMap<Integer, String>();
-//        for (int i = 0; i < classTypeId.size(); i++) {
-//            spinnerClassMap.put(i, String.valueOf(classTypeId.get(i)));
-//            spinnerclassIdArray[i] = className.get(i).trim();
-//        }
-//        try {
-//            Field popup = Spinner.class.getDeclaredField("mPopup");
-//            popup.setAccessible(true);
-//
-//            // Get private mPopup member variable and try cast to ListPopupWindow
-//            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(addFamilyBinding.classSpinner);
-//
-//            popupWindow.setHeight(spinnerclassIdArray.length > 4 ? 500 : spinnerclassIdArray.length * 100);
-//        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
-//            // silently fail...
-//        }
-//
-//        ArrayAdapter<String> adapterTerm = new ArrayAdapter<String>(mContext, R.layout.spinner_layout, spinnerclassIdArray);
-//        addFamilyBinding.classSpinner.setAdapter(adapterTerm);
-    }
+
 }
 
